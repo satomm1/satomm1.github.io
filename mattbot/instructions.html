@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MattBot Instructions | Matthew Sato</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 300;
+        }
+        
+        .header .subtitle {
+            color: #7f8c8d;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .nav-link {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .nav-link:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .nav-link.back {
+            background: #95a5a6;
+        }
+        
+        .nav-link.back:hover {
+            background: #7f8c8d;
+        }
+        
+        .intro-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .intro-section h2 {
+            color: #2c3e50;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 0.5rem;
+        }
+        
+        .intro-section p {
+            color: #555;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+        
+        .instructions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .instruction-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .instruction-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .instruction-card h3 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .instruction-card p {
+            color: #666;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        
+        .card-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .card-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3);
+        }
+        
+        .construction .card-link {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+        
+        .construction .card-link:hover {
+            box-shadow: 0 8px 20px rgba(243, 156, 18, 0.3);
+        }
+        
+        .setup .card-link {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+        
+        .setup .card-link:hover {
+            box-shadow: 0 8px 20px rgba(46, 204, 113, 0.3);
+        }
+        
+        .requirements {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .requirements h3 {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .req-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .req-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .req-item h4 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .req-item p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .instructions-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Mobile Robot Instruction Guide</h1>
+            <p class="subtitle">Complete Guide to Building and Operating Your Autonomous Mobile Robot</p>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link back">← Back to Project Overview</a>
+            </div>
+
+            <div style="height: 1.5rem;"></div>
+
+            <div class="nav-links">
+                <a href="construction.html" class="nav-link">Construction Guide</a>
+                <a href="setup.html" class="nav-link">Setup Guide</a>
+                <a href="operation.html" class="nav-link">Operation Guide</a>
+            </div>
+        </header>
+        
+        <section class="intro-section">
+            <h2>Getting Started</h2>
+            <p>
+                Welcome to the comprehensive instruction guide! This documentation will walk you through every step of creating your own autonomous mobile robot, from initial construction to advanced operation.
+            </p>
+            <p>
+                The process is divided into three main phases: Construction (building the physical robot), Setup (configuring software and sensors), and Operation (running and controlling the robot). Each phase builds upon the previous one, so it's recommended to follow them in order.
+            </p>
+            <p>
+                These guides provide detailed instructions, troubleshooting tips, and best practices for building and using the autonomous mobile robot.
+            </p>
+        </section>
+        
+        <div class="instructions-grid">
+            <div class="instruction-card construction">
+                <h3>Construction Guide</h3>
+                <p>Learn how to build the physical robot from scratch. This section covers:</p>
+                <ul style="text-align: left; margin-bottom: 1.5rem;">
+                    <li>Parts list and sourcing</li>
+                    <li>3D printing, laser cutting, and assembly</li>
+                    <li>Circuit board soldering, MCU programming, wiring, and connections</li>
+                    <li>Mechanical assembly</li>
+                </ul>
+                <a href="construction.html" class="card-link">Start Building →</a>
+            </div>
+            
+            <div class="instruction-card setup">
+                <h3>Setup Guide</h3>
+                <p>Configure software, sensors, computing, and prepare your robot for operation:</p>
+                <ul style="text-align: left; margin-bottom: 1.5rem;">
+                    <li>Operating system installation</li>
+                    <li>Software installation</li>
+                    <li>Sensor configuration</li>
+                    <li>Network configuration</li>
+                    <li>GUI setup</li>
+                    <li>Initial testing</li>
+                </ul>
+                <a href="setup.html" class="card-link">Configure System →</a>
+            </div>
+            
+            <div class="instruction-card operation">
+                <h3>Operation Guide</h3>
+                <p>Master the operation of your autonomous mobile robot:</p>
+                <ul style="text-align: left; margin-bottom: 1.5rem;">
+                    <li>Basic movement controls</li>
+                    <li>Mapping and localization</li>
+                    <li>Autonomous navigation</li>
+                    <li>Object detection</li>
+                    <li>Mobile robot monitoring</li>
+                </ul>
+                <a href="operation.html" class="card-link">Start Operating →</a>
+            </div>
+        </div>
+        
+        <section class="requirements">
+            <h3>Prerequisites & Requirements</h3>
+            <div class="req-grid">
+                <div class="req-item">
+                    <h4>Tools Required</h4>
+                    <p>Soldering iron, screwdrivers (Phillips Head, Flat Head, Hex), 3D printer access, laser cutter access, multimeter, computer</p>
+                </div>
+                <div class="req-item">
+                    <h4>Skill Level</h4>
+                    <p>Intermediate electronics knowledge, basic programming experience recommended</p>
+                </div>
+                <div class="req-item">
+                    <h4>Budget</h4>
+                    <p>Approximately $800-1200 depending on component choices and sourcing</p>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
