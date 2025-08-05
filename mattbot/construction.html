@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MattBot Construction Guide | Matthew Sato</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 300;
+        }
+        
+        .header .subtitle {
+            color: #7f8c8d;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .nav-link {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .nav-link:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .nav-link.back {
+            background: #95a5a6;
+        }
+        
+        .nav-link.back:hover {
+            background: #7f8c8d;
+        }
+        
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .section h2 {
+            color: #2c3e50;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            border-bottom: 3px solid #f39c12;
+            padding-bottom: 0.5rem;
+        }
+        
+        .section h3 {
+            color: #e67e22;
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem 0;
+        }
+        
+        .section p, .section li {
+            color: #555;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .parts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .part-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #f39c12;
+        }
+        
+        .part-card h4 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .part-card .price {
+            color: #27ae60;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .part-card p {
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+        
+        .step-card {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+            border-left: 5px solid #e67e22;
+        }
+        
+        .step-number {
+            background: #e67e22;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        
+        .warning strong {
+            color: #e17055;
+        }
+        
+        .tools-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .tool-item {
+            background: #e8f4fd;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🔧 Construction Guide</h1>
+            <p class="subtitle">Building Your MattBot from Scratch</p>
+            <div class="nav-links">
+                <a href="instructions.html" class="nav-link back">← Instructions Hub</a>
+                <a href="setup.html" class="nav-link">Setup Guide →</a>
+                <a href="operation.html" class="nav-link">Operation Guide →</a>
+            </div>
+        </header>
+
+        <section class="section">
+            <h2>Electrical Instructions</h2>
+            <p>The component list and instructions for the electrical components are available at: <a href="https://github.com/satomm1/Robot/tree/main/Electrical" target="_blank">https://github.com/satomm1/Robot/tree/main/Electrical</a>.</p>
+        
+            <p>I recommend constructing the electrical components first before moving on to the mechanical assembly. This ensures that all wiring and connections are properly set up before integrating with the robot's frame.</p>
+        </section>
+        
+        <section class="section">
+            <h2>Mechanical Instructions</h2>
+            <p>The component list, part files, and assembly instructions are provided at: <a href="https://github.com/satomm1/Robot/tree/main/CAD" target="_blank">https://github.com/satomm1/Robot/tree/main/CAD</a>.</p>
+
+            <p>Once construction is complete and all checks pass, proceed to the <a href="setup.html">Setup Guide</a> to configure your robot's software and calibrate sensors.</p>
+        
+            <div class="nav-links">
+                <a href="setup.html" class="nav-link">Setup Guide →</a>
+            </div>
+        </section>
+        
+    </div>
+</body>
+</html>
