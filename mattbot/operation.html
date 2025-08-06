@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MattBot Setup Guide | Matthew Sato</title>
+    <title>MattBot Operation Guide | Matthew Sato</title>
     <style>
         * {
             margin: 0;
@@ -15,7 +15,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             color: #333;
-            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
             min-height: 100vh;
         }
         
@@ -91,12 +91,12 @@
             font-size: 2.2rem;
             margin-bottom: 1.5rem;
             text-align: center;
-            border-bottom: 3px solid #27ae60;
+            border-bottom: 3px solid #e74c3c;
             padding-bottom: 0.5rem;
         }
         
         .section h3 {
-            color: #2ecc71;
+            color: #c0392b;
             font-size: 1.5rem;
             margin: 2rem 0 1rem 0;
         }
@@ -112,11 +112,11 @@
             padding: 2rem;
             border-radius: 10px;
             margin: 1.5rem 0;
-            border-left: 5px solid #2ecc71;
+            border-left: 5px solid #c0392b;
         }
         
         .step-number {
-            background: #2ecc71;
+            background: #c0392b;
             color: white;
             width: 40px;
             height: 40px;
@@ -151,36 +151,61 @@
             color: #e17055;
         }
         
-        .success {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
+        .tip {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
             padding: 1rem;
             border-radius: 8px;
             margin: 1rem 0;
         }
         
-        .success strong {
-            color: #155724;
+        .tip strong {
+            color: #0c5460;
         }
         
-        .config-grid {
+        .controls-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
             margin: 2rem 0;
         }
         
-        .config-card {
+        .control-card {
             background: #f8f9fa;
             padding: 1.5rem;
             border-radius: 10px;
-            border-left: 4px solid #27ae60;
+            border-left: 4px solid #e74c3c;
+            text-align: center;
         }
         
-        .config-card h4 {
+        .control-card h4 {
             color: #2c3e50;
             margin-bottom: 1rem;
             font-size: 1.2rem;
+        }
+        
+        .key-combo {
+            background: #e74c3c;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-family: monospace;
+            font-weight: bold;
+            margin: 0.25rem;
+            display: inline-block;
+        }
+        
+        .mode-card {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+        
+        .mode-card h4 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
         }
         
         @media (max-width: 768px) {
@@ -200,84 +225,118 @@
                 flex-direction: column;
                 align-items: center;
             }
+            
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header class="header">
-            <h1>Setup Guide</h1>
-            <p class="subtitle">Configuring Software, Sensors, Network, and GUI</p>
+            <h1>Operation Guide</h1>
+            <p class="subtitle">Learn to Operate the Mobile Robot</p>
             <div class="nav-links">
                 <a href="instructions.html" class="nav-link back">← Instructions Hub</a>
                 <a href="construction.html" class="nav-link">← Construction Guide</a>
-                <a href="operation.html" class="nav-link">Operation Guide →</a>
+                <a href="setup.html" class="nav-link">← Setup Guide</a>
             </div>
         </header>
         
         <section class="section">
-            <h2>Prerequisites</h2>
-            <p>Before beginning the setup process, ensure your robot construction is complete. You'll need:</p>
-            <ul>
-                <li>Fully assembled robot with all components connected</li>
-                <li>Computer with SD card reader for NVIDIA Jetson setup</li>
-                <li>Stable internet connection for downloading software</li>
-                <li>SSH client</li>
-                <li>Basic familiarity with command line operations</li>
-            </ul>
+            <h2>Getting Started</h2>
+            <p>Welcome to the operation of the mobile robot! This guide assumes you have successfully completed construction and setup. Your robot should be powered on, connected to WiFi, and all systems verified.</p>
         </section>
         
         <section class="section">
-            <h2>Setting up the NVIDIA Jetson</h2>
-
-            <p>Follow these steps to set up your NVIDIA Jetson: <a href="https://github.com/satomm1/Robot/tree/main/Jetson" target="_blank">https://github.com/satomm1/Robot/tree/main/Jetson</a>.</p>
-        </section>
-        
-        <section class="section">
-            <h2>Setting Up User GUI/Communication</h2>
-
-           <p>The setup of the User GUI/communications platform is located at: <a href="https://github.com/satomm1/dds_robot_platform/tree/main" target="_blank">https://github.com/satomm1/dds_robot_platform/tree/main</a>.</p>
-
-           <h4>Common Problems</h4>
-           <p>Firewall: Ensure that your firewall is not blocking the IP addresses of the mobile robots. You may need to add a rule to specifically allow inbound and outbound traffic to the robot IP addresses</p>
-        </section>
-        
-        <section class="section">
-            <h2>Initial System Test</h2>
-            <h3>Test mobile robot movement via telecommunication</h3>
+            <h2>Preparing the Mobile Robots</h2>
+            
             <div class="step-card">
                 <div class="step-number">1</div>
-                <h3>Start the docker container</h3>
+                <h3>System Startup</h3>
+                <p>Power on the NVIDIA Jetson and the Microcontroller.</p>
+                <p>Establish SSH connection to the robot:</p>
+                <div class="code-block">
+                ssh jetson@&lt;robot_ip_address&gt;
+                </div>
+                <p>Load the spidev module:</p>
+                <div class="code-block">
+                sudo modprobe spidev
+                </div>
+                <div class="tip">
+                    <strong>💡 Tip:</strong> Add spidev to /etc/modules-load.d/spidev.conf to automatically load this at startup
+                </div>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>Start the Docker Containers</h3>
+                <p>Start the ROS Container:</p>
                 <div class="code-block">
                 jetson-containers run -v ~/workspaces/catkin_ws:/workspace/catkin_ws -v ~/gemini_api:/gemini_code -v /dev/bus/usb:/dev/bus/usb -v /dev/video0:/dev/video0 -v /dev/video1:/dev/video1 -i --device=/dev/ttyUSB0 --device=/dev/spidev0.0 --rm --privileged --name ros_noetic $(autotag ml_ros:latest)
                 </div>
-                <p>Start another terminal and enter the docker environment:</p>
+                <p>Open other terminals and enter the container (as needed):</p>
                 <div class="code-block">
                 docker exec -it ros_noetic bash
                 </div>
+
+                <p>Start the Gemini Container:</p>
+                <div class="code-block">
+                sudo docker run -v ~/gemini_api:/gemini_code -v ~/Desktop/audio:/audio -w /gemini_code -it --rm --privileged -p 5000:5000  --name gemini gemini:latest
+                </div>
             </div>
+        </section>
+        
+        <section class="section">
+            <h2>User GUI/Communication</h2>
+        
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>Start the user DDS node</h3>
+                <p>Start Docker:</p>
+                <div class="code-block">
+                cd dds_robot_platform<br>
+                docker compose up -d
+                </div>
+                <p>Start the DDS scripts:</p>
+                <div class="code-block">
+                cd dds_robot_platform/dds<br>
+                . start_scripts.sh
+                </div>
+                <div class="tip">
+                    The scripts can be stopped by running <code>. stop_scripts.sh</code> in another terminal.
+                </div>
+            </div>
+
             <div class="step-card">
                 <div class="step-number">2</div>
-                <h3>Run Minimal Bringup Launch File in Terminal 1</h3>
+                <h3>Start the GUI</h3>
+                <p>Navigate to the GUI directory and start the server:</p>
                 <div class="code-block">
-                    ros launch mattbot_bringup minimal.launch
+                cd dds_robot_platform/gui<br>
+                serve -s build
                 </div>
-
-                <h3>Run Teleoperation Launch File in Terminal 2</h3>
-                <div class="code-block">
-                    ros launch mattbot_teleop keyboard.launch
-                </div>
-
+                <p>Now go to <a href="http://localhost:3000" target="_blank">http://localhost:3000</a> in your web browser to view the GUI.</p>
             </div>
+        </section>
 
-            <p>If the mobile robot is moving, setup is complete!</p>
+        <section class="section">
+            <h2>Operating the Mobile Robots</h2>
             
-            <div class="success">
-                <strong>Setup Complete!</strong> Your MattBot is now ready for operation. Proceed to the Operation Guide to learn how to control and operate your robot.
-            </div>
-
-            <div class="nav-links">
-                <a href="operation.html" class="nav-link">Operation Guide →</a>
+            
+        </section>
+        
+        <section class="section">
+            <h2>Safety and Best Practices</h2>
+            <ul>
+                <li><strong>Always test in safe environments first</strong> - Start indoors with clear spaces</li>
+                <li><strong>Monitor battery levels</strong> - Low battery can cause unpredictable behavior</li>
+                <li><strong>Update software regularly</strong> - Pull latest updates from repositories</li>
+            </ul>
+            
+            <div class="tip">
+                <strong>Congratulations!</strong> You now have the knowledge to operate your mobile robot safely and effectively. Now you can modify the code for your own application!
             </div>
         </section>
     </div>
