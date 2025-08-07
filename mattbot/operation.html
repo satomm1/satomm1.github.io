@@ -290,29 +290,43 @@
         
         <section class="section">
             <h2>User GUI/Communication</h2>
+            <div class="tip">
+                I run everything on a Windows machine. I use WSL (windows subsystem for Linux) to run the DDS scripts and the Windows command line to run the GUI. If you are using a different OS, you may need to adjust the commands accordingly.
+            </div>
         
             <div class="step-card">
                 <div class="step-number">1</div>
                 <h3>Start the user DDS node</h3>
-                <p>Start Docker:</p>
+                <p>Open three terminals in WSL</p>
+
+                <p>Start the Docker containers in the first terminal</p>
                 <div class="code-block">
                 cd dds_robot_platform<br>
                 docker compose up -d
                 </div>
-                <p>Start the DDS scripts:</p>
+                To stop the containers, run:
+                <div class="code-block">
+                docker compose down
+                </div>
+
+                <p>In the second terminal, start the DDS scripts:</p>
                 <div class="code-block">
                 cd dds_robot_platform/dds<br>
                 . start_scripts.sh
                 </div>
-                <div class="tip">
-                    The scripts can be stopped by running <code>. stop_scripts.sh</code> in another terminal.
-                </div>
+
+                <div class="tip">Ensure you have set the agent_id by adding <code>export AGENT_ID=xxx</code> in the ~/.bashrc file.</div>
+
+                
+                <p>The DDS scripts can be stopped by running <code>. stop_scripts.sh</code> in the third terminal.
+                
+                <p>After running these commands, the user node will be active and participate in the DDS network.</p>
             </div>
 
             <div class="step-card">
                 <div class="step-number">2</div>
                 <h3>Start the GUI</h3>
-                <p>Navigate to the GUI directory and start the server:</p>
+                <p>In windows command line, navigate to the GUI directory and start the server:</p>
                 <div class="code-block">
                 cd dds_robot_platform/gui<br>
                 serve -s build
@@ -322,11 +336,74 @@
         </section>
 
         <section class="section">
+            <h2>Using the GUI</h2>
+
+            <div class="step-card">
+                <h3>GUI Overview</h3>
+                <p>The GUI provides a web-based interface for monitoring and controlling the robots on your machine.</p>
+                <img src="images/gui_overview.png" alt="GUI Overview" style="width: 100%; border-radius: 8px; margin: 1rem 0; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                
+                <h4>Main Features:</h4>
+                <ul>
+                    <li><strong>Robot Status Panel:</strong> Shows online robots</li>
+                    <li><strong>Click Function:</strong> Choose what clicking on the map does</li>
+                    <li><strong>Map Visualization:</strong> Displays robot positions and environment map</li>
+                </ul>
+            </div>
+
+            <div class="controls-grid">
+                <div class="control-card">
+                    <h4>Select Robot</h4>
+                    <p>Click on a robot in the status panel to select it for control</p>
+                </div>
+                
+                <div class="control-card">
+                    <h4>Robot Orientation</h4>
+                    <p>Set the robot orientation when setting a goal or initial position</p>
+                </div>
+                
+                <div class="control-card">
+                    <h4>Clicking Function</h4>
+                    <p>Selecting "Set Robot Goal" means clicking on the map will set goal position for a robot. Selection "Set Initial Position" means clicking will set the robot's starting position.</p>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <h3>Workflow</h3>
+                <p>Follow these steps to control a robot with the GUI:</p>
+                
+                <div class="control-card">
+                    <h4>Step 1: Connect to Robot</h4>
+                    <p>When a mobile robot enters the network, it will automatically appear in the Robot Status Panel on the left side of the GUI.</p>
+                </div>
+
+                <div class="control-card">
+                    <h4>Step 2: Set Initial Position</h4>
+                    <p>Select the robot from the status panel, then choose "Set Initial Position".</p>
+                    <p>Adjust the orientation using the orientation slider to match the robot's approximate initial orientation.</p>
+                    <p>Click on the map where the robot is currently located to set its approximate initial position.</p>
+                    
+                    <div class="tip">
+                        <strong>💡 Tip:</strong> Setting an accurate initial position helps the robot localize correctly in the environment.
+                    </div>
+                </div>
+
+                <div class="control-card">
+                    <h4>Step 3: Send Robot to Goal</h4>
+                    <p>After the robot is initialized, change the clicking function to "Set Robot Goal".</p>
+                    <p>Click anywhere on the map to set a navigation goal for the robot.</p>
+                    <p>The robot will plan a path and start moving toward the goal location.</p>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="section">
             <h2>Operating the Mobile Robots</h2>
             
             
         </section>
-        
+
         <section class="section">
             <h2>Safety and Best Practices</h2>
             <ul>
