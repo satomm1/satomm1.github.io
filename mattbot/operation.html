@@ -208,6 +208,38 @@
             font-size: 1.3rem;
         }
         
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #e74c3c;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 1000;
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            background: #c0392b;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+        
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
@@ -401,21 +433,111 @@
         <section class="section">
             <h2>Operating the Mobile Robots</h2>
             
-            
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>Launch Files</h3>
+                <p>There are several launch files used to support running the mobile robots.</p>
+                <p>Below is a summary of the important launch files:</p>
+                <ul>
+                    <li><strong>minimal.launch</strong> - Launches the minimal robot with connection to the MCU.</li>
+                    <li><strong>short.launch</strong> - Launches the full software stack for the short robot.</li>
+                    <li><strong>tall.launch</strong> - Launches the full software stack for the tall robot.</li>
+                    <li><strong>sense_and_map.launch</strong> - Launches the software stack for creating a map using SLAM</li>
+                </ul>
+
+                <p>Some optional arguments include:</p>
+                <ul>
+                    <li><strong>car</strong> - Set to true if using a mobile robot with wheels at the back (default: false)</li>
+                    <li><strong>patrol</strong> - Set to true if mobile robot should follow the defined patrol path (default: false)</li>
+                </ul>
+
+                <p>To run any of the launch files, follow this format:</p>
+                <pre><code>roslaunch mattbot_bringup &lt;launch_file&gt; [arguments:=arg_value]</code></pre>
+
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>Creating a Map</h3>
+
+                <p>Start the mapping software by running the following command:</p>
+                <pre><code>roslaunch mattbot_bringup sense_and_map.launch</code></pre>
+
+                <p>In a second terminal, start robot teleoperation:</p>
+                <pre><code>roslaunch mattbot_teleop keyboard.launch</code></pre>
+
+                <p>Use the keyboard controls to move the robot around and create a map of the environment. The robot should visit all areas of the space to build a comprehensive map.</p>
+                <p>Once the mapping is complete, save the map using the following command:</p>
+                <pre><code>rosrun map_server map_saver -f &lt;map_name&gt; map:=/map</code></pre>
+
+                <p>My navigation software requires (and allows) for the human to modify the map. Make a copy of the map with the name &lt;map_name&gt;_mod.pgm. Use some image editing software (i.e., GIMP) to add barriers that you wish the mobile robot to avoid. Now, copy three (3) files to the ~/workspace/catkin_ws/src/mattbot_mcl/maps directory:</p>
+                <ul>
+                    <li>&lt;map_name&gt;.yaml</li>
+                    <li>&lt;map_name&gt;.pgm</li>
+                    <li>&lt;map_name&gt;_mod.pgm</li>
+                </ul>
+
+                <p>Last, create an occupancy grid for the map by running <code>python3 ./generate_dds_map.py --map_file &lt;map_name&gt;</code> within the ~/workspace/catkin_ws/src/mattbot_mcl/scripts directory.</p>
+
+                <p>The last thing to do is to copy the json version of the map to the user GUI directory. Copy the file: ~/workspace/catkin_ws/src/mattbot_mcl/map_json/current_map.json to your machine running the user GUI. The file should be saved in the dds_robot_platform/dds directory named as user_map.json.</p> 
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>Normal Operation of the Robots</h3>
+                <p>To run the mobile robots, simply call the appropriate launch file:</p>
+                <pre><code>roslaunch mattbot_bringup tall.launch</code></pre>
+                <p>The mobile robot will connect to the DDS network, and you can control the mobile robot goals via the GUI.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h3>Shutting down the robots</h3>
+
+                <p>To shut down the software stack, simply perform a <code>ctrl+c</code> command in the terminal. Alternatively, you can use the following command:</p>
+                <pre><code>rosnode kill -a</code></pre>
+
+                <p>To exit the docker containers, simply run <code>exit</code> in the terminal.</p>
+
+                <p>To shutdown the Jetson, run the following command:</p>
+                <pre><code>sudo shutdown -h now</code></pre>
+                <p>Please shutdown using this command rather than simply powering off the device.</p>
+            </div>
+
         </section>
 
         <section class="section">
-            <h2>Safety and Best Practices</h2>
-            <ul>
-                <li><strong>Always test in safe environments first</strong> - Start indoors with clear spaces</li>
-                <li><strong>Monitor battery levels</strong> - Low battery can cause unpredictable behavior</li>
-                <li><strong>Update software regularly</strong> - Pull latest updates from repositories</li>
-            </ul>
             
             <div class="tip">
                 <strong>Congratulations!</strong> You now have the knowledge to operate your mobile robot safely and effectively. Now you can modify the code for your own application!
             </div>
         </section>
     </div>
+    
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top" id="backToTop">↑</a>
+    
+    <script>
+        // Back to top functionality
+        const backToTopButton = document.getElementById('backToTop');
+        
+        // Show/hide button based on scroll position
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('visible');
+            } else {
+                backToTopButton.classList.remove('visible');
+            }
+        });
+        
+        // Smooth scroll to top when clicked
+        backToTopButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
 </body>
 </html>
