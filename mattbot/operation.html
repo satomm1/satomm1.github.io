@@ -343,14 +343,15 @@
 
                 <p>In the second terminal, start the DDS scripts:</p>
                 <div class="code-block">
+                conda activate dds<br>
                 cd dds_robot_platform/dds<br>
-                . start_scripts.sh
+                ./start_scripts.sh
                 </div>
 
                 <div class="tip">Ensure you have set the agent_id by adding <code>export AGENT_ID=xxx</code> in the ~/.bashrc file.</div>
 
                 
-                <p>The DDS scripts can be stopped by running <code>. stop_scripts.sh</code> in the third terminal.
+                <p>The DDS scripts can be stopped by running <code>./stop_scripts.sh</code> in the third terminal.
                 
                 <p>After running these commands, the user node will be active and participate in the DDS network.</p>
             </div>
