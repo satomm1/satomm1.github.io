@@ -291,10 +291,21 @@
                 <div class="code-block">
                     roslaunch mattbot_teleop keyboard.launch
                 </div>
-
+                <p>Use your keypad ('u', 'i', 'o', 'j', 'k', 'l', 'm', ',', '.') to control the robot's movement.</p>
+                <p>If the mobile robot is moving, setup is complete!</p>
             </div>
-
-            <p>If the mobile robot is moving, setup is complete!</p>
+            
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>Shut Down the Robots</h3>
+                <p>To stop the ROS nodes that are running, simply press Ctrl+C in each terminal.</p>
+                <p>To stop the docker container, type <code>exit</code> in the terminal that was used to start the container. Alternatively, type <code>docker stop ros_noetic</code> in a different terminal.</p>    
+                <p>After stopping the container, you can safely shut down the Jetson:
+                <div class="code-block">
+                    sudo shutdown now -h
+                </div>
+                </p>
+                </div>
             
             <div class="success">
                 <strong>Setup Complete!</strong> Your MattBot is now ready for operation. Proceed to the Operation Guide to learn how to control and operate your robot.
