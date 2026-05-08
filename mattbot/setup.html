@@ -246,7 +246,24 @@
             <h2>(Optional) Visualization with RVIZ</h2>
             <p>For debugging purposes, it can be helpful to use RVIZ to visualize the mobile robot.</p>
             <p>I use a Windows machine, so I run Oracle VM VirtualBox with Ubuntu 20.04 and install ROS Noetic in the VM.</p>
+            <p>It is important that the VM runs on the same network as the Jetson for proper communication. You may need to change the network settings to be on the same network (look for something like "Bridged Adapter" under network settings).</p>
             <p>Mac users and Linux users not on Ubuntu 20.04 may also want/need to use a VM or another workaround.</p>
+            <p>To install ROS Noetic, follow the <a href="https://wiki.ros.org/noetic/Installation/Ubuntu" target="_blank">official ROS installation guide for Ubuntu 20.04</a>. In step 1.4, you need the "Desktop Install" Version. You only need to complete steps 1.1-1.5.</p>
+            <p>Once ROS Noetic is installed, we need to set the ROS master URI and let ROS know the hostname of the VM. Edit the <code>~/.bashrc</code> file (<code>nano ~/.bashrc</code>) to add the following lines:</p>
+            <div class="code-block">
+                export ROS_MASTER_URI=http://[IP_ADDRESS_OF_JETSON]:11311<br>
+                export ROS_HOSTNAME=[IP_ADDRESS_OF_VM]
+            </div>
+            <p>Replace [IP_ADDRESS_OF_JETSON] and [IP_ADDRESS_OF_VM] with the actual IP addresses of your Jetson and VM, respectively. To save the file, press Ctrl+x, then y to confirm, then enter. The last step is to make sure these changes are applied by running <code>source ~/.bashrc</code>.</p>
+
+            <p>Now you should be able to run RVIZ in the VM and visualize the mobile robot. First, make sure the Jetson ROS master is running (see the next section). To run RVIZ, use the following command:</p>
+            <div class="code-block">
+                rosrun rviz rviz   
+            </div>
+            <p>The RVIZ interface should open. In the "Displays" panel on the left, click "Add" (bottom left). In the dispaly window that opens, click the tab "By Topics" and add the relevant displays for your robot (e.g. LaserScan, etc.). You should now be able to see a visualization of your mobile robot in RVIZ!</p>
+            <p>You can use RVIZ to visualize various parts of the robot, such as the map, LiDAR scans, robot location, image stream, and more. 
+            <p>Further, we can use the built in "2D Goal Pose" feature to set the goal target for the mobile robot. Click the "2D Goal Pose" button on the top toolbar, and then click a point on the map to set a goal.</p>
+
         </section>
         
         <section class="section">
@@ -267,12 +284,12 @@
                 <div class="step-number">2</div>
                 <h3>Run Minimal Bringup Launch File in Terminal 1</h3>
                 <div class="code-block">
-                    ros launch mattbot_bringup minimal.launch
+                    roslaunch mattbot_bringup minimal.launch
                 </div>
 
                 <h3>Run Teleoperation Launch File in Terminal 2</h3>
                 <div class="code-block">
-                    ros launch mattbot_teleop keyboard.launch
+                    roslaunch mattbot_teleop keyboard.launch
                 </div>
 
             </div>
