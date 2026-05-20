@@ -457,7 +457,6 @@
 
                 <p>In the second terminal, start the DDS scripts:</p>
                 <div class="code-block">
-                conda activate dds<br>
                 cd dds_robot_platform/dds<br>
                 ./start_scripts.sh
                 </div>
@@ -465,15 +464,22 @@
                 <div class="tip">Ensure you have set the agent_id by adding <code>export AGENT_ID=xxx</code> in the ~/.bashrc file.</div>
 
                 
-                <p>The DDS scripts can be stopped by running <code>./stop_scripts.sh</code> in the third terminal.
-                
+                <p>The DDS scripts can be stopped by running</p>
+                <div class="code-block">
+                cd dds_robot_platform/dds<br>
+                ./stop_scripts.sh
+                </div>
+                <p>in the third terminal.</p>
+
                 <p>After running these commands, the user node will be active and participate in the DDS network.</p>
             </div>
 
             <div class="step-card">
                 <div class="step-number">2</div>
                 <h3>Start the GUI</h3>
-                <p>In windows command line, navigate to the GUI directory and start the server:</p>
+                <p> If you have installed the GUI as an executable on your machine, simply find the executable and run it.</p>
+
+                <p>If you have not installed the GUI as an executable, you must run it with Node.js. Navigate to the GUI directory and start the server:</p>
                 <div class="code-block">
                 cd dds_robot_platform/gui<br>
                 serve -s build
