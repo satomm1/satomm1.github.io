@@ -177,6 +177,15 @@
             border-left: 4px solid #e74c3c;
             text-align: center;
         }
+
+        /* Make section images half the viewport width and responsive */
+        .section-image {
+            width: 50vw; /* half the screen width */
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 1rem 0;
+        }
         
         .control-card h4 {
             color: #2c3e50;
@@ -280,6 +289,99 @@
             <h2>Getting Started</h2>
             <p>Welcome to the operation of the mobile robot! This guide assumes you have successfully completed construction and setup. Your robot should be powered on, connected to WiFi, and all systems verified.</p>
         </section>
+
+        <section class="section">
+            <h2>Getting to Know The Mobile Robot</h2>
+            <p>Use this section to introduce the robot visually and explain the purpose of each major component. Add labeled photos and keep each explanation short and practical.</p>
+
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>Full Robot Overview</h3>
+                <p>First, let's go layer by layer to understand everything on the robot.</p>
+                <h4>Layer 1</h4>
+                <p>The first layer contains the main circuit board for motor control/sensor integration, the drivetrain, and environmental sensor, and a motor on/off switch.</p>
+                <img src="images/first_layer.png" alt="Layer 1 of the robot" class="section-image">
+                <ul>
+                    <li>
+                        <strong>Main circuit board:</strong> Handles motor control and sensor integration for the robot. On the front of the circuit board there are 3 ports for connecting power:
+                        <ul style="margin-left:1.5em;">
+                            <li>A Micro-USB port for connecting the 5V battery. <strong>Note: There is an additional Micro-USB port on the side of the circuit board. DO NOT plug the 5V battery into this port. This port is used for serial communication with a laptop (debugging purposes only).</strong></li>
+                            <li>2 Tamiya Style blocks for connecting the 7.2 NiMH motor batteries.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Drivetrain:</strong> Consists of 2 DC motors, spider couplers, 6 mm D-shafts, pillow blocks, and wheels.</li>
+                    <li><strong>Environmental sensor:</strong> Detects surroundings so the robot can respond to its environment.</li>
+                    <li><strong>Motor on/off switch:</strong> Turns power on/off to both the motors (14.4 V) and the circuit board (5 V). You must turn this switch on prior to operating the robot. The indicator light will turn red when idle, and green when activated by the ROS code.</li>
+                </ul>
+
+                <h4>Layer 2</h4>
+                <p>This layer contains the various batteries, the NVIDIA Jetson onboard computer, and the microphone processing circuit board.</p>
+                <img src="images/second_layer.png" alt="Layer 2 of the robot" class="section-image">
+                <ul>
+                    <li><strong>Batteries:</strong> Provide power for the robot’s electronics and motor systems. There are 3 kinds of batteries and 4 total batteries on board:</li>
+                    <ul style="margin-left:1.5em;">
+                        <li><strong>5 V USB battery:</strong> Powers the main circuit board.</li>
+                        <li><strong>2x 7.2 V NiMH motor batteries:</strong> Powers the motors for movement.</li>
+                        <li><strong>12 V Li-ion battery:</strong> Powers the NVIDIA Jetson onboard computer.</li>
+                    </ul>
+                    <li><strong>NVIDIA Jetson onboard computer:</strong> Runs the robot software and handles processing. Connects via wires to the main circuit board and the microphone processing board. <strong>Note: The 12 V battery should be directly connected to the Jetson. This battery must be turned on prior to use. When not actively running the robot, I recommend plugging in the battery via the split cable.</strong></li>
+                    <li><strong>Microphone processing circuit board:</strong> Processes audio input for voice and sound-related features.</li>
+                </ul>
+                
+
+                <h4>Layer 5</h4>
+                <p>Layer 5 contains a single Orbecc Astra RGB-D camera and 2x ICS-43434 MEMS omnidirectional microphones</p>
+                <img src="images/fifth_layer.png" alt="Layer 5 of the robot" class="section-image">
+                <ul>
+                    <li><strong>RGB-D Camera:</strong> Provides image and depth sensing capabilities. Should be plugged into the NVIDIA Jetson via USB.</li>
+                    <li><strong>Microphones:</strong> Capture audio input for voice and sound-related features. Should be plugged into the microphone processing circuit board via the provided MOLEX connections.</li>
+                </ul>
+
+                <h4>Layer 6</h4>
+                <p>Layer 6 contains a 2D LiDAR sensor, a touchscreen display with speakers, and a USB camera for facial recognition.</p>
+                <img src="images/sixth_layer.png" alt="Layer 6 of the robot" class="section-image">
+                <ul>
+                    <li><strong>LiDAR:</strong> An RPLIDAR A2M12 LiDAR sensor, which should be connected to the NVIDIA Jetson via USB.</li>
+                    <li><strong>Touchscreen Display:</strong> Provides a user interface for interacting with the robot and displaying information. The HDMI cable should be plugged into the NVIDIA Jetson using an HDMI-Display Port adapter. The USB cable should be plugged into the NVIDIA Jetson via USB. The HDMI is for display and the USB is for touch.</li>
+                    <li><strong>USB Camera:</strong> Used for facial recognition and other visual applications. The USB cable should be plugged into the NVIDIA Jetson via USB.</li>
+                </ul>
+
+
+                
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>How to Turn the Robot On and Off</h3>
+                <h4>Turning On the Robot</h4>
+                <p>To turn on the robot, follow these steps:</p>
+                <ol>
+                    <li>Ensure all batteries are properly connected and charged.</li>
+                    <li>Turn on the 12 V Li-ion battery for the NVIDIA Jetson. This will power on the onboard computer.</li>
+                    <li>Turn on the motor on/off switch to power the main circuit board and motors. The indicator light will turn red when idle.</li>
+                    <li>Wait for the NVIDIA Jetson to boot up and establish connections with the peripherals. This may take a minute or two.</li>
+                    <li>Once the Jetson is fully booted, the robot is ready for operation. The indicator light on the motor switch will turn green when activated by the ROS code.</li>
+                </ol>
+                <h4>Turning Off the Robot</h4>
+                <p>To turn off the robot, follow these steps:</p>
+                <ol>
+                    <li>Use the appropriate shutdown command to safely power down the NVIDIA Jetson. This can be done via SSH or directly on the device. The command is: <code>sudo shutdown -h now</code>.</li>
+                    <li>Wait for the Jetson to fully shut down. The indicator light on the motor switch will turn red when idle.</li>
+                    <li>Turn off the motor on/off switch to cut power to the main circuit board and motors.</li>
+                    <li>Turn off the 12 V Li-ion battery for the NVIDIA Jetson.</li>
+                </ol>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>Charging the Batteries</h3>
+                <ul>
+                    <li><strong>5 V USB battery:</strong> Simply remove the battery and plug into a USB port on a wall adapter or laptop.</li>
+                    <li><strong>7.2 V NiMH motor batteries:</strong> Use the provided Tamiya-style smart chargers to charge these batteries. I usually just disconnect these batteries from the main circuit board and connect the chargers directly without removing the batteries from the robot.</li>
+                    <li><strong>12 V Li-ion battery:</strong> Use the provided DC barrel jack charger to charge this battery. It can be charged while plugged into the robot or separately. To achieve a full charge, disconnect the battery from the Jetson, turn the battery on, and plug the charger in.</li>
+                </ul>
+            </div>
+
         
         <section class="section">
             <h2>Preparing the Mobile Robots</h2>
@@ -475,10 +577,10 @@
                 <h3>Creating a Map</h3>
 
                 <p>Start the mapping software by running the following command:</p>
-                <pre><code>roslaunch mattbot_bringup sense_and_map.launch</code></pre>
+                <div class="code-block">roslaunch mattbot_bringup sense_and_map.launch</div>
 
                 <p>In a second terminal, start robot teleoperation:</p>
-                <pre><code>roslaunch mattbot_teleop keyboard.launch</code></pre>
+                <div class="code-block">roslaunch mattbot_teleop keyboard.launch</div>
 
                 <p>Use the keyboard controls to move the robot around and create a map of the environment. The robot should visit all areas of the space to build a comprehensive map.</p>
                 <p>Once the mapping is complete, save the map using the following command:</p>
