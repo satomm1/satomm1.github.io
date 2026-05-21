@@ -405,7 +405,11 @@
             <div class="step-card">
                 <div class="step-number">2</div>
                 <h3>Start the Docker Containers</h3>
-                <p>Start the ROS Container:</p>
+                <p>Included in the files you downloaded is a file that lets our GUI start up the robots from a remote machine. If using this feature, use the following command to start the ROS Container:</p>
+                <div class="code-block">
+                sudo docker run --runtime nvidia --network=host -v ~/workspaces/catkin_ws:/workspace/catkin_ws -v ~/gemini_api:/gemini_code -v /dev/bus/usb:/dev/bus/usb -v /dev/video0:/dev/video0 -v /dev/video1:/dev/video1 -it --device=/dev/ttyUSB0 --device=/dev/spidev0.0 --rm --privileged --name ros_noetic ml_ros:latest bash -lc 'python3 /workspace/catkin_ws/src/startup_script.py & exec bash'
+                </div>
+                <p>If you are not using my GUI (i.e., using RVIZ), or doing other development work, start the ROS Container using:</p>
                 <div class="code-block">
                 jetson-containers run -v ~/workspaces/catkin_ws:/workspace/catkin_ws -v ~/gemini_api:/gemini_code -v /dev/bus/usb:/dev/bus/usb -v /dev/video0:/dev/video0 -v /dev/video1:/dev/video1 -i --device=/dev/ttyUSB0 --device=/dev/spidev0.0 --rm --privileged --name ros_noetic $(autotag ml_ros:latest)
                 </div>
@@ -437,13 +441,13 @@
         <section class="section">
             <h2>User GUI/Communication</h2>
             <div class="tip">
-                I run everything on a Windows machine. I use WSL (windows subsystem for Linux) to run the DDS scripts and the Windows command line to run the GUI. If you are using a different OS, you may need to adjust the commands accordingly.
+                I run everything on a Windows machine. I use WSL (windows subsystem for Linux) to run Docker and the DDS scripts. For development, I use the Windows command line to run the GUI, but otherwise use the executable installed. If you are using a different OS, you may need to adjust the commands accordingly.
             </div>
         
             <div class="step-card">
                 <div class="step-number">1</div>
                 <h3>Start the user DDS node</h3>
-                <p>Open three terminals in WSL</p>
+                <p>Open three terminals in WSL or your Unix terminal (Mac/Linux)</p>
 
                 <p>Start the Docker containers in the first terminal</p>
                 <div class="code-block">
@@ -479,12 +483,14 @@
                 <h3>Start the GUI</h3>
                 <p> If you have installed the GUI as an executable on your machine, simply find the executable and run it.</p>
 
+                <div class="tip">
                 <p>If you have not installed the GUI as an executable, you must run it with Node.js. Navigate to the GUI directory and start the server:</p>
                 <div class="code-block">
                 cd dds_robot_platform/gui<br>
                 serve -s build
                 </div>
                 <p>Now go to <a href="http://localhost:3000" target="_blank">http://localhost:3000</a> in your web browser to view the GUI.</p>
+                </div>
             </div>
 
             <p>An example of how I set up my terminal for docker and DDS communications is as follows:</p>
@@ -504,6 +510,7 @@
                     <li><strong>Robot Status Panel:</strong> Shows online robots</li>
                     <li><strong>Click Function:</strong> Choose what clicking on the map does</li>
                     <li><strong>Map Visualization:</strong> Displays robot positions and environment map</li>
+                    <li><strong>Robot start and kill commands:</strong> Allows the user to start and kill the robot from the GUI</li>
                 </ul>
             </div>
 
@@ -524,6 +531,11 @@
                 </div>
 
                 <div class="control-card">
+                    <h4>Robot Start Actions</h4>
+                    <p>Add the IP address of your robot and save the settings. In the future, select your robot from the dropdown box and click the "Start" button.</p>
+                </div>
+
+                <div class="control-card">
                     <h4>Robot Kill Actions</h4>
                     <p>Selecting "Stop" will stop robot motion. Selecting 'Shutdown' will kill all ROS nodes.</p>
                 </div>
@@ -536,6 +548,7 @@
                 <div class="control-card">
                     <h4>Step 1: Connect to Robot</h4>
                     <p>When a mobile robot enters the network, it will automatically appear in the Robot Status Panel on the left side of the GUI.</p>
+                    <p>To start a robot, either use the built in start feature in the GUI or run a launch file via SSH.</p>
                 </div>
 
                 <div class="control-card">
@@ -554,6 +567,11 @@
                     <p>After the robot is initialized, change the clicking function to "Set Robot Goal".</p>
                     <p>Click anywhere on the map to set a navigation goal for the robot.</p>
                     <p>The robot will plan a path and start moving toward the goal location.</p>
+                </div>
+
+                <div class="control-card">
+                    <h4>Step 4: Shutdown the Robot</h4>
+                    <p>After you are done with your robot, click the robot in the status panel and select "Shutdown".</p>
                 </div>
             </div>
 
