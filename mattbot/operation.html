@@ -454,7 +454,7 @@
                 cd dds_robot_platform<br>
                 docker compose up -d
                 </div>
-                To stop the containers, run:
+                <p>To stop the containers, run:</p>
                 <div class="code-block">
                 docker compose down
                 </div>
@@ -599,7 +599,7 @@
                 </ul>
 
                 <p>To run any of the launch files, follow this format:</p>
-                <pre><code>roslaunch mattbot_bringup &lt;launch_file&gt; [arguments:=arg_value]</code></pre>
+                <div class="code-block">roslaunch mattbot_bringup &lt;launch_file&gt; [arguments:=arg_value]</div>  
 
             </div>
 
@@ -615,28 +615,32 @@
 
                 <p>Use the keyboard controls to move the robot around and create a map of the environment. The robot should visit all areas of the space to build a comprehensive map.</p>
                 <p>Once the mapping is complete, save the map using the following command:</p>
-                <pre><code>rosrun map_server map_saver -f &lt;map_name&gt; map:=/map</code></pre>
+                <div class="code-block">rosrun map_server map_saver -f &lt;map_name&gt; map:=/map</div>
 
-                <p>My navigation software requires (and allows) for the human to modify the map. Make a copy of the map with the name &lt;map_name&gt;_mod.pgm. Use some image editing software (i.e., GIMP) to add barriers that you wish the mobile robot to avoid. Now, copy three (3) files to the ~/workspace/catkin_ws/src/mattbot_mcl/maps directory:</p>
+                <p>My navigation software requires (and allows) for the human to modify the map. Make a copy of the map with the name &lt;map_name&gt;_mod.pgm. Use some image editing software (i.e., GIMP) to add barriers that you wish the mobile robot to avoid. Now, copy three (3) files to the <code>~/workspace/catkin_ws/src/mattbot_mcl/maps</code> directory:</p>
                 <ul>
-                    <li>&lt;map_name&gt;.yaml</li>
-                    <li>&lt;map_name&gt;.pgm</li>
-                    <li>&lt;map_name&gt;_mod.pgm</li>
+                    <li><code>&lt;map_name&gt;.yaml</code></li>
+                    <li><code>&lt;map_name&gt;.pgm</code></li>
+                    <li><code>&lt;map_name&gt;_mod.pgm</code></li>
                 </ul>
 
-                <p>Last, create an occupancy grid for the map by running <code>python3 ./generate_dds_map.py --map_file &lt;map_name&gt;</code> within the ~/workspace/catkin_ws/src/mattbot_mcl/scripts directory.</p>
+                <p>Last, create an occupancy grid for the map by running</p>
+                    <div class="code-block">python3 ./generate_dds_map.py --map_file &lt;map_name&gt;</div> 
+                <p>within the ~/workspace/catkin_ws/src/mattbot_mcl/scripts directory.</p>
 
-                <p>The last thing to do is to copy the json version of the map to the user GUI directory. Copy the file: ~/workspace/catkin_ws/src/mattbot_mcl/map_json/current_map.json to your machine running the user GUI. The file should be saved in the dds_robot_platform/dds directory named as user_map.json.</p> 
+                <p>The last thing to do is to copy the json version of the map to the user GUI directory. Copy the file:</p>
+                <div class="code-block">~/workspace/catkin_ws/src/mattbot_mcl/map_json/current_map.json</div> 
+                <p>to your machine running the user GUI. The file should be saved in the <code>dds_robot_platform/dds</code> directory named as <code>user_map.json</code>.</p> 
             </div>
 
             <div class="step-card">
                 <div class="step-number">3</div>
                 <h3>Normal Operation of the Robots</h3>
                 <p>To run the mobile robots, simply call the appropriate launch file. For example, for a tall mobile robot:</p>
-                <pre><code>roslaunch mattbot_bringup tall.launch</code></pre>
+                <div class="code-block">roslaunch mattbot_bringup tall.launch</div>
                 <p>The mobile robot will connect to the DDS network, and you can control the mobile robot goals via the GUI.</p>
                 <p>If your mobile robot is in a car configuration (wheels at the back, casters at the front), you must include the car argument:</p>
-                <pre><code>roslaunch mattbot_bringup tall.launch car:=true</code></pre>
+                <div class="code-block">roslaunch mattbot_bringup tall.launch car:=true</div>
             </div>
 
             <div class="step-card">
@@ -644,12 +648,14 @@
                 <h3>Shutting down the robots</h3>
 
                 <p>To shut down the software stack, simply perform a <code>ctrl+c</code> command in the terminal. Alternatively, you can use the following command:</p>
-                <pre><code>rosnode kill -a</code></pre>
+                <div class="code-block">rosnode kill -a</div>
 
-                <p>To exit the docker containers, simply run <code>exit</code> in the terminal.</p>
+                <p>To exit the docker containers, simply run</p>
+                <div class="code-block">exit</div>
+                <p>in the terminal.</p>
 
                 <p>To shutdown the Jetson, run the following command:</p>
-                <pre><code>sudo shutdown -h now</code></pre>
+                <div class="code-block">sudo shutdown -h now</div>
                 <p>Please shutdown using this command rather than simply powering off the device.</p>
             </div>
 
