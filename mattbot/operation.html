@@ -407,7 +407,7 @@
                 <h3>Start the Docker Containers</h3>
                 <p>Included in the files you downloaded is a file that lets our GUI start up the robots from a remote machine. If using this feature, use the following command to start the ROS Container:</p>
                 <div class="code-block">
-                sudo docker run --runtime nvidia --network=host -v ~/workspaces/catkin_ws:/workspace/catkin_ws -v ~/gemini_api:/gemini_code -v /dev/bus/usb:/dev/bus/usb -v /dev/video0:/dev/video0 -v /dev/video1:/dev/video1 -it --device=/dev/ttyUSB0 --device=/dev/spidev0.0 --rm --privileged --name ros_noetic ml_ros:latest bash -lc 'python3 /workspace/catkin_ws/src/startup_script.py & exec bash'
+                sudo docker run --runtime nvidia --network=host -v ~/workspaces/catkin_ws:/workspace/catkin_ws -v ~/gemini_api:/gemini_code -v /dev/bus/usb:/dev/bus/usb -v /dev/video0:/dev/video0 -v /dev/video1:/dev/video1 -it --device=/dev/ttyUSB0 --device=/dev/spidev0.0 --rm --privileged --pid=host --name ros_noetic ml_ros:latest bash -lc 'python3 /workspace/catkin_ws/src/startup_script.py & exec bash'
                 </div>
                 <p>If you are not using my GUI (i.e., using RVIZ), or doing other development work, start the ROS Container using:</p>
                 <div class="code-block">
