@@ -95,18 +95,18 @@
         });
     });
 
-    // Table of contents + scroll spy
+    // Table of contents + scroll spy (section h2 titles only)
     var tocNav = document.getElementById('page-toc');
     if (tocNav) {
-        var headings = document.querySelectorAll('.page-layout [id]');
+        var tocSections = document.querySelectorAll('.page-layout section.section[id]');
         var tocList = document.createElement('ul');
-        headings.forEach(function (h) {
-            if (!h.id || h.tagName === 'H1') return;
+        tocSections.forEach(function (section) {
+            var h2 = section.querySelector(':scope > h2');
+            if (!h2) return;
             var li = document.createElement('li');
-            if (h.tagName === 'H3') li.className = 'toc-h3';
             var a = document.createElement('a');
-            a.href = '#' + h.id;
-            a.textContent = h.textContent.replace(/^\d+\.\s*/, '');
+            a.href = '#' + section.id;
+            a.textContent = h2.textContent.trim();
             li.appendChild(a);
             tocList.appendChild(li);
         });
@@ -120,7 +120,7 @@
                 sidebar.classList.toggle('mobile-open');
                 toggle.textContent = sidebar.classList.contains('mobile-open')
                     ? 'Hide contents'
-                    : 'Show page contents';
+                    : 'Table of contents';
             });
         }
 
@@ -138,8 +138,8 @@
                 },
                 { rootMargin: '-80px 0px -70% 0px', threshold: 0 }
             );
-            headings.forEach(function (h) {
-                if (h.id) observer.observe(h);
+            tocSections.forEach(function (section) {
+                observer.observe(section);
             });
         }
     }
