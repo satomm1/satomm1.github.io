@@ -133,6 +133,13 @@ body {
     align-items: start;
 }
 
+.container.with-sidebar > aside {
+    position: sticky;
+    top: 4.5rem;
+    align-self: start;
+    z-index: 10;
+}
+
 .page-layout {
     min-width: 0;
 }
@@ -291,8 +298,6 @@ body {
 
 /* Table of contents sidebar */
 .toc-sidebar {
-    position: sticky;
-    top: 4.5rem;
     background: var(--card-bg);
     border-radius: 12px;
     padding: 1.25rem;
@@ -921,6 +926,10 @@ body {
 @media (max-width: 900px) {
     .container.with-sidebar {
         grid-template-columns: 1fr;
+    }
+
+    .container.with-sidebar > aside {
+        position: static;
     }
 
     .toc-sidebar {

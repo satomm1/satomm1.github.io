@@ -151,6 +151,58 @@
                 </div>
             </section>
 
+            <section class="section" id="gui-overview">
+                <h2>GUI overview</h2>
+                <p>The web GUI lets you monitor robots, control local Docker/DDS, and send navigation goals on the map.</p>
+
+                <img src="images/gui_overview.png" alt="GUI overview" class="section-image">
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Main controls
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="controls-grid">
+                                <div class="control-card"><h4>Select robot</h4><p>Click a robot in the status panel to select it.</p></div>
+                                <div class="control-card"><h4>Local software</h4><p>Start, stop, and monitor DDS/Docker on your machine.</p></div>
+                                <div class="control-card"><h4>Click mode</h4><p><strong>Set Robot Goal</strong> — navigation target. <strong>Set Initial Position</strong> — localization seed.</p></div>
+                                <div class="control-card"><h4>Start robot</h4><p>Save robot IP, select from dropdown, click Start (or launch via SSH).</p></div>
+                                <div class="control-card"><h4>Stop / shutdown</h4><p><strong>Stop</strong> — halt motion. <strong>Shutdown</strong> — kill ROS nodes.</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Typical workflow
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="step-card">
+                                <h4>1. Connect</h4>
+                                <p>Robots on the network appear in the status panel. Start via GUI or SSH launch file.</p>
+                            </div>
+                            <div class="step-card">
+                                <h4>2. Set initial pose</h4>
+                                <p>Select robot → <strong>Set Initial Position</strong> → adjust orientation slider → click map at robot location.</p>
+                            </div>
+                            <div class="step-card">
+                                <h4>3. Send goal</h4>
+                                <p>Switch to <strong>Set Robot Goal</strong> → click destination on map.</p>
+                            </div>
+                            <div class="step-card">
+                                <h4>4. Shutdown</h4>
+                                <p>Select robot → <strong>Shutdown</strong> when finished.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section class="section" id="power">
                 <h2>Power on, power off &amp; charging</h2>
 
@@ -215,7 +267,7 @@
             </section>
 
             <section class="section" id="preparing">
-                <h2>Preparing the robots</h2>
+                <h2>Starting the Robots</h2>
 
                 <div class="collapsible" data-workflow="development">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
@@ -291,6 +343,46 @@
                     </button>
                     <div class="collapsible-panel">
                         <div class="collapsible-content">
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>System startup</h3>
+                                <p>Power on the Jetson and microcontroller, then SSH in:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">ssh jetson@&lt;robot_ip_address&gt;</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Load spidev:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">sudo modprobe spidev</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <div class="tip"><strong>Tip:</strong> Add <code>spidev</code> to <code>/etc/modules-load.d/spidev.conf</code> to load at boot.</div>
+                            </div>
+
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Docker containers</h3>
+                                <p><strong>With GUI remote start</strong> (from downloaded startup script):</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">sudo docker run --runtime nvidia --network=host -v ~/workspaces/catkin_ws:/workspace/catkin_ws -v ~/gemini_api:/gemini_code -v /dev/bus/usb:/dev/bus/usb -v /dev/video0:/dev/video0 -v /dev/video1:/dev/video1 -it --device=/dev/ttyUSB0 --device=/dev/spidev0.0 --rm --privileged --pid=host --name ros_noetic ml_ros:latest bash -lc 'python3 /workspace/catkin_ws/src/startup_script.py & exec bash'</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p><strong>Without GUI</strong> (RVIZ / development):</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">jetson-containers run -v ~/workspaces/catkin_ws:/workspace/catkin_ws -v ~/gemini_api:/gemini_code -v /dev/bus/usb:/dev/bus/usb -v /dev/video0:/dev/video0 -v /dev/video1:/dev/video1 -i --device=/dev/ttyUSB0 --device=/dev/spidev0.0 --rm --privileged --name ros_noetic $(autotag ml_ros:latest)</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Additional terminals:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">docker exec -it ros_noetic bash</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p><strong>Optional Gemini container:</strong></p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">sudo docker run -v ~/gemini_api:/gemini_code -v ~/Desktop/audio:/audio -w /gemini_code -it --rm --privileged -p 5000:5000 --name gemini gemini:latest</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -384,38 +476,6 @@ npm start</pre>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
-
-            <section class="section" id="using-gui">
-                <h2>Using the GUI</h2>
-
-                <img src="images/gui_overview.png" alt="GUI overview" class="section-image">
-
-                <div class="controls-grid">
-                    <div class="control-card"><h4>Select robot</h4><p>Click a robot in the status panel to select it.</p></div>
-                    <div class="control-card"><h4>Local software</h4><p>Start, stop, and monitor DDS/Docker on your machine.</p></div>
-                    <div class="control-card"><h4>Click mode</h4><p><strong>Set Robot Goal</strong> — navigation target. <strong>Set Initial Position</strong> — localization seed.</p></div>
-                    <div class="control-card"><h4>Start robot</h4><p>Save robot IP, select from dropdown, click Start (or launch via SSH).</p></div>
-                    <div class="control-card"><h4>Stop / shutdown</h4><p><strong>Stop</strong> — halt motion. <strong>Shutdown</strong> — kill ROS nodes.</p></div>
-                </div>
-
-                <h3 id="gui-workflow">Typical workflow</h3>
-                <div class="step-card">
-                    <h4>1. Connect</h4>
-                    <p>Robots on the network appear in the status panel. Start via GUI or SSH launch file.</p>
-                </div>
-                <div class="step-card">
-                    <h4>2. Set initial pose</h4>
-                    <p>Select robot → <strong>Set Initial Position</strong> → adjust orientation slider → click map at robot location.</p>
-                </div>
-                <div class="step-card">
-                    <h4>3. Send goal</h4>
-                    <p>Switch to <strong>Set Robot Goal</strong> → click destination on map.</p>
-                </div>
-                <div class="step-card">
-                    <h4>4. Shutdown</h4>
-                    <p>Select robot → <strong>Shutdown</strong> when finished.</p>
                 </div>
             </section>
 
