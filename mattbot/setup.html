@@ -1,320 +1,149 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="setup">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MattBot Setup Guide | Matthew Sato</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
-            min-height: 100vh;
-        }
-        
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        
-        .header {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 3rem 2rem;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-        }
-        
-        .header h1 {
-            color: #2c3e50;
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-            font-weight: 300;
-        }
-        
-        .header .subtitle {
-            color: #7f8c8d;
-            font-size: 1.3rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .nav-link {
-            display: inline-block;
-            background: #3498db;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            text-decoration: none;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-        
-        .nav-link:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
-        }
-        
-        .nav-link.back {
-            background: #95a5a6;
-        }
-        
-        .nav-link.back:hover {
-            background: #7f8c8d;
-        }
-        
-        .section {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 2.5rem;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-        }
-        
-        .section h2 {
-            color: #2c3e50;
-            font-size: 2.2rem;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            border-bottom: 3px solid #27ae60;
-            padding-bottom: 0.5rem;
-        }
-        
-        .section h3 {
-            color: #2ecc71;
-            font-size: 1.5rem;
-            margin: 2rem 0 1rem 0;
-        }
-        
-        .section p, .section li {
-            color: #555;
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-        }
-        
-        .step-card {
-            background: #f8f9fa;
-            padding: 2rem;
-            border-radius: 10px;
-            margin: 1.5rem 0;
-            border-left: 5px solid #2ecc71;
-        }
-        
-        .step-number {
-            background: #2ecc71;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-        }
-        
-        .code-block {
-            background: #2c3e50;
-            color: #ecf0f1;
-            padding: 1rem;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            margin: 1rem 0;
-            overflow-x: auto;
-        }
-        
-        .warning {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-        }
-        
-        .warning strong {
-            color: #e17055;
-        }
-        
-        .success {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-        }
-        
-        .success strong {
-            color: #155724;
-        }
-        
-        .config-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-        
-        .config-card {
-            background: #f8f9fa;
-            padding: 1.5rem;
-            border-radius: 10px;
-            border-left: 4px solid #27ae60;
-        }
-        
-        .config-card h4 {
-            color: #2c3e50;
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-            
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .section {
-                padding: 1.5rem;
-            }
-            
-            .nav-links {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="assets/mattbot.css">
 </head>
 <body>
-    <div class="container">
-        <header class="header">
-            <h1>Setup Guide</h1>
-            <p class="subtitle">Configuring Software, Sensors, Network, and GUI</p>
-            <div class="nav-links">
-                <a href="instructions.html" class="nav-link back">← Instructions Hub</a>
-                <a href="construction.html" class="nav-link">← Construction Guide</a>
-                <a href="operation.html" class="nav-link">Operation Guide →</a>
+    <nav class="site-nav" aria-label="MattBot navigation">
+        <div class="site-nav-inner">
+            <a href="index.html" class="site-nav-brand">MattBot</a>
+            <div class="site-nav-links">
+                <a href="index.html">Overview</a>
+                <a href="instructions.html">Instructions</a>
+                <a href="construction.html">Build</a>
+                <a href="setup.html">Setup</a>
+                <a href="operation.html">Operate</a>
+                <a href="../index.html">← Home</a>
             </div>
-        </header>
-        
-        <section class="section">
-            <h2>Prerequisites</h2>
-            <p>Before beginning the setup process, ensure your robot construction is complete. You'll need:</p>
-            <ul>
-                <li>Fully assembled robot with all components connected</li>
-                <li>Computer with SD card reader for NVIDIA Jetson setup</li>
-                <li>Stable internet connection for downloading software</li>
-                <li>SSH client</li>
-                <li>Basic familiarity with command line operations</li>
-            </ul>
-        </section>
-        
-        <section class="section">
-            <h2>Setting up the NVIDIA Jetson</h2>
+        </div>
+    </nav>
 
-            <p>Follow these steps to set up your NVIDIA Jetson: <a href="https://github.com/satomm1/Robot/tree/main/Jetson/README.md" target="_blank">https://github.com/satomm1/Robot/tree/main/Jetson/README.md</a>.</p>
-        </section>
-        
-        <section class="section">
-            <h2>Setting Up User GUI/Communication</h2>
+    <div class="container with-sidebar">
+        <aside>
+            <button type="button" class="toc-toggle" id="toc-toggle">Show page contents</button>
+            <nav class="toc-sidebar" aria-label="Page contents">
+                <h3>On this page</h3>
+                <div id="page-toc"></div>
+            </nav>
+        </aside>
 
-           <p>The setup of the User GUI/communications platform is located at: <a href="https://github.com/satomm1/dds_robot_platform/tree/main" target="_blank">https://github.com/satomm1/dds_robot_platform/tree/main</a>.</p>
-
-           <h4>Common Problems</h4>
-           <p>Firewall: Ensure that your firewall is not blocking the IP addresses of the mobile robots. You may need to add a rule to specifically allow inbound and outbound traffic to the robot IP addresses</p>
-        </section>
-
-        <section class="section">
-            <h2>(Optional) Visualization with RVIZ</h2>
-            <p>For debugging purposes, it can be helpful to use RVIZ to visualize the mobile robot.</p>
-            <p>I use a Windows machine, so I run Oracle VM VirtualBox with Ubuntu 20.04 and install ROS Noetic in the VM.</p>
-            <p>It is important that the VM runs on the same network as the Jetson for proper communication. You may need to change the network settings to be on the same network (look for something like "Bridged Adapter" under network settings).</p>
-            <p>Mac users and Linux users not on Ubuntu 20.04 may also want/need to use a VM or another workaround.</p>
-            <p>To install ROS Noetic, follow the <a href="https://wiki.ros.org/noetic/Installation/Ubuntu" target="_blank">official ROS installation guide for Ubuntu 20.04</a>. In step 1.4, you need the "Desktop Install" Version. You only need to complete steps 1.1-1.5.</p>
-            <p>Once ROS Noetic is installed, we need to set the ROS master URI and let ROS know the hostname of the VM. Edit the <code>~/.bashrc</code> file (<code>nano ~/.bashrc</code>) to add the following lines:</p>
-            <div class="code-block">
-                export ROS_MASTER_URI=http://[IP_ADDRESS_OF_JETSON]:11311<br>
-                export ROS_HOSTNAME=[IP_ADDRESS_OF_VM]
-            </div>
-            <p>Replace [IP_ADDRESS_OF_JETSON] and [IP_ADDRESS_OF_VM] with the actual IP addresses of your Jetson and VM, respectively. To save the file, press Ctrl+x, then y to confirm, then enter. The last step is to make sure these changes are applied by running <code>source ~/.bashrc</code>.</p>
-
-            <p>Now you should be able to run RVIZ in the VM and visualize the mobile robot. First, make sure the Jetson ROS master is running (see the next section). To run RVIZ, use the following command:</p>
-            <div class="code-block">
-                rosrun rviz rviz   
-            </div>
-            <p>The RVIZ interface should open. In the "Displays" panel on the left, click "Add" (bottom left). In the dispaly window that opens, click the tab "By Topics" and add the relevant displays for your robot (e.g. LaserScan, etc.). You should now be able to see a visualization of your mobile robot in RVIZ!</p>
-            <p>You can use RVIZ to visualize various parts of the robot, such as the map, LiDAR scans, robot location, image stream, and more. 
-            <p>Further, we can use the built in "2D Goal Pose" feature to set the goal target for the mobile robot. Click the "2D Goal Pose" button on the top toolbar, and then click a point on the map to set a goal.</p>
-
-        </section>
-        
-        <section class="section">
-            <h2>Initial System Test</h2>
-            <h3>Test mobile robot movement via telecommunication</h3>
-            <div class="step-card">
-                <div class="step-number">1</div>
-                <h3>Start the docker container</h3>
-                <div class="code-block">
-                jetson-containers run -v ~/workspaces/catkin_ws:/workspace/catkin_ws -v ~/gemini_api:/gemini_code -v /dev/bus/usb:/dev/bus/usb -v /dev/video0:/dev/video0 -v /dev/video1:/dev/video1 -i --device=/dev/ttyUSB0 --device=/dev/spidev0.0 --rm --privileged --name ros_noetic $(autotag ml_ros:latest)
+        <div class="page-layout">
+            <header class="header">
+                <h1>Setup Guide</h1>
+                <p class="subtitle">Software, sensors, network, and GUI</p>
+                <nav class="phase-progress" aria-label="Build phases">
+                    <a href="construction.html" class="phase-step"><span class="num">1</span> Construction</a>
+                    <a href="setup.html" class="phase-step active"><span class="num">2</span> Setup</a>
+                    <a href="operation.html" class="phase-step"><span class="num">3</span> Operation</a>
+                </nav>
+                <div class="nav-links">
+                    <a href="instructions.html" class="nav-link back">← Instructions hub</a>
+                    <a href="construction.html" class="nav-link back">← Construction</a>
                 </div>
-                <p>Start another terminal and enter the docker environment:</p>
-                <div class="code-block">
-                docker exec -it ros_noetic bash
+            </header>
+
+            <section class="section" id="prerequisites">
+                <h2>Prerequisites</h2>
+                <ul>
+                    <li>Fully assembled robot with all components connected</li>
+                    <li>Computer with SD card reader for Jetson imaging</li>
+                    <li>Stable internet for downloads</li>
+                    <li>SSH client and basic command-line familiarity</li>
+                </ul>
+            </section>
+
+            <section class="section" id="jetson">
+                <h2>NVIDIA Jetson</h2>
+                <p>Follow the Jetson setup README in the Robot repository:</p>
+                <a href="https://github.com/satomm1/Robot/tree/main/Jetson/README.md" class="nav-link" target="_blank" rel="noopener" style="margin-top: 0.5rem;">Jetson setup on GitHub →</a>
+            </section>
+
+            <section class="section" id="gui-dds">
+                <h2>User GUI / communication</h2>
+                <p>Install and configure the DDS robot platform (GUI + agent communication):</p>
+                <a href="https://github.com/satomm1/dds_robot_platform/tree/main" class="nav-link" target="_blank" rel="noopener" style="margin-top: 0.5rem;">DDS platform on GitHub →</a>
+                <div class="warning" style="margin-top: 1rem;">
+                    <strong>Firewall:</strong> Allow inbound and outbound traffic to your robot IP addresses. Blocked firewall rules are a common cause of connection failures.
                 </div>
-            </div>
-            <div class="step-card">
-                <div class="step-number">2</div>
-                <h3>Run Minimal Bringup Launch File in Terminal 1</h3>
-                <div class="code-block">
-                    roslaunch mattbot_bringup minimal.launch
+            </section>
+
+            <section class="section" id="rviz">
+                <h2>(Optional) RVIZ visualization</h2>
+                <p>RVIZ helps debug maps, LiDAR, and goals. On Windows, use a VirtualBox VM with Ubuntu 20.04 and ROS Noetic on the <strong>same network</strong> as the Jetson (try Bridged Adapter in VM network settings).</p>
+                <p>Install ROS Noetic per the <a href="https://wiki.ros.org/noetic/Installation/Ubuntu" target="_blank" rel="noopener">official guide</a> (Desktop Install; steps 1.1–1.5 only).</p>
+                <p>Add to <code>~/.bashrc</code> on the VM:</p>
+                <div class="code-wrap">
+                    <pre class="code-block">export ROS_MASTER_URI=http://[IP_ADDRESS_OF_JETSON]:11311
+export ROS_HOSTNAME=[IP_ADDRESS_OF_VM]</pre>
+                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                </div>
+                <p>Save, then run <code>source ~/.bashrc</code>. With the Jetson ROS master running:</p>
+                <div class="code-wrap">
+                    <pre class="code-block">rosrun rviz rviz</pre>
+                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                </div>
+                <p>In Displays → Add → By Topics, add LaserScan and other relevant topics. Use <strong>2D Goal Pose</strong> on the toolbar to send navigation goals.</p>
+            </section>
+
+            <section class="section" id="system-test">
+                <h2>Initial system test</h2>
+                <p>Verify teleoperation before moving to full operation.</p>
+
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Start Docker container</h3>
+                    <div class="code-wrap">
+                        <pre class="code-block">jetson-containers run -v ~/workspaces/catkin_ws:/workspace/catkin_ws -v ~/gemini_api:/gemini_code -v /dev/bus/usb:/dev/bus/usb -v /dev/video0:/dev/video0 -v /dev/video1:/dev/video1 -i --device=/dev/ttyUSB0 --device=/dev/spidev0.0 --rm --privileged --name ros_noetic $(autotag ml_ros:latest)</pre>
+                        <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                    </div>
+                    <p>In a second terminal, enter the container:</p>
+                    <div class="code-wrap">
+                        <pre class="code-block">docker exec -it ros_noetic bash</pre>
+                        <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                    </div>
                 </div>
 
-                <h3>Run Teleoperation Launch File in Terminal 2</h3>
-                <div class="code-block">
-                    roslaunch mattbot_teleop keyboard.launch
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Run bringup and teleop</h3>
+                    <p><strong>Terminal 1</strong> — minimal bringup:</p>
+                    <div class="code-wrap">
+                        <pre class="code-block">roslaunch mattbot_bringup minimal.launch</pre>
+                        <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                    </div>
+                    <p><strong>Terminal 2</strong> — keyboard teleop:</p>
+                    <div class="code-wrap">
+                        <pre class="code-block">roslaunch mattbot_teleop keyboard.launch</pre>
+                        <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                    </div>
+                    <p>Use the keypad (<code>u</code> <code>i</code> <code>o</code> <code>j</code> <code>k</code> <code>l</code> <code>m</code> <code>,</code> <code>.</code>) to drive. If the robot moves, setup is complete.</p>
                 </div>
-                <p>Use your keypad ('u', 'i', 'o', 'j', 'k', 'l', 'm', ',', '.') to control the robot's movement.</p>
-                <p>If the mobile robot is moving, setup is complete!</p>
-            </div>
-            
-            <div class="step-card">
-                <div class="step-number">3</div>
-                <h3>Shut Down the Robots</h3>
-                <p>To stop the ROS nodes that are running, simply press Ctrl+C in each terminal.</p>
-                <p>To stop the docker container, type <code>exit</code> in the terminal that was used to start the container. Alternatively, type <code>docker stop ros_noetic</code> in a different terminal.</p>    
-                <p>After stopping the container, you can safely shut down the Jetson:
-                <div class="code-block">
-                    sudo shutdown now -h
-                </div>
-                </p>
-                </div>
-            
-            <div class="success">
-                <strong>Setup Complete!</strong> Your MattBot is now ready for operation. Proceed to the Operation Guide to learn how to control and operate your robot.
-            </div>
 
-            <div class="nav-links">
-                <a href="operation.html" class="nav-link">Operation Guide →</a>
-            </div>
-        </section>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Shut down</h3>
+                    <p>Press <kbd>Ctrl+C</kbd> in each ROS terminal. Exit the container with <code>exit</code>, or run <code>docker stop ros_noetic</code> from another terminal.</p>
+                    <div class="code-wrap">
+                        <pre class="code-block">sudo shutdown now -h</pre>
+                        <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                    </div>
+                </div>
+
+                <div class="success">
+                    <strong>Setup complete!</strong> Continue to the <a href="operation.html">Operation Guide</a> for GUI control, mapping, and autonomous navigation.
+                </div>
+                <div class="nav-links" style="margin-top: 1.5rem;">
+                    <a href="operation.html" class="nav-link">Operation Guide →</a>
+                </div>
+            </section>
+        </div>
     </div>
+
+    <div class="lightbox" id="lightbox" role="dialog" aria-label="Enlarged image"><img src="" alt=""></div>
+    <button type="button" class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+    <script src="assets/mattbot.js"></script>
 </body>
 </html>

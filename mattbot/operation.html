@@ -1,701 +1,533 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="operation">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MattBot Operation Guide | Matthew Sato</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-            min-height: 100vh;
-        }
-        
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        
-        .header {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 3rem 2rem;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-        }
-        
-        .header h1 {
-            color: #2c3e50;
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-            font-weight: 300;
-        }
-        
-        .header .subtitle {
-            color: #7f8c8d;
-            font-size: 1.3rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .nav-link {
-            display: inline-block;
-            background: #3498db;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            text-decoration: none;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-        
-        .nav-link:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
-        }
-        
-        .nav-link.back {
-            background: #95a5a6;
-        }
-        
-        .nav-link.back:hover {
-            background: #7f8c8d;
-        }
-        
-        .section {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 2.5rem;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-        }
-        
-        .section h2 {
-            color: #2c3e50;
-            font-size: 2.2rem;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            border-bottom: 3px solid #e74c3c;
-            padding-bottom: 0.5rem;
-        }
-        
-        .section h3 {
-            color: #c0392b;
-            font-size: 1.5rem;
-            margin: 2rem 0 1rem 0;
-        }
-        
-        .section p, .section li {
-            color: #555;
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-        }
-        
-        .step-card {
-            background: #f8f9fa;
-            padding: 2rem;
-            border-radius: 10px;
-            margin: 1.5rem 0;
-            border-left: 5px solid #c0392b;
-        }
-        
-        .step-number {
-            background: #c0392b;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-        }
-        
-        .code-block {
-            background: #2c3e50;
-            color: #ecf0f1;
-            padding: 1rem;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            margin: 1rem 0;
-            overflow-x: auto;
-        }
-        
-        .warning {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-        }
-        
-        .warning strong {
-            color: #e17055;
-        }
-        
-        .tip {
-            background: #d1ecf1;
-            border: 1px solid #bee5eb;
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-        }
-        
-        .tip strong {
-            color: #0c5460;
-        }
-        
-        .controls-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-        
-        .control-card {
-            background: #f8f9fa;
-            padding: 1.5rem;
-            border-radius: 10px;
-            border-left: 4px solid #e74c3c;
-            text-align: center;
-        }
-
-        /* Make section images half the viewport width and responsive */
-        .section-image {
-            width: 50vw; /* half the screen width */
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 1rem 0;
-        }
-        
-        .control-card h4 {
-            color: #2c3e50;
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-        }
-        
-        .key-combo {
-            background: #e74c3c;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-family: monospace;
-            font-weight: bold;
-            margin: 0.25rem;
-            display: inline-block;
-        }
-        
-        .mode-card {
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            color: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin: 1rem 0;
-        }
-        
-        .mode-card h4 {
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-        }
-        
-        .back-to-top {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #e74c3c;
-            color: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            font-size: 1.5rem;
-            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
-            transition: all 0.3s ease;
-            opacity: 0;
-            visibility: hidden;
-            z-index: 1000;
-        }
-        
-        .back-to-top.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .back-to-top:hover {
-            background: #c0392b;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-            
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .section {
-                padding: 1.5rem;
-            }
-            
-            .nav-links {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .controls-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="assets/mattbot.css">
 </head>
 <body>
-    <div class="container">
-        <header class="header">
-            <h1>Operation Guide</h1>
-            <p class="subtitle">Learn to Operate the Mobile Robot</p>
-            <div class="nav-links">
-                <a href="instructions.html" class="nav-link back">← Instructions Hub</a>
-                <a href="construction.html" class="nav-link">← Construction Guide</a>
-                <a href="setup.html" class="nav-link">← Setup Guide</a>
+    <nav class="site-nav" aria-label="MattBot navigation">
+        <div class="site-nav-inner">
+            <a href="index.html" class="site-nav-brand">MattBot</a>
+            <div class="site-nav-links">
+                <a href="index.html">Overview</a>
+                <a href="instructions.html">Instructions</a>
+                <a href="construction.html">Build</a>
+                <a href="setup.html">Setup</a>
+                <a href="operation.html">Operate</a>
+                <a href="../index.html">← Home</a>
             </div>
-        </header>
-        
-        <section class="section">
-            <h2>Getting Started</h2>
-            <p>Welcome to the operation of the mobile robot! This guide assumes you have successfully completed construction and setup. Your robot should be powered on, connected to WiFi, and all systems verified.</p>
-        </section>
+        </div>
+    </nav>
 
-        <section class="section">
-            <h2>Getting to Know The Mobile Robot</h2>
-            <p>Use this section to introduce the robot visually and explain the purpose of each major component. Add labeled photos and keep each explanation short and practical.</p>
+    <div class="container with-sidebar">
+        <aside>
+            <button type="button" class="toc-toggle" id="toc-toggle">Show page contents</button>
+            <nav class="toc-sidebar" aria-label="Page contents">
+                <h3>On this page</h3>
+                <div id="page-toc"></div>
+            </nav>
+        </aside>
 
-            <div class="step-card">
-                <div class="step-number">1</div>
-                <h3>Full Robot Overview</h3>
-                <p>First, let's go layer by layer to understand everything on the robot.</p>
-                <h4>Layer 1</h4>
-                <p>The first layer contains the main circuit board for motor control/sensor integration, the drivetrain, and environmental sensor, and a motor on/off switch.</p>
-                <img src="images/first_layer.png" alt="Layer 1 of the robot" class="section-image">
-                <ul>
-                    <li>
-                        <strong>Main circuit board:</strong> Handles motor control and sensor integration for the robot. On the front of the circuit board there are 3 ports for connecting power:
-                        <ul style="margin-left:1.5em;">
-                            <li>A Micro-USB port for connecting the 5V battery. <strong>Note: There is an additional Micro-USB port on the side of the circuit board. DO NOT plug the 5V battery into this port. This port is used for serial communication with a laptop (debugging purposes only).</strong></li>
-                            <li>2 Tamiya Style blocks for connecting the 7.2 NiMH motor batteries.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Drivetrain:</strong> Consists of 2 DC motors, spider couplers, 6 mm D-shafts, pillow blocks, and wheels.</li>
-                    <li><strong>Environmental sensor:</strong> Detects surroundings so the robot can respond to its environment.</li>
-                    <li><strong>Motor on/off switch:</strong> Turns power on/off to both the motors (14.4 V) and the circuit board (5 V). You must turn this switch on prior to operating the robot. The indicator light will turn red when idle, and green when activated by the ROS code.</li>
-                </ul>
+        <div class="page-layout">
+            <header class="header">
+                <h1>Operation Guide</h1>
+                <p class="subtitle">Power, software, GUI, mapping, and navigation</p>
+                <nav class="phase-progress" aria-label="Build phases">
+                    <a href="construction.html" class="phase-step"><span class="num">1</span> Construction</a>
+                    <a href="setup.html" class="phase-step"><span class="num">2</span> Setup</a>
+                    <a href="operation.html" class="phase-step active"><span class="num">3</span> Operation</a>
+                </nav>
+                <div class="nav-links">
+                    <a href="instructions.html" class="nav-link back">← Instructions hub</a>
+                    <a href="setup.html" class="nav-link back">← Setup</a>
+                </div>
+            </header>
 
-                <h4>Layer 2</h4>
-                <p>This layer contains the various batteries, the NVIDIA Jetson onboard computer, and the microphone processing circuit board.</p>
-                <img src="images/second_layer.png" alt="Layer 2 of the robot" class="section-image">
-                <ul>
-                    <li><strong>Batteries:</strong> Provide power for the robot’s electronics and motor systems. There are 3 kinds of batteries and 4 total batteries on board:</li>
-                    <ul style="margin-left:1.5em;">
-                        <li><strong>5 V USB battery:</strong> Powers the main circuit board.</li>
-                        <li><strong>2x 7.2 V NiMH motor batteries:</strong> Powers the motors for movement.</li>
-                        <li><strong>12 V Li-ion battery:</strong> Powers the NVIDIA Jetson onboard computer.</li>
-                    </ul>
-                    <li><strong>NVIDIA Jetson onboard computer:</strong> Runs the robot software and handles processing. Connects via wires to the main circuit board and the microphone processing board. <strong>Note: The 12 V battery should be directly connected to the Jetson. This battery must be turned on prior to use. When not actively running the robot, I recommend plugging in the battery via the split cable.</strong></li>
-                    <li><strong>Microphone processing circuit board:</strong> Processes audio input for voice and sound-related features.</li>
-                </ul>
-                
-
-                <h4>Layer 5</h4>
-                <p>Layer 5 contains a single Orbecc Astra RGB-D camera and 2x ICS-43434 MEMS omnidirectional microphones</p>
-                <img src="images/fifth_layer.png" alt="Layer 5 of the robot" class="section-image">
-                <ul>
-                    <li><strong>RGB-D Camera:</strong> Provides image and depth sensing capabilities. Should be plugged into the NVIDIA Jetson via USB.</li>
-                    <li><strong>Microphones:</strong> Capture audio input for voice and sound-related features. Should be plugged into the microphone processing circuit board via the provided MOLEX connections.</li>
-                </ul>
-
-                <h4>Layer 6</h4>
-                <p>Layer 6 contains a 2D LiDAR sensor, a touchscreen display with speakers, and a USB camera for facial recognition.</p>
-                <img src="images/sixth_layer.png" alt="Layer 6 of the robot" class="section-image">
-                <ul>
-                    <li><strong>LiDAR:</strong> An RPLIDAR A2M12 LiDAR sensor, which should be connected to the NVIDIA Jetson via USB.</li>
-                    <li><strong>Touchscreen Display:</strong> Provides a user interface for interacting with the robot and displaying information. The HDMI cable should be plugged into the NVIDIA Jetson using an HDMI-Display Port adapter. The USB cable should be plugged into the NVIDIA Jetson via USB. The HDMI is for display and the USB is for touch.</li>
-                    <li><strong>USB Camera:</strong> Used for facial recognition and other visual applications. The USB cable should be plugged into the NVIDIA Jetson via USB.</li>
-                </ul>
-
-
-                
+            <div class="workflow-toggle-bar" id="workflow-toggle" role="group" aria-label="Workflow mode">
+                <span class="workflow-toggle-label">Workflow:</span>
+                <button type="button" class="workflow-toggle-btn active" data-workflow="development" aria-pressed="true">Development</button>
+                <button type="button" class="workflow-toggle-btn" data-workflow="production" aria-pressed="false">Production</button>
             </div>
 
-            <div class="step-card">
-                <div class="step-number">2</div>
-                <h3>How to Turn the Robot On and Off</h3>
-                <h4>Turning On the Robot</h4>
-                <p>To turn on the robot, follow these steps:</p>
-                <ol>
-                    <li>Ensure all batteries are properly connected and charged.</li>
-                    <li>Turn on the 12 V Li-ion battery for the NVIDIA Jetson. This will power on the onboard computer.</li>
-                    <li>Turn on the motor on/off switch to power the main circuit board and motors. The indicator light will turn red when idle.</li>
-                    <li>Wait for the NVIDIA Jetson to boot up and establish connections with the peripherals. This may take a minute or two.</li>
-                    <li>Once the Jetson is fully booted, the robot is ready for operation. The indicator light on the motor switch will turn green when activated by the ROS code.</li>
-                </ol>
-                <h4>Turning Off the Robot</h4>
-                <p>To turn off the robot, follow these steps:</p>
-                <ol>
-                    <li>Use the appropriate shutdown command to safely power down the NVIDIA Jetson. This can be done via SSH or directly on the device. The command is: <code>sudo shutdown -h now</code>. Alternatively, use the touchscreen to turn off the Jetson through the Ubuntu GUI.</li>
-                    <li>Wait for the Jetson to fully shut down. Turn off the 12 V Li-ion battery for the NVIDIA Jetson.</li>
-                    <li>Turn off the motor on/off switch to cut power to the main circuit board and motors.</li>
-                </ol>
-            </div>
+            <section class="section" id="getting-started">
+                <h2>Getting started</h2>
+                <p>This guide assumes construction and setup are complete. The robot should be powered, on Wi‑Fi, and systems verified before proceeding.</p>
+            </section>
 
-            <div class="step-card">
-                <div class="step-number">3</div>
-                <h3>Charging the Batteries</h3>
-                <ul>
-                    <li><strong>5 V USB battery:</strong> Simply remove the battery and plug into a USB port on a wall adapter or laptop.</li>
-                    <li><strong>7.2 V NiMH motor batteries:</strong> Use the provided Tamiya-style smart chargers to charge these batteries. I usually just disconnect these batteries from the main circuit board and connect the chargers directly without removing the batteries from the robot.</li>
-                    <li><strong>12 V Li-ion battery:</strong> Use the provided DC barrel jack charger to charge this battery. It can be charged while plugged into the robot or separately. To achieve a full charge, disconnect the battery from the Jetson, turn the battery on, and plug the charger in.</li>
-                </ul>
-            </div>
+            <section class="section" id="robot-overview">
+                <h2>Robot overview</h2>
+                <p>Expand each layer to see components and wiring notes. Click any photo to enlarge.</p>
 
-        
-        <section class="section">
-            <h2>Preparing the Mobile Robots</h2>
-            
-            <div class="step-card">
-                <div class="step-number">1</div>
-                <h3>System Startup</h3>
-                <p>Power on the NVIDIA Jetson and the Microcontroller.</p>
-                <p>Establish SSH connection to the robot:</p>
-                <div class="code-block">
-                ssh jetson@&lt;robot_ip_address&gt;
-                </div>
-                <p>Load the spidev module:</p>
-                <div class="code-block">
-                sudo modprobe spidev
-                </div>
-                <div class="tip">
-                    <strong>💡 Tip:</strong> Add spidev to /etc/modules-load.d/spidev.conf to automatically load this at startup
-                </div>
-            </div>
-            
-            <div class="step-card">
-                <div class="step-number">2</div>
-                <h3>Start the Docker Containers</h3>
-                <p>Included in the files you downloaded is a file that lets our GUI start up the robots from a remote machine. If using this feature, use the following command to start the ROS Container:</p>
-                <div class="code-block">
-                sudo docker run --runtime nvidia --network=host -v ~/workspaces/catkin_ws:/workspace/catkin_ws -v ~/gemini_api:/gemini_code -v /dev/bus/usb:/dev/bus/usb -v /dev/video0:/dev/video0 -v /dev/video1:/dev/video1 -it --device=/dev/ttyUSB0 --device=/dev/spidev0.0 --rm --privileged --pid=host --name ros_noetic ml_ros:latest bash -lc 'python3 /workspace/catkin_ws/src/startup_script.py & exec bash'
-                </div>
-                <p>If you are not using my GUI (i.e., using RVIZ), or doing other development work, start the ROS Container using:</p>
-                <div class="code-block">
-                jetson-containers run -v ~/workspaces/catkin_ws:/workspace/catkin_ws -v ~/gemini_api:/gemini_code -v /dev/bus/usb:/dev/bus/usb -v /dev/video0:/dev/video0 -v /dev/video1:/dev/video1 -i --device=/dev/ttyUSB0 --device=/dev/spidev0.0 --rm --privileged --name ros_noetic $(autotag ml_ros:latest)
-                </div>
-                <p>Open other terminals and enter the container (as needed):</p>
-                <div class="code-block">
-                docker exec -it ros_noetic bash
-                </div>
-
-                <p>Start the Gemini Container (optional):</p>
-                <div class="code-block">
-                sudo docker run -v ~/gemini_api:/gemini_code -v ~/Desktop/audio:/audio -w /gemini_code -it --rm --privileged -p 5000:5000  --name gemini gemini:latest
-                </div>
-            </div>
-        </section>
-
-        <section class="section">
-            <h2>Accessing/Editing Code</h2>
-            <p>I use VS Code to access the code on the NVIDIA Jetsons.</p>
-            <p>Within VS Code, click the Remote Explorer button (lower left corner), then click "Connect to Host".</p>
-            <img src="images/remote_explorer.png" alt="Remote Explorer" style="width: 19%; border-radius: 8px; margin: 1rem 0; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-            <img src="images/connect_to_host.png" alt="Connect to Host" style="width: 79%; border-radius: 8px; margin: 1rem 0; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-            <p>Add a new SSH Host, or click an existing host, and log in using the IP Address and the jetson password (jetson)</p>
-            <p>To gain access to the Docker container running on the Jetson, click the Remote Explorer button again, then click "Attach to Running Container".</p>
-            <img src="images/remote_explorer.png" alt="Remote Explorer" style="width: 19%; border-radius: 8px; margin: 1rem 0; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-            <img src="images/running_container.png" alt="Connect to Host" style="width: 79%; border-radius: 8px; margin: 1rem 0; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-            <p>Select the correct docker container, login, and now you can access and edit all code.</p>
-        </section>
-        
-        <section class="section">
-            <h2>User GUI/Communication</h2>
-            <div class="tip">
-                <p>I run everything on a Windows machine. I use WSL (windows subsystem for Linux) to run Docker and the DDS scripts. For development, I use the Windows command line to run the GUI, but otherwise use the executable installed. If you are using a different OS, you may need to adjust the commands accordingly.</p>
-                <p><strong>Note:</strong> This section is only required if you are not using the installed GUI application. Otherwise, skip to the next section: "Using the GUI"</p>
-            </div>
-        
-            <div class="step-card">
-                <div class="step-number">1</div>
-                <h3>Start the user DDS node</h3>
-                <p>Open three terminals in WSL or your Unix terminal (Mac/Linux)</p>
-
-                <p>Start the Docker containers in the first terminal</p>
-                <div class="code-block">
-                cd dds_robot_platform<br>
-                docker compose up -d
-                </div>
-                <p>To stop the containers, run:</p>
-                <div class="code-block">
-                docker compose down
-                </div>
-
-                <p>In the second terminal, start the DDS scripts:</p>
-                <div class="code-block">
-                cd dds_robot_platform/dds<br>
-                ./start_scripts.sh
-                </div>
-
-                <div class="tip">Ensure you have set the agent_id by adding <code>export AGENT_ID=xxx</code> in the ~/.bashrc file.</div>
-
-                
-                <p>The DDS scripts can be stopped by running</p>
-                <div class="code-block">
-                cd dds_robot_platform/dds<br>
-                ./stop_scripts.sh
-                </div>
-                <p>in the third terminal.</p>
-
-                <p>After running these commands, the user node will be active and participate in the DDS network.</p>
-            </div>
-
-            <div class="step-card">
-                <div class="step-number">2</div>
-                <h3>Start the GUI</h3>
-                <p> If you have installed the GUI as an executable on your machine, simply find the executable and run it.</p>
-
-                <div class="tip">
-                <p>If you have not installed the GUI as an executable, you must run it with Node.js. Navigate to the GUI directory and start the server:</p>
-                <div class="code-block">
-                cd dds_robot_platform/gui<br>
-                serve -s build
-                </div>
-                <p>Now go to <a href="http://localhost:3000" target="_blank">http://localhost:3000</a> in your web browser to view the GUI.</p>
-                </div>
-            </div>
-
-            <p>An example of how I set up my terminal for docker and DDS communications is as follows:</p>
-            <img src="images/docker_dds_example.png" alt="GUI" style="width: 100%; border-radius: 8px; margin: 1rem 0; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-        </section>
-
-        <section class="section">
-            <h2>Using the GUI</h2>
-
-            <div class="step-card">
-                <h3>GUI Overview</h3>
-                <p>The GUI provides a web-based interface for monitoring and controlling the robots on your machine.</p>
-                <img src="images/gui_overview.png" alt="GUI Overview" style="width: 100%; border-radius: 8px; margin: 1rem 0; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-                
-                <h4>Main Features:</h4>
-                <ul>
-                    <li><strong>Robot Status Panel:</strong> Shows online robots</li>
-                    <li><strong>Click Function:</strong> Choose what clicking on the map does</li>
-                    <li><strong>Map Visualization:</strong> Displays robot positions and environment map</li>
-                    <li><strong>Robot start and kill commands:</strong> Allows the user to start and kill the robot from the GUI</li>
-                </ul>
-            </div>
-
-            <div class="controls-grid">
-                <div class="control-card">
-                    <h4>Select Robot</h4>
-                    <p>Click on a robot in the status panel to select it for control</p>
-                </div>
-                
-                <div class="control-card">
-                    <h4>Local Software Startup/Status</h4>
-                    <p>Start, stop, and monitor the local software running on the GUI's machine.</p>
-                </div>
-                
-                <div class="control-card">
-                    <h4>Clicking Function</h4>
-                    <p>Selecting "Set Robot Goal" means clicking on the map will set goal position for a robot. Selection "Set Initial Position" means clicking will set the robot's starting position.</p>
-                </div>
-
-                <div class="control-card">
-                    <h4>Robot Start Actions</h4>
-                    <p>Add the IP address of your robot and save the settings. In the future, select your robot from the dropdown box and click the "Start" button.</p>
-                </div>
-
-                <div class="control-card">
-                    <h4>Robot Kill Actions</h4>
-                    <p>Selecting "Stop" will stop robot motion. Selecting 'Shutdown' will kill all ROS nodes.</p>
-                </div>
-            </div>
-
-            <div class="step-card">
-                <h3>Workflow</h3>
-                <p>Follow these steps to control a robot with the GUI:</p>
-                
-                <div class="control-card">
-                    <h4>Step 1: Connect to Robot</h4>
-                    <p>When a mobile robot enters the network, it will automatically appear in the Robot Status Panel on the left side of the GUI.</p>
-                    <p>To start a robot, either use the built in start feature in the GUI or run a launch file via SSH.</p>
-                </div>
-
-                <div class="control-card">
-                    <h4>Step 2: Set Initial Position</h4>
-                    <p>Select the robot from the status panel, then choose "Set Initial Position".</p>
-                    <p>Adjust the orientation using the orientation slider to match the robot's approximate initial orientation.</p>
-                    <p>Click on the map where the robot is currently located to set its approximate initial position.</p>
-                    
-                    <div class="tip">
-                        <strong>💡 Tip:</strong> Setting an accurate initial position helps the robot localize correctly in the environment.
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Layer 1 — Drivetrain &amp; main board
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <p>Motor control PCB, drivetrain, environmental sensor, and motor power switch.</p>
+                            <img src="images/first_layer.png" alt="Layer 1 of the robot" class="section-image">
+                            <ul>
+                                <li><strong>Main circuit board:</strong> Motor control and sensor integration. Three power ports on the front:
+                                    <ul>
+                                        <li>Micro-USB for the 5 V battery. <strong>Do not use the side Micro-USB</strong> — that port is for serial debugging only.</li>
+                                        <li>Two Tamiya blocks for 7.2 V NiMH motor batteries.</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Drivetrain:</strong> 2× DC motors, spider couplers, 6 mm D-shafts, pillow blocks, wheels.</li>
+                                <li><strong>Environmental sensor:</strong> Surroundings detection for reactive behavior.</li>
+                                <li><strong>Motor switch:</strong> Powers motors (14.4 V) and board (5 V). Indicator red when idle, green when ROS activates motors.</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
-                <div class="control-card">
-                    <h4>Step 3: Send Robot to Goal</h4>
-                    <p>After the robot is initialized, change the clicking function to "Set Robot Goal".</p>
-                    <p>Click anywhere on the map to set a navigation goal for the robot.</p>
-                    <p>The robot will plan a path and start moving toward the goal location.</p>
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Layer 2 — Batteries &amp; compute
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <p>Batteries, Jetson, and microphone processing board.</p>
+                            <img src="images/second_layer.png" alt="Layer 2 of the robot" class="section-image">
+                            <ul>
+                                <li><strong>5 V USB battery</strong> — main board</li>
+                                <li><strong>2× 7.2 V NiMH</strong> — motors</li>
+                                <li><strong>12 V Li-ion</strong> — Jetson (connect directly; turn on before use; use split cable when idle)</li>
+                                <li><strong>Jetson Orin Nano</strong> — ROS and processing; wired to main board and mic board</li>
+                                <li><strong>Microphone board</strong> — audio preprocessing</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="control-card">
-                    <h4>Step 4: Shutdown the Robot</h4>
-                    <p>After you are done with your robot, click the robot in the status panel and select "Shutdown".</p>
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Layers 3 &amp; 4 — Spacer / storage
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <p>Layers 3 and 4 are spacer layers with no fixed electronic components. They provide vertical clearance between the compute/battery stack (Layer 2) and the sensor tiers above (Layers 5 and 6).</p>
+                            <p>These layers can be used for storage — for example, spare cables, tools, or other small items you want to keep with the robot during transport or operation.</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-        </section>
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Layer 5 — RGB-D camera &amp; microphones
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <img src="images/fifth_layer.png" alt="Layer 5 of the robot" class="section-image">
+                            <ul>
+                                <li><strong>Orbbec Astra RGB-D</strong> — USB to Jetson</li>
+                                <li><strong>2× ICS-43434 MEMS mics</strong> — MOLEX to microphone board</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
 
-        <section class="section">
-            <h2>Operating the Mobile Robots</h2>
-            
-            <div class="step-card">
-                <div class="step-number">1</div>
-                <h3>Launch Files</h3>
-                <p>There are several launch files used to support running the mobile robots.</p>
-                <p>Below is a summary of the important launch files:</p>
-                <ul>
-                    <li><strong>minimal.launch</strong> - Launches the minimal robot with connection to the MCU.</li>
-                    <li><strong>short.launch</strong> - Launches the full software stack for the short robot.</li>
-                    <li><strong>tall.launch</strong> - Launches the full software stack for the tall robot.</li>
-                    <li><strong>sense_and_map.launch</strong> - Launches the software stack for creating a map using SLAM</li>
-                </ul>
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Layer 6 — LiDAR, display &amp; USB camera
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <img src="images/sixth_layer.png" alt="Layer 6 of the robot" class="section-image">
+                            <ul>
+                                <li><strong>RPLIDAR A2M12</strong> — USB to Jetson</li>
+                                <li><strong>Touchscreen</strong> — HDMI (via DP adapter) for video, USB for touch</li>
+                                <li><strong>USB camera</strong> — facial recognition; USB to Jetson</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-                <p>Some optional arguments include:</p>
-                <ul>
-                    <li><strong>car</strong> - Set to true if using a mobile robot with wheels at the back (default: false)</li>
-                    <li><strong>patrol</strong> - Set to true if mobile robot should follow the defined patrol path (default: false)</li>
-                </ul>
+            <section class="section" id="power">
+                <h2>Power on, power off &amp; charging</h2>
 
-                <p>To run any of the launch files, follow this format:</p>
-                <div class="code-block">roslaunch mattbot_bringup &lt;launch_file&gt; [arguments:=arg_value]</div>  
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger">
+                        Turning on
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <ol>
+                                <li>Verify all batteries are connected and charged.</li>
+                                <li>Turn on the 12 V Li-ion battery (Jetson).</li>
+                                <li>Turn on the motor switch (board + motors; red when idle).</li>
+                                <li>Wait for Jetson boot (~1–2 min).</li>
+                                <li>When ROS connects to the MCU, the switch indicator turns green.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
 
-            </div>
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger">
+                        Turning off
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="warning">
+                                <strong>Important:</strong> Do not simply unplug the power supply from the Jetson. Always shut down the Jetson first via the command line (<code>sudo shutdown -h now</code>) or through the touchscreen Ubuntu GUI. Unplugging power without a proper shutdown can corrupt the filesystem and damage the system.
+                            </div>
+                            <ol>
+                                <li>Shut down Jetson via SSH, touchscreen, or:</li>
+                            </ol>
+                            <div class="code-wrap">
+                                <pre class="code-block">sudo shutdown -h now</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <ol start="2">
+                                <li>After shutdown completes, turn off the 12 V battery.</li>
+                                <li>Turn off the motor switch.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="step-card">
-                <div class="step-number">2</div>
-                <h3>Creating a Map</h3>
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger">
+                        Charging batteries
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <ul>
+                                <li><strong>5 V USB:</strong> Remove and charge via wall adapter or laptop USB.</li>
+                                <li><strong>7.2 V NiMH:</strong> Tamiya smart chargers; can charge in-place on the robot.</li>
+                                <li><strong>12 V Li-ion:</strong> Use the provided DC barrel jack charger. The battery does not need to be unplugged from the Jetson — with the split cable, you can charge while the Jetson remains connected and powered on. I recommend charging this way whenever the robot is not actively being used or moving.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-                <p>Start the mapping software by running the following command:</p>
-                <div class="code-block">roslaunch mattbot_bringup sense_and_map.launch</div>
+            <section class="section" id="preparing">
+                <h2>Preparing the robots</h2>
 
-                <p>In a second terminal, start robot teleoperation:</p>
-                <div class="code-block">roslaunch mattbot_teleop keyboard.launch</div>
+                <div class="collapsible" data-workflow="development">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Development
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>System startup</h3>
+                                <p>Power on the Jetson and microcontroller, then SSH in:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">ssh jetson@&lt;robot_ip_address&gt;</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Load spidev:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">sudo modprobe spidev</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <div class="tip"><strong>Tip:</strong> Add <code>spidev</code> to <code>/etc/modules-load.d/spidev.conf</code> to load at boot.</div>
+                            </div>
 
-                <p>Use the keyboard controls to move the robot around and create a map of the environment. The robot should visit all areas of the space to build a comprehensive map.</p>
-                <p>Once the mapping is complete, save the map using the following command:</p>
-                <div class="code-block">rosrun map_server map_saver -f &lt;map_name&gt; map:=/map</div>
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Docker containers</h3>
+                                <p><strong>With GUI remote start</strong> (from downloaded startup script):</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">sudo docker run --runtime nvidia --network=host -v ~/workspaces/catkin_ws:/workspace/catkin_ws -v ~/gemini_api:/gemini_code -v /dev/bus/usb:/dev/bus/usb -v /dev/video0:/dev/video0 -v /dev/video1:/dev/video1 -it --device=/dev/ttyUSB0 --device=/dev/spidev0.0 --rm --privileged --pid=host --name ros_noetic ml_ros:latest bash -lc 'python3 /workspace/catkin_ws/src/startup_script.py & exec bash'</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p><strong>Without GUI</strong> (RVIZ / development):</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">jetson-containers run -v ~/workspaces/catkin_ws:/workspace/catkin_ws -v ~/gemini_api:/gemini_code -v /dev/bus/usb:/dev/bus/usb -v /dev/video0:/dev/video0 -v /dev/video1:/dev/video1 -i --device=/dev/ttyUSB0 --device=/dev/spidev0.0 --rm --privileged --name ros_noetic $(autotag ml_ros:latest)</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Additional terminals:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">docker exec -it ros_noetic bash</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p><strong>Optional Gemini container:</strong></p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">sudo docker run -v ~/gemini_api:/gemini_code -v ~/Desktop/audio:/audio -w /gemini_code -it --rm --privileged -p 5000:5000 --name gemini gemini:latest</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                            </div>
 
-                <p>My navigation software requires (and allows) for the human to modify the map. Make a copy of the map with the name &lt;map_name&gt;_mod.pgm. Use some image editing software (i.e., GIMP) to add barriers that you wish the mobile robot to avoid. Now, copy three (3) files to the <code>~/workspace/catkin_ws/src/mattbot_mcl/maps</code> directory:</p>
-                <ul>
-                    <li><code>&lt;map_name&gt;.yaml</code></li>
-                    <li><code>&lt;map_name&gt;.pgm</code></li>
-                    <li><code>&lt;map_name&gt;_mod.pgm</code></li>
-                </ul>
+                            <div class="step-card">
+                                <div class="step-number">3</div>
+                                <h3>Accessing code (VS Code)</h3>
+                                <p>Use VS Code Remote SSH, then attach to the running Docker container.</p>
+                                <div class="img-pair">
+                                    <img src="images/remote_explorer.png" alt="Remote Explorer" class="img-small">
+                                    <img src="images/connect_to_host.png" alt="Connect to Host" class="img-large">
+                                </div>
+                                <p>Add or select an SSH host (user <code>jetson</code>, default password <code>jetson</code>).</p>
+                                <div class="img-pair">
+                                    <img src="images/remote_explorer.png" alt="Remote Explorer" class="img-small">
+                                    <img src="images/running_container.png" alt="Attach to running container" class="img-large">
+                                </div>
+                                <p>Remote Explorer → <strong>Attach to Running Container</strong> → select <code>ros_noetic</code>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                <p>Last, create an occupancy grid for the map by running</p>
-                    <div class="code-block">python3 ./generate_dds_map.py --map_file &lt;map_name&gt;</div> 
-                <p>within the ~/workspace/catkin_ws/src/mattbot_mcl/scripts directory.</p>
+                <div class="collapsible" data-workflow="production">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Production
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-                <p>The last thing to do is to copy the json version of the map to the user GUI directory. Copy the file:</p>
-                <div class="code-block">~/workspace/catkin_ws/src/mattbot_mcl/map_json/current_map.json</div> 
-                <p>to your machine running the user GUI. The file should be saved in the <code>dds_robot_platform/dds</code> directory named as <code>user_map.json</code>.</p> 
-            </div>
+            <section class="section" id="dds-setup">
+                <h2>Starting User GUI / DDS</h2>
 
-            <div class="step-card">
-                <div class="step-number">3</div>
-                <h3>Normal Operation of the Robots</h3>
-                <p>To run the mobile robots, simply call the appropriate launch file. For example, for a tall mobile robot:</p>
-                <div class="code-block">roslaunch mattbot_bringup tall.launch</div>
-                <p>The mobile robot will connect to the DDS network, and you can control the mobile robot goals via the GUI.</p>
-                <p>If your mobile robot is in a car configuration (wheels at the back, casters at the front), you must include the car argument:</p>
-                <div class="code-block">roslaunch mattbot_bringup tall.launch car:=true</div>
-            </div>
+                <div class="collapsible" data-workflow="development">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Development
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Start DDS node</h3>
+                                <p>Three terminals (WSL or Unix):</p>
+                                <p><strong>Terminal 1 — Docker:</strong></p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">cd dds_robot_platform
+docker compose up -d</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p><strong>To shut down the Docker containers:</strong></p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">cd dds_robot_platform
+docker compose down</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p><strong>Terminal 2 — DDS scripts:</strong></p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">cd dds_robot_platform/dds
+./start_scripts.sh</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <div class="tip">Set <code>export AGENT_ID=xxx</code> in <code>~/.bashrc</code>.</div>
+                                <p><strong>Terminal 3 — stop scripts:</strong></p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">cd dds_robot_platform/dds
+./stop_scripts.sh</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                            </div>
 
-            <div class="step-card">
-                <div class="step-number">4</div>
-                <h3>Powering down the robots</h3>
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Start GUI</h3>
+                                <p>Run the installed executable, or with Node.js:</p>
+                                <div class="tip">
+                                    <p><strong>Windows users:</strong> Run the following commands from the Windows command line (not WSL).</p>
+                                </div>
+                                <div class="code-wrap">
+                                    <pre class="code-block">cd dds_robot_platform/gui
+npm start</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Open <a href="http://localhost:3000" target="_blank" rel="noopener">http://localhost:3000</a></p>
+                            </div>
 
-                <p>The easiest way to power off the robots is to use the built in "Power Off" button in the GUI. This button will handle graceful ROS node shutdown and safely powering off the Jetson.</p>
+                        </div>
+                    </div>
+                </div>
 
-                <p>To manually power down the robot, follow these steps. First, shut down the software stack with a <code>ctrl+c</code> command in the terminal. Alternatively, you can use the following command:</p>
-                <div class="code-block">rosnode kill -a</div>
+                <div class="collapsible" data-workflow="production">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Production
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Open the GUI app</h3>
+                                <p>Open the installed GUI application to start the GUI.</p>
+                                <img src="images/gui_icon.png" alt="MattBot GUI app icon" class="section-image" style="max-width: 128px;">
+                            </div>
 
-                <p>To exit the docker containers, run:</p>
-                <div class="code-block">exit</div>
-                <p>in the terminal.</p>
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Start Docker and DDS</h3>
+                                <p>In the <strong>Local Stack</strong> panel, enter the path to your <code>dds_robot_platform</code> directory in the path field, and your WSL distro name in the WSL field (WSL only). Click <strong>Verify</strong> for the GUI to confirm it can reach the path.</p>
+                                <img src="images/gui_docker_dds_start.png" alt="Local Stack panel with path, WSL distro, and Docker/DDS start controls" class="section-image">
+                                <p>Once verified, the <strong>Start</strong> options become available:</p>
+                                <img src="images/gui_docker_dds_start_available.png" alt="Local Stack panel with Start buttons enabled after verification" class="section-image">
+                                <div class="tip">
+                                    <p><strong>Before starting Docker from the GUI:</strong> Make sure <strong>Docker Desktop</strong> is running on your machine.</p>
+                                </div>
+                                <p>Start <strong>Docker</strong> first by pressing its <strong>Start</strong> button, then start <strong>DDS</strong> by pressing its <strong>Start</strong> button.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-                <p>To shutdown the Jetson, run the following command:</p>
-                <div class="code-block">sudo shutdown -h now</div>
-                <p>Please power off using this command rather than simply turning off the battery pack or removing the power jack.</p>
-            </div>
+            <section class="section" id="using-gui">
+                <h2>Using the GUI</h2>
 
-        </section>
+                <img src="images/gui_overview.png" alt="GUI overview" class="section-image">
 
-        <section class="section">
-            
-            <div class="tip">
-                <strong>Congratulations!</strong> You now have the knowledge to operate your mobile robot safely and effectively. Now you can modify the code for your own application!
-            </div>
-        </section>
+                <div class="controls-grid">
+                    <div class="control-card"><h4>Select robot</h4><p>Click a robot in the status panel to select it.</p></div>
+                    <div class="control-card"><h4>Local software</h4><p>Start, stop, and monitor DDS/Docker on your machine.</p></div>
+                    <div class="control-card"><h4>Click mode</h4><p><strong>Set Robot Goal</strong> — navigation target. <strong>Set Initial Position</strong> — localization seed.</p></div>
+                    <div class="control-card"><h4>Start robot</h4><p>Save robot IP, select from dropdown, click Start (or launch via SSH).</p></div>
+                    <div class="control-card"><h4>Stop / shutdown</h4><p><strong>Stop</strong> — halt motion. <strong>Shutdown</strong> — kill ROS nodes.</p></div>
+                </div>
+
+                <h3 id="gui-workflow">Typical workflow</h3>
+                <div class="step-card">
+                    <h4>1. Connect</h4>
+                    <p>Robots on the network appear in the status panel. Start via GUI or SSH launch file.</p>
+                </div>
+                <div class="step-card">
+                    <h4>2. Set initial pose</h4>
+                    <p>Select robot → <strong>Set Initial Position</strong> → adjust orientation slider → click map at robot location.</p>
+                </div>
+                <div class="step-card">
+                    <h4>3. Send goal</h4>
+                    <p>Switch to <strong>Set Robot Goal</strong> → click destination on map.</p>
+                </div>
+                <div class="step-card">
+                    <h4>4. Shutdown</h4>
+                    <p>Select robot → <strong>Shutdown</strong> when finished.</p>
+                </div>
+            </section>
+
+            <section class="section" id="operating">
+                <h2>Operating the robots</h2>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger">
+                        Launch files
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <ul>
+                                <li><code>minimal.launch</code> — MCU connection only</li>
+                                <li><code>short.launch</code> — full stack (short robot)</li>
+                                <li><code>tall.launch</code> — full stack (tall robot)</li>
+                                <li><code>sense_and_map.launch</code> — SLAM mapping</li>
+                            </ul>
+                            <p>Arguments: <code>car:=true</code> (rear-wheel config), <code>patrol:=true</code> (patrol path).</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">roslaunch mattbot_bringup &lt;launch_file&gt; [arguments:=arg_value]</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger">
+                        Creating a map
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="code-wrap">
+                                <pre class="code-block">roslaunch mattbot_bringup sense_and_map.launch</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Second terminal — teleop:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">roslaunch mattbot_teleop keyboard.launch</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Drive through the entire space, then save:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">rosrun map_server map_saver -f &lt;map_name&gt; map:=/map</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Copy <code>&lt;map_name&gt;.yaml</code>, <code>&lt;map_name&gt;.pgm</code>, and edited <code>&lt;map_name&gt;_mod.pgm</code> to <code>~/workspace/catkin_ws/src/mattbot_mcl/maps</code>.</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">python3 ./generate_dds_map.py --map_file &lt;map_name&gt;</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Copy <code>current_map.json</code> to your GUI machine as <code>dds_robot_platform/dds/user_map.json</code>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger">
+                        Normal operation
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="code-wrap">
+                                <pre class="code-block">roslaunch mattbot_bringup tall.launch</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Car configuration:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">roslaunch mattbot_bringup tall.launch car:=true</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger">
+                        Powering down
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <p>Prefer the GUI <strong>Power Off</strong> button for graceful shutdown.</p>
+                            <p>Manual: <kbd>Ctrl+C</kbd> in ROS terminals, or:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">rosnode kill -a</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Exit container: <code>exit</code>. Shut down Jetson:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">sudo shutdown -h now</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="success">
+                    <strong>You're ready!</strong> You can now operate the robot safely and extend the codebase for your own applications.
+                </div>
+            </section>
+        </div>
     </div>
-    
-    <!-- Back to Top Button -->
-    <a href="#" class="back-to-top" id="backToTop">↑</a>
-    
-    <script>
-        // Back to top functionality
-        const backToTopButton = document.getElementById('backToTop');
-        
-        // Show/hide button based on scroll position
-        window.addEventListener('scroll', function() {
-            if (window.pageYOffset > 300) {
-                backToTopButton.classList.add('visible');
-            } else {
-                backToTopButton.classList.remove('visible');
-            }
-        });
-        
-        // Smooth scroll to top when clicked
-        backToTopButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-    </script>
+
+    <div class="lightbox" id="lightbox" role="dialog" aria-label="Enlarged image"><img src="" alt=""></div>
+    <button type="button" class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+    <script src="assets/mattbot.js"></script>
 </body>
 </html>
