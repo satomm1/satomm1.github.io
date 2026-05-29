@@ -400,31 +400,22 @@
                         <div class="collapsible-content">
                             <div class="step-card">
                                 <div class="step-number">1</div>
-                                <h3>Start DDS node</h3>
-                                <p>Three terminals (WSL or Unix):</p>
-                                <p><strong>Terminal 1 — Docker:</strong></p>
+                                <h3>Start Docker stack and DDS</h3>
+                                <p>Complete one-time setup in the <a href="setup.html#gui-dds">Setup Guide → User GUI / communication</a> (clone repo, <code>dds_env.sh</code>, <code>docker compose pull</code>). Then from the repo root:</p>
                                 <div class="code-wrap">
                                     <pre class="code-block">cd dds_robot_platform
-docker compose up -d</pre>
+docker compose up -d
+docker exec -d dds ./start_scripts.sh</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
-                                <p><strong>To shut down the Docker containers:</strong></p>
+                                <p><strong>To shut down DDS scripts:</strong></p>
                                 <div class="code-wrap">
-                                    <pre class="code-block">cd dds_robot_platform
-docker compose down</pre>
+                                    <pre class="code-block">docker exec dds ./stop_scripts.sh</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
-                                <p><strong>Terminal 2 — DDS scripts:</strong></p>
+                                <p><strong>To tear down the stack:</strong></p>
                                 <div class="code-wrap">
-                                    <pre class="code-block">cd dds_robot_platform/dds
-./start_scripts.sh</pre>
-                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
-                                </div>
-                                <div class="tip">Set <code>export AGENT_ID=xxx</code> in <code>~/.bashrc</code>.</div>
-                                <p><strong>Terminal 3 — stop scripts:</strong></p>
-                                <div class="code-wrap">
-                                    <pre class="code-block">cd dds_robot_platform/dds
-./stop_scripts.sh</pre>
+                                    <pre class="code-block">docker compose down</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
                             </div>

@@ -336,15 +336,12 @@ cd dds_robot_platform</pre>
                                 <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                             </div>
                             <div class="tip">
-                                <p><strong>Windows:</strong> Clone into your <strong>WSL</strong> filesystem (e.g. under <code>~/</code> in Ubuntu) so Docker and DDS scripts run in the same environment as the README expects. For GUI development from source, you may also clone a second copy into a <strong>Windows directory</strong> (e.g. <code>C:\Users\…\dds_robot_platform</code>) and run <code>npm start</code> from Windows command line — but keep your primary WSL clone for <code>docker compose</code> and <code>./start_scripts.sh</code>.</p>
+                                <p><strong>Windows:</strong> Clone into your <strong>WSL</strong> filesystem (e.g. under <code>~/</code> in Ubuntu) so <code>docker compose</code> runs where the README expects. For GUI development from source, you may also clone a second copy on a <strong>Windows path</strong> and run <code>npm start</code> from Windows command line.</p>
                             </div>
-                            <p>Also install:</p>
-                            <ul>
-                                <li><a href="https://www.docker.com/products/docker-desktop/" target="_blank" rel="noopener">Docker Desktop</a> — download and install before running DDS</li>
-                                <li><a href="https://www.anaconda.com/docs/getting-started/miniconda/main" target="_blank" rel="noopener">Miniconda</a> (or another conda interpreter) for the DDS Python environment</li>
-                            </ul>
+                            <p>Install <a href="https://www.docker.com/products/docker-desktop/" target="_blank" rel="noopener">Docker Desktop</a> and ensure the Docker daemon is running.</p>
+                            <p>Copy <code>dds/dds_env.sh.example</code> to <code>dds/dds_env.sh</code> and set <code>AGENT_ID</code>, <code>INFLUXDB_TOKEN</code>, and any other operator variables. The compose stack, DDS container, and GUI read this file.</p>
                             <div class="tip">
-                                <p><strong>Windows workflow:</strong> Run Docker and DDS code via <strong>WSL</strong>. Run the GUI from the <strong>Windows command line</strong> (not WSL). See the <a href="operation.html#dds-setup">Operation Guide</a> for production GUI steps.</p>
+                                <p><strong>Windows workflow:</strong> Run <code>docker compose</code> and DDS commands via <strong>WSL</strong>. Run the GUI from the <strong>Windows command line</strong> (desktop app) or from source. See the <a href="operation.html#dds-setup">Operation Guide</a> for day-to-day production steps.</p>
                             </div>
                         </div>
                     </div>
@@ -352,65 +349,59 @@ cd dds_robot_platform</pre>
 
                 <div class="collapsible">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
-                        DDS and Backend setup
+                        DDS (Docker)
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
                     <div class="collapsible-panel">
                         <div class="collapsible-content">
+                            <p>The local stack runs entirely in Docker. DDS and GraphQL use the <strong><code>ghcr.io/satomm1/matt_python</code></strong> image from <a href="https://github.com/users/satomm1/packages" target="_blank" rel="noopener">GitHub Container Registry</a> (no manual download from Google Drive). The <code>./dds</code> directory is mounted into the container; DDS scripts are started and stopped on demand inside the <code>dds</code> container.</p>
+
                             <div class="step-card">
                                 <div class="step-number">1</div>
-                                <h3>Docker image</h3>
-                                <p>Download <strong><code>matt_python_latest.tar.gz</code></strong> from the Google Drive folder linked in the <a href="https://github.com/satomm1/dds_robot_platform/blob/main/README.md" target="_blank" rel="noopener">dds_robot_platform README</a> (<a href="https://drive.google.com/drive/folders/1emeEoJrZxV4Nn6ktKUAyXbSTj0LjnlfB?usp=drive_link" target="_blank" rel="noopener">Drive folder</a>), then load it:</p>
+                                <h3>Pull images and start the stack</h3>
+                                <p>From the <code>dds_robot_platform</code> repo root:</p>
                                 <div class="code-wrap">
-                                    <pre class="code-block">docker load &lt; matt_python_latest.tar.gz</pre>
+                                    <pre class="code-block">docker compose pull
+docker compose up -d</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p><code>docker compose up -d</code> alone also pulls missing images. This starts InfluxDB, Ignite, GraphQL, and the idle <code>dds</code> container.</p>
+                                <p><strong>Alternatively:</strong> GUI <strong>Local Stack</strong> → <strong>Docker</strong> → <strong>Start</strong> (runs <code>docker compose up -d</code> via WSL on Windows). Requires <code>compose.yaml</code> and <code>dds/dds_env.sh</code>.</p>
+                                <p>To tear down the stack:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">docker compose down</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
                             </div>
 
                             <div class="step-card">
                                 <div class="step-number">2</div>
-                                <h3>Conda environment &amp; DDS config</h3>
+                                <h3>Start and stop DDS scripts (in container)</h3>
+                                <p>After Docker is up, start DDS inside the <code>dds</code> container:</p>
                                 <div class="code-wrap">
-                                    <pre class="code-block">conda env create -f environment.yml</pre>
+                                    <pre class="code-block">docker exec -d dds ./start_scripts.sh</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
-                                <p>You may also need to install DDS separately — I’m not certain whether that step is required for every setup. Check the <a href="https://github.com/satomm1/dds_robot_platform/blob/main/README.md" target="_blank" rel="noopener">repo README</a> for any additional DDS install instructions.</p>
-                                <p>Copy <code>dds/dds_env.sh.example</code> to <code>dds/dds_env.sh</code> and set <code>AGENT_ID</code>, <code>INFLUXDB_TOKEN</code>, and any other operator variables. Both <code>start_scripts.sh</code> and the GUI read this file.</p>
-                                <div class="tip">
-                                    <p>If the steps below result in a DDS error, contact Matthew Sato at <a href="mailto:satomm@stanford.edu">satomm@stanford.edu</a>.</p>
+                                <p><strong>Alternatively:</strong> GUI <strong>Local Stack</strong> — verify repo path, start <strong>Docker</strong>, then <strong>DDS</strong> → <strong>Start</strong> (DDS stays disabled until Docker is running).</p>
+                                <p>When finished, stop DDS scripts:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">docker exec dds ./stop_scripts.sh</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
+                                <p>Or <strong>DDS</strong> → <strong>Stop</strong> in the GUI <strong>Local Stack</strong> panel.</p>
                             </div>
 
                             <div class="step-card">
                                 <div class="step-number">3</div>
-                                <h3>Run DDS (three terminals)</h3>
-                                <p><strong>Terminal 1</strong> — from the <code>dds_robot_platform</code> repo root:</p>
+                                <h3>Verify DDS scripts (optional)</h3>
                                 <div class="code-wrap">
-                                    <pre class="code-block">docker compose up -d</pre>
+                                    <pre class="code-block">docker exec dds bash -lc "pgrep -af python"</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
-                                <p>Shut down:</p>
-                                <div class="code-wrap">
-                                    <pre class="code-block">docker compose down</pre>
-                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                <p>You should see the publisher/subscriber scripts (<code>entry_exit.py</code>, <code>heartbeat_publisher.py</code>, <code>goal_publisher.py</code>, etc.).</p>
+                                <div class="tip">
+                                    <p>If you hit a DDS error during setup, contact Matthew Sato at <a href="mailto:satomm@stanford.edu">satomm@stanford.edu</a>.</p>
                                 </div>
-                                <p><strong>Alternatively:</strong> use the GUI <strong>Local Stack</strong> panel — <strong>Docker</strong> → <strong>Start</strong> (runs <code>docker compose up -d</code> via WSL on Windows). Requires <code>compose.yaml</code> and <code>dds/dds_env.sh</code>.</p>
-
-                                <p><strong>Terminal 2</strong> — DDS scripts:</p>
-                                <div class="code-wrap">
-                                    <pre class="code-block">cd dds
-./start_scripts.sh</pre>
-                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
-                                </div>
-                                <p><strong>Alternatively:</strong> GUI <strong>Local Stack</strong> — set repo path, then <strong>DDS</strong> → <strong>Start</strong> / <strong>Stop</strong>. On Windows the GUI uses WSL; conda env <code>dds</code> and <code>dds/dds_env.sh</code> are required.</p>
-
-                                <p><strong>Terminal 3</strong> — when finished:</p>
-                                <div class="code-wrap">
-                                    <pre class="code-block">cd dds
-./stop_scripts.sh</pre>
-                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
-                                </div>
-                                <p>Or click <strong>Stop DDS</strong> in the GUI <strong>Local DDS</strong> panel.</p>
                             </div>
                         </div>
                     </div>
@@ -436,7 +427,7 @@ cd dds_robot_platform</pre>
                                 </li>
                             </ol>
                             <div class="warning">
-                                <strong>Backend:</strong> The desktop app is <strong>only the UI</strong>. Start Docker/GraphQL and DDS so the GraphQL API is available (see DDS setup above). The app expects <code>http://localhost:8000/graphql</code> unless changed at build time via <code>REACT_APP_GRAPHQL_HTTP_URL</code> in <code>gui</code>.
+                                <strong>Backend:</strong> The desktop app is <strong>only the UI</strong>. Start the Docker stack and DDS scripts so the GraphQL API is available (see <strong>DDS (Docker)</strong> above). The app expects <code>http://localhost:8000/graphql</code> unless changed at build time via <code>REACT_APP_GRAPHQL_HTTP_URL</code> in <code>gui</code>.
                             </div>
                         </div>
                     </div>
