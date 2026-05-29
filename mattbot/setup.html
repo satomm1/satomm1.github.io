@@ -56,9 +56,246 @@
             </section>
 
             <section class="section" id="jetson">
-                <h2>NVIDIA Jetson</h2>
-                <p>Follow the Jetson setup README in the Robot repository:</p>
-                <a href="https://github.com/satomm1/Robot/tree/main/Jetson/README.md" class="nav-link" target="_blank" rel="noopener" style="margin-top: 0.5rem;">Jetson setup on GitHub →</a>
+                <h2>NVIDIA Jetson Setup</h2>
+                <p>
+                    The robot uses an <strong>8 GB NVIDIA Jetson Orin Nano Developer Kit</strong> for high-level control. Full details are in the
+                    <a href="https://github.com/satomm1/Robot/blob/main/Jetson/README.md" target="_blank" rel="noopener">Jetson README</a>
+                    on the <a href="https://github.com/satomm1/Robot" target="_blank" rel="noopener">Robot</a> repository.
+                </p>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Jetson bring-up
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Flash Jetpack to microSD</h3>
+                                <p>I recommend <strong>Jetpack 5.x</strong> (e.g. 5.1.5 as of May 2025) — Jetpack 6.x has caused WiFi card issues. Image: <a href="https://developer.nvidia.com/embedded/jetpack-sdk-515" target="_blank" rel="noopener">Jetpack SDK 5.1.5</a>.</p>
+                                <p>Format the SD card with the <a href="https://www.sdcard.org/downloads/formatter/" target="_blank" rel="noopener">SD Association formatter</a>, then flash with <a href="https://etcher.balena.io/" target="_blank" rel="noopener">Balena Etcher</a>. Alternatively use NVIDIA SDK Manager (native Ubuntu or VMware Workstation VM with enough disk and USB passthrough to the Jetson).</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Replace WiFi card</h3>
+                                <p>The default card does not support roaming (needed for mesh). Use an <strong>Intel AC9260</strong> on the bottom of the Jetson (screwdriver).</p>
+                                <div class="warning"><strong>Important:</strong> Reconnect the antennas to the new WiFi card.</div>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">3</div>
+                                <h3>First boot</h3>
+                                <p>Power on with a monitor, connect to Wi‑Fi so you can SSH in.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">4</div>
+                                <h3>Basic packages</h3>
+                                <div class="code-wrap">
+                                    <pre class="code-block">sudo apt update
+sudo apt install nano</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">5</div>
+                                <h3>SPI on 40-pin header (MCU)</h3>
+                                <div class="code-wrap">
+                                    <pre class="code-block">cd /opt/nvidia/jetson-io
+sudo python3 jetson-io.py</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Manually configure the header: activate <strong>SPI1</strong> and <strong>I2S</strong>. Reboot when done.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">6</div>
+                                <h3>Load spidev at boot</h3>
+                                <p>Edit <code>/etc/modules-load.d/spidev.conf</code> (e.g. <code>sudo nano /etc/modules-load.d/spidev.conf</code>), add:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">spidev</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Save and exit nano: <kbd>Ctrl+O</kbd>, <kbd>Enter</kbd>, then <kbd>Ctrl+X</kbd>. Reboot the Jetson for the change to take effect.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">7</div>
+                                <h3>Serial / USB (optional)</h3>
+                                <p>If <code>/dev/ttyUSB0</code> has issues: <code>sudo apt remove brltty</code></p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">8–9</div>
+                                <h3>Wiring</h3>
+                                <h4>Jetson ↔ main board (SPI1)</h4>
+                                <p>Connect the main board’s 6-position Molex (first five positions) to the Jetson 40-pin header with dupont wires. Match SPI1 on the Jetson to the PCB labels:</p>
+                                <table class="pin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Jetson pin name</th>
+                                            <th>Jetson GPIO</th>
+                                            <th>PCB pin name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>SPI1_SCLK</td><td>23</td><td>SCK</td></tr>
+                                        <tr><td>SPI1_CS0</td><td>24</td><td>SS</td></tr>
+                                        <tr><td>SPI1_din</td><td>21</td><td>SDO</td></tr>
+                                        <tr><td>SPI1_dout</td><td>19</td><td>SDI</td></tr>
+                                        <tr><td>GND</td><td>25</td><td>GND</td></tr>
+                                    </tbody>
+                                </table>
+                                <div class="warning"><strong>Note:</strong> If using twisted-pair wire, <strong>do not</strong> twist the SDO and SDI wires together — that can cause crosstalk and degrade SPI communication.</div>
+                                <p>Full main-board wiring (motors, power, buttons) is in the <a href="https://github.com/satomm1/Robot/blob/main/Electrical/README.md" target="_blank" rel="noopener">Electrical README</a>.</p>
+                                <h4>Jetson ↔ microphone board (I2S2)</h4>
+                                <p>Use the PIC32 board’s <strong>6-pin</strong> connector (not the 5-pin header). Set the switch to the <strong>upward</strong> position. Connect to Jetson I2S2 (pin numbers may vary with your header config):</p>
+                                <table class="pin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>PIC32 pin</th>
+                                            <th>Jetson I2S pin</th>
+                                            <th>Jetson pin #</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>CS</td><td>I2S2_FS</td><td>35</td></tr>
+                                        <tr><td>SDI</td><td>I2S2_DOUT</td><td>40</td></tr>
+                                        <tr><td>SDO</td><td>I2S2_DIN</td><td>38</td></tr>
+                                        <tr><td>SCK</td><td>I2S2_SCLK</td><td>12</td></tr>
+                                        <tr><td>GND</td><td>GND</td><td>14</td></tr>
+                                        <tr><td>3V3</td><td>3.3V</td><td>17</td></tr>
+                                    </tbody>
+                                </table>
+                                <p>Microphone assembly, PIC32 firmware, and Jetson audio software: <a href="https://github.com/satomm1/Robot/blob/main/Electrical/Microphones/README.md" target="_blank" rel="noopener">Microphone README</a> and <a href="https://github.com/satomm1/mattbot_record/tree/noetic" target="_blank" rel="noopener">mattbot_record (noetic)</a>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        WiFi roaming setup
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <p>Roaming lets the Jetson switch access points when signal is weak. Use <code>wifi_roaming_setup.sh</code> from the Jetson directory in the Robot repo.</p>
+                            <p><strong>Prerequisites:</strong> Intel AC9260 installed, bring-up through step 4, <code>sudo apt install wpasupplicant</code>, and a <code>wlan*</code> interface (<code>ip link show | grep wlan</code>).</p>
+                            <p><strong>Copy script to Jetson</strong> (wget):</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">cd ~
+wget "https://raw.githubusercontent.com/satomm1/Robot/main/Jetson/wifi_roaming_setup.sh"
+chmod +x wifi_roaming_setup.sh</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p><strong>Run:</strong></p>
+                            <div class="code-wrap">
+                                <pre class="code-block">sudo ~/wifi_roaming_setup.sh</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Follow prompts (SSID, password, US/KR regulatory domain), then <code>sudo reboot</code>. Verify: <code>sudo systemctl status wpa_supplicant@wlan0 custom_wifi.service</code> (replace <code>wlan0</code> if needed).</p>
+                            <div class="tip">Assign a fixed DHCP reservation for the Jetson’s WiFi MAC on your router for a stable IP.</div>
+                            <p>Undo/revert steps are in the <a href="https://github.com/satomm1/Robot/blob/main/Jetson/README.md" target="_blank" rel="noopener">Jetson README</a>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Docker setup (pre-built image) and ROS workspace setup
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <p>First configure Docker on the Jetson per <a href="https://github.com/dusty-nv/jetson-containers/blob/master/docs/setup.md" target="_blank" rel="noopener">jetson-containers setup</a> (through at least <strong>Relocating Docker Data Root</strong>). If using NVMe, set <code>data-root</code> in <code>/etc/docker/daemon.json</code> (e.g. <code>"/mnt/data"</code>), then <code>sudo systemctl restart docker</code>.</p>
+
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Download and load ROS Docker image</h3>
+                                <p>Download the pre-built image (<code>ml_ros</code>) from <a href="https://drive.google.com/file/d/1__ZI9WkVhz9b7KRzaHHCewiELtFPr_nl/view?usp=sharing" target="_blank" rel="noopener">Google Drive</a>, then on the Jetson:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">sudo docker load &lt; your_image.tar.gz</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Typical run command:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">sudo docker run --runtime nvidia --network=host -v ~/workspaces/catkin_ws:/workspace/catkin_ws -v ~/gemini_api:/gemini_code -v /dev/bus/usb:/dev/bus/usb -v /dev/video0:/dev/video0 -v /dev/video1:/dev/video1 -it --device=/dev/ttyUSB0 --device=/dev/spidev0.0 --rm --privileged --name ros_noetic ml_ros:latest</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Inside the container: <code>source /opt/ros/noetic/setup.bash</code></p>
+                            </div>
+
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>ROS workspace</h3>
+                                <div class="code-wrap">
+                                    <pre class="code-block">cd /workspace/catkin_ws
+mkdir -p devel src
+catkin_make
+source devel/setup.bash
+cd src</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Copy <code>clone_repos.sh</code> from the Robot Jetson folder to the Jetson, make executable, and run it to clone mattbot packages, <code>ros_astra_camera</code>, <code>rplidar_ros</code>, <code>robot_env.sh</code>, <code>startup_script.py</code>, etc. (full list in <a href="https://github.com/satomm1/Robot/blob/main/Jetson/README.md" target="_blank" rel="noopener">README</a>).</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">cd /workspace/catkin_ws
+catkin_make
+source devel/setup.bash</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Edit <code>/workspace/catkin_ws/src/robot_env.sh</code> with Jetson IP, robot ID, MCU SPI, camera type, and robot height. Add to <code>~/.bashrc</code>:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">source /workspace/catkin_ws/devel/setup.bash
+source /workspace/catkin_ws/src/robot_env.sh</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Test with <code>roscore</code>. For the Astra camera, outside the container:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">cd ~/workspaces/catkin_ws/src/ros_astra_camera
+./scripts/create_udev_rules
+sudo udevadm control --reload && sudo udevadm trigger</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Save changes: <code>sudo docker commit ros_noetic ml_ros:latest</code> (with container running).</p>
+                            </div>
+
+                            <div class="step-card">
+                                <div class="step-number">3</div>
+                                <h3>Gemini container (optional)</h3>
+                                <p>Download from <a href="https://drive.google.com/file/d/1xQtwj8xyFaPMbaMlJZ36KgxLJ6gVcdOr/view?usp=sharing" target="_blank" rel="noopener">Google Drive</a>, then:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">sudo docker load &lt; gemini_latest.tar.gz
+cd ~ && git clone https://github.com/satomm1/gemini_api.git
+sudo docker run -v ~/gemini_api:/gemini_code -v ~/Desktop/audio:/audio -w /gemini_code -it --rm --privileged -p 5000:5000 --name gemini gemini:latest</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Inside: <code>. start_scripts.sh</code></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Onboard display setup
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="tip">
+                                <p>Run all of the following on the <strong>Jetson host</strong> (outside the Docker container), not inside <code>ros_noetic</code> or other containers.</p>
+                            </div>
+                            <div class="code-wrap">
+                                <pre class="code-block">git clone https://github.com/satomm1/mattbot_display.git
+cd mattbot_display
+pip3 install pygame
+pip3 install -U pyinstaller
+mkdir -p ~/Desktop/audio
+cp default.mp3 ~/Desktop/audio
+python3 display_app.py</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Build desktop executable: <code>pyinstaller display_app.spec</code>, then <code>cp dist/display_app ~/Desktop</code>. After copying to the Desktop, you can launch the display app by <strong>double-tapping</strong> its icon on the touchscreen. Adjust <code>AUDIODEV</code> in the script if needed (see <a href="https://github.com/satomm1/Robot/blob/main/Jetson/README.md" target="_blank" rel="noopener">Jetson README</a>).</p>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <section class="section" id="gui-dds">
