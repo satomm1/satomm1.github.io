@@ -204,19 +204,29 @@ chmod +x wifi_roaming_setup.sh</pre>
                     </button>
                     <div class="collapsible-panel">
                         <div class="collapsible-content">
+                            <p>Use the pre-built <strong><code>ml_ros</code></strong> image from <a href="https://github.com/users/satomm1/packages" target="_blank" rel="noopener">GitHub Container Registry</a> (<code>ghcr.io/satomm1/ml_ros:latest</code>). Building from scratch on the Jetson is only needed if you are customizing the container — see the <a href="https://github.com/satomm1/Robot/blob/main/Jetson/README.md" target="_blank" rel="noopener">Jetson README</a>.</p>
                             <p>First configure Docker on the Jetson per <a href="https://github.com/dusty-nv/jetson-containers/blob/master/docs/setup.md" target="_blank" rel="noopener">jetson-containers setup</a> (through at least <strong>Relocating Docker Data Root</strong>). If using NVMe, set <code>data-root</code> in <code>/etc/docker/daemon.json</code> (e.g. <code>"/mnt/data"</code>), then <code>sudo systemctl restart docker</code>.</p>
 
                             <div class="step-card">
                                 <div class="step-number">1</div>
-                                <h3>Download and load ROS Docker image</h3>
-                                <p>Download the pre-built image (<code>ml_ros</code>) from <a href="https://drive.google.com/file/d/1__ZI9WkVhz9b7KRzaHHCewiELtFPr_nl/view?usp=sharing" target="_blank" rel="noopener">Google Drive</a>, then on the Jetson:</p>
+                                <h3>Pull pre-built <code>ml_ros</code> image</h3>
+                                <p>On the Jetson, after Docker is installed:</p>
                                 <div class="code-wrap">
-                                    <pre class="code-block">sudo docker load &lt; your_image.tar.gz</pre>
+                                    <pre class="code-block">docker pull ghcr.io/satomm1/ml_ros:latest</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
-                                <p>Typical run command:</p>
+                                <p>Verify:</p>
                                 <div class="code-wrap">
-                                    <pre class="code-block">sudo docker run --runtime nvidia --network=host -v ~/workspaces/catkin_ws:/workspace/catkin_ws -v ~/gemini_api:/gemini_code -v /dev/bus/usb:/dev/bus/usb -v /dev/video0:/dev/video0 -v /dev/video1:/dev/video1 -it --device=/dev/ttyUSB0 --device=/dev/spidev0.0 --rm --privileged --name ros_noetic ml_ros:latest</pre>
+                                    <pre class="code-block">docker images ghcr.io/satomm1/ml_ros:latest</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>No <code>docker login</code> is required — the package is public on GHCR. To refresh after an image update, run <code>docker pull ghcr.io/satomm1/ml_ros:latest</code> again.</p>
+                                <div class="tip">
+                                    <p><strong>Offline / no registry access:</strong> on a connected machine, run <code>docker pull ghcr.io/satomm1/ml_ros:latest</code>, then <code>docker save ghcr.io/satomm1/ml_ros:latest | gzip &gt; ml_ros.tar.gz</code>, copy to the Jetson, and <code>sudo docker load &lt; ml_ros.tar.gz</code>.</p>
+                                </div>
+                                <p>Start the container (example):</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">sudo docker run --runtime nvidia --network=host -v ~/workspaces/catkin_ws:/workspace/catkin_ws -v ~/gemini_api:/gemini_code -v /dev/bus/usb:/dev/bus/usb -v /dev/video0:/dev/video0 -v /dev/video1:/dev/video1 -it --device=/dev/ttyUSB0 --device=/dev/spidev0.0 --rm --privileged --name ros_noetic ghcr.io/satomm1/ml_ros:latest</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
                                 <p>Inside the container: <code>source /opt/ros/noetic/setup.bash</code></p>
@@ -253,7 +263,12 @@ source /workspace/catkin_ws/src/robot_env.sh</pre>
 sudo udevadm control --reload && sudo udevadm trigger</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
-                                <p>Save changes: <code>sudo docker commit ros_noetic ml_ros:latest</code> (with container running).</p>
+                                <p>Save changes (with container running):</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">sudo docker commit ros_noetic ghcr.io/satomm1/ml_ros:latest</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>This tag matches the Jetson host service and GHCR image name.</p>
                             </div>
 
                             <div class="step-card">
