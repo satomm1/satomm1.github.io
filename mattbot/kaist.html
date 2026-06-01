@@ -152,7 +152,7 @@ roslaunch mattbot_bringup bringup.launch</pre>
 
             <section class="section" id="updates">
                 <h2>Updates</h2>
-                <p>Required software, script, and hardware updates for the KAIST deployment. <strong>Most recent updates appear at the top.</strong> When an update has been applied by everyone, move it below the divider into previous updates — do not delete it.</p>
+                <p>Required software, script, and hardware updates for the KAIST deployment. <strong>Most recent updates appear at the top.</strong></p>
 
                 <!-- <div class="add-update-note">
                     <strong>To add a new update:</strong> Copy the HTML block below (from <code>&lt;!-- NEW UPDATE --&gt;</code> through the closing <code>&lt;/div&gt;</code>) and paste it <em>above</em> the existing updates. Set the date, badge type (<code>software</code>, <code>hardware</code>, <code>script</code>, or <code>other</code>), title, and content. Add <code>open</code> to the collapsible class if you want it expanded by default.
@@ -190,6 +190,47 @@ roslaunch mattbot_bringup bringup.launch</pre>
 
                 <div class="collapsible update-item open">
                     <button type="button" class="collapsible-trigger" aria-expanded="true">
+                        <span class="update-title">Download robot_env.sh and startup_script.py</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="update-meta">
+                                <span class="update-date">2026-06-01</span>
+                                <span class="update-badge script">Script</span>
+                            </div>
+                            <p>On each Jetson, download these two files into <code>~/workspaces/catkin_ws/src</code>:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">cd ~/workspaces/catkin_ws/src
+sudo wget -O robot_env.sh "https://raw.githubusercontent.com/satomm1/Robot/main/Jetson/robot_env.sh"
+sudo wget -O startup_script.py "https://raw.githubusercontent.com/satomm1/dds_robot_platform/main/robot/startup_script.py"</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p><strong>Edit <code>robot_env.sh</code> on each robot</strong> (inside the Docker container this path is <code>/workspace/catkin_ws/src/robot_env.sh</code>):</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">sudo nano ~/workspaces/catkin_ws/src/robot_env.sh</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Update these lines with the values below. Set <code>ROS_IP</code> and <code>ROBOT_ID</code> uniquely for each robot; the other values are the same for all KAIST units:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">export ROS_IP=              # this Jetson's IP address
+export ROBOT_ID=              # unique ID for this robot (match MCU robot ID)
+export MCU_SPI=3
+export CAMERA_TYPE=astra_pro_plus
+export ROBOT_HEIGHT=tall</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Use the arrow keys to move the cursor. Type each value after the <code>=</code> on the lines above (leave <code>export</code> and the variable names unchanged).</p>
+                            <p>Save and exit nano: press <kbd>Ctrl+O</kbd>, then <kbd>Enter</kbd> to confirm the filename, then <kbd>Ctrl+X</kbd> to close the editor.</p>
+                            <div class="tip">
+                                <p>See <a href="setup.html#jetson">Setup Guide → ROS workspace</a> for sourcing <code>robot_env.sh</code> in <code>~/.bashrc</code> if not already configured.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible update-item">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
                         <span class="update-title">Load spidev at boot (Jetson)</span>
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
