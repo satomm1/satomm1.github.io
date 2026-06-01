@@ -190,6 +190,87 @@ roslaunch mattbot_bringup bringup.launch</pre>
 
                 <div class="collapsible update-item open">
                     <button type="button" class="collapsible-trigger" aria-expanded="true">
+                        <span class="update-title">Install Jetson host service (GUI startup)</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="update-meta">
+                                <span class="update-date">2026-06-01</span>
+                                <span class="update-badge script">Script</span>
+                            </div>
+                            <p>On each Jetson (outside Docker), install the <strong>Jetson host service</strong> so the operator GUI <strong>Robot Startup</strong> panel can start/stop the <code>ros_noetic</code> container and power off the Jetson over HTTP on port <strong>8081</strong>. ROS launch and software updates remain on port <strong>8080</strong> inside the container (<code>startup_script.py</code>).</p>
+                            <p><strong>1. Download the install script</strong> on the Jetson:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">cd ~
+wget "https://raw.githubusercontent.com/satomm1/Robot/main/Jetson/jetson-host-install.sh"
+chmod +x jetson-host-install.sh</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p><strong>2. Run the installer</strong> on the Jetson:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">sudo ./jetson-host-install.sh</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>The installer writes <code>/opt/robot/host_service.py</code> and enables the <code>robot-host-service</code> systemd unit so the service starts on boot. Re-running the installer replaces the service file and restarts it.</p>
+                            <div class="warning">
+                                <p>If you see <code>/usr/bin/env: 'bash\r': No such file or directory</code>, the script has Windows (CRLF) line endings. On the Jetson run <code>sed -i 's/\r$//' ~/jetson-host-install.sh</code> and try again.</p>
+                            </div>
+                            <p><strong>3. Verify</strong> the service is running:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">curl -s http://127.0.0.1:8081/status</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Expected response (example): <code>{"host_service": true, "docker_running": false, "container": "ros_noetic"}</code></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible update-item">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        <span class="update-title">Replace Docker image with ml_ros:latest</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="update-meta">
+                                <span class="update-date">2026-06-01</span>
+                                <span class="update-badge software">Software</span>
+                            </div>
+                            <p>On each Jetson, remove the old Docker image and pull the updated <code>ml_ros</code> image from GitHub Container Registry. The pull can take a long time — use <strong>tmux</strong> so it keeps running if your SSH session disconnects.</p>
+                            <p><strong>Install tmux:</strong></p>
+                            <div class="code-wrap">
+                                <pre class="code-block">sudo apt update
+sudo apt install tmux</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p><strong>Start a tmux session</strong> (on the Jetson host, outside Docker):</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">tmux new -s docker-pull</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Inside tmux, stop the ROS container if it is running, remove the old image, and pull the new one:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">sudo docker stop ros_noetic
+sudo docker rmi ros_ml:latest
+sudo docker pull ghcr.io/satomm1/ml_ros:latest</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Verify the new image is present:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">sudo docker images ghcr.io/satomm1/ml_ros:latest</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>When the pull finishes, detach from tmux without stopping it: press <kbd>Ctrl+B</kbd>, then <kbd>D</kbd>. To reattach later — or if your SSH terminal disconnects during the pull — run <code>tmux attach -t docker-pull</code>. Exit the session when done: type <code>exit</code> inside tmux.</p>
+                            <div class="tip">
+                                <p>If <code>docker rmi</code> fails because the image is still in use, ensure <code>ros_noetic</code> is stopped (<code>sudo docker stop ros_noetic</code>) and retry. No <code>docker login</code> is required — the package is public on GHCR.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible update-item">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
                         <span class="update-title">Download robot_env.sh and startup_script.py</span>
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
