@@ -274,6 +274,64 @@ sudo docker run -v ~/gemini_api:/gemini_code -v ~/Desktop/audio:/audio -w /gemin
 
                 <div class="collapsible">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Jetson host service (GUI startup)
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <p>After Docker and the ROS workspace are set up, install the <strong>Jetson host service</strong> on the base machine (not inside Docker). The operator GUI <strong>Robot Startup</strong> panel uses HTTP on port <strong>8081</strong> to start/stop the <code>ros_noetic</code> container and power off the Jetson. ROS launch and software updates remain on port <strong>8080</strong> inside the container (<code>startup_script.py</code>).</p>
+                            <p>You do not need the GUI repo on the Jetson — only the install script from the <a href="https://github.com/satomm1/Robot" target="_blank" rel="noopener">Robot</a> repo. Full reference: <a href="https://github.com/satomm1/Robot/blob/main/Jetson/JETSON_HOST_SERVICE.md" target="_blank" rel="noopener">JETSON_HOST_SERVICE.md</a>.</p>
+
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Get the install script</h3>
+                                <p><strong>On the Jetson</strong> (recommended):</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">cd ~
+wget "https://raw.githubusercontent.com/satomm1/Robot/main/Jetson/jetson-host-install.sh"
+chmod +x jetson-host-install.sh</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p><strong>From your development machine</strong> (if you have the Robot repo cloned):</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">scp Jetson/jetson-host-install.sh YOUR_USER@JETSON_IP:~/
+ssh YOUR_USER@JETSON_IP 'chmod +x ~/jetson-host-install.sh'</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                            </div>
+
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Run the installer</h3>
+                                <p>On the Jetson:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">sudo ./jetson-host-install.sh</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>The installer writes <code>/opt/robot/host_service.py</code> and enables the <code>robot-host-service</code> systemd unit so the service starts on boot. Re-running the installer replaces the service file and restarts it.</p>
+                                <div class="warning">
+                                    <p>If you see <code>/usr/bin/env: 'bash\r': No such file or directory</code>, the script has Windows (CRLF) line endings. On the Jetson run <code>sed -i 's/\r$//' ~/jetson-host-install.sh</code> and try again, or re-copy with <code>scp</code> from a checkout that uses LF for <code>*.sh</code>.</p>
+                                </div>
+                            </div>
+
+                            <div class="step-card">
+                                <div class="step-number">3</div>
+                                <h3>Verify</h3>
+                                <div class="code-wrap">
+                                    <pre class="code-block">curl -s http://127.0.0.1:8081/status</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Expected response (example): <code>{"host_service": true, "docker_running": false, "container": "ros_noetic"}</code></p>
+                                <div class="tip">
+                                    <p>Open port <strong>8081</strong> on the Jetson firewall if your operator PC cannot reach the Robot Startup panel. To change Docker paths or the <code>docker run</code> command after install, edit <code>/opt/robot/host_service.py</code> and run <code>sudo systemctl restart robot-host-service</code>.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
                         Onboard display setup
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
