@@ -1004,6 +1004,35 @@ body {
     border-radius: 3px;
 }
 
+.updates-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0 1.25rem;
+    color: #95a5a6;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.updates-divider::before,
+.updates-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #d5dbe3;
+}
+
+.updates-empty {
+    text-align: center;
+    font-size: 0.92rem;
+    color: #95a5a6;
+    font-style: italic;
+    margin: 0;
+    padding: 0.5rem 0 0.25rem;
+}
+
 /* Development / Production workflow toggle */
 .workflow-toggle-bar {
     display: flex;

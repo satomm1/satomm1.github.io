@@ -152,11 +152,11 @@ roslaunch mattbot_bringup bringup.launch</pre>
 
             <section class="section" id="updates">
                 <h2>Updates</h2>
-                <p>Required software, script, and hardware updates for the KAIST deployment. <strong>Most recent updates appear at the top.</strong></p>
+                <p>Required software, script, and hardware updates for the KAIST deployment. <strong>Most recent updates appear at the top.</strong> When an update has been applied by everyone, move it below the divider into previous updates — do not delete it.</p>
 
-                <div class="add-update-note">
+                <!-- <div class="add-update-note">
                     <strong>To add a new update:</strong> Copy the HTML block below (from <code>&lt;!-- NEW UPDATE --&gt;</code> through the closing <code>&lt;/div&gt;</code>) and paste it <em>above</em> the existing updates. Set the date, badge type (<code>software</code>, <code>hardware</code>, <code>script</code>, or <code>other</code>), title, and content. Add <code>open</code> to the collapsible class if you want it expanded by default.
-                </div>
+                </div> -->
 
                 <!--
                 NEW UPDATE TEMPLATE — copy from here:
@@ -182,12 +182,15 @@ roslaunch mattbot_bringup bringup.launch</pre>
                 </div>
 
                 end template
+
+                Move completed updates below the "Previous updates" divider.
                 -->
 
-                <!-- Example update — replace or remove when you add real updates -->
+                <div id="updates-new">
+
                 <div class="collapsible update-item open">
                     <button type="button" class="collapsible-trigger" aria-expanded="true">
-                        <span class="update-title">Example: Pull latest Docker image</span>
+                        <span class="update-title">Load spidev at boot (Jetson)</span>
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
                     <div class="collapsible-panel">
@@ -196,39 +199,73 @@ roslaunch mattbot_bringup bringup.launch</pre>
                                 <span class="update-date">2026-06-01</span>
                                 <span class="update-badge software">Software</span>
                             </div>
-                            <p>Replace this example with your first real update. On each Jetson, pull the latest <code>ml_ros</code> image:</p>
+                            <p>Each Jetson must load the <code>spidev</code> kernel module at boot so the robot can communicate with the MCU over SPI. Perform this on every robot unit.</p>
+                            <p>Edit <code>/etc/modules-load.d/spidev.conf</code> on the Jetson host (outside Docker):</p>
                             <div class="code-wrap">
-                                <pre class="code-block">docker pull ghcr.io/satomm1/ml_ros:latest</pre>
+                                <pre class="code-block">sudo nano /etc/modules-load.d/spidev.conf</pre>
                                 <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                             </div>
-                            <p>Restart the robot container via the GUI Robot Startup panel, or stop and re-run the container manually.</p>
+                            <p>Add this line to the file (create the file if it does not exist):</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">spidev</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Save and exit nano: <kbd>Ctrl+O</kbd>, <kbd>Enter</kbd>, then <kbd>Ctrl+X</kbd>. Reboot the Jetson for the change to take effect:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">sudo reboot</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Older updates accumulate below — keep for reference -->
                 <div class="collapsible update-item">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
-                        <span class="update-title">Example: Run host service installer</span>
+                        <span class="update-title">WiFi roaming setup (Jetson)</span>
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
                     <div class="collapsible-panel">
                         <div class="collapsible-content">
                             <div class="update-meta">
-                                <span class="update-date">2026-05-15</span>
+                                <span class="update-date">2026-06-01</span>
                                 <span class="update-badge script">Script</span>
                             </div>
-                            <p>Example of an installer-script update. On each Jetson:</p>
+                            <p>Configure WiFi roaming so each Jetson can switch access points when signal is weak. The Intel AC9260 is already installed on your robots — download and run the setup script on every Jetson host (outside Docker).</p>
+                            <p><strong>Download the script:</strong></p>
                             <div class="code-wrap">
                                 <pre class="code-block">cd ~
-wget "https://raw.githubusercontent.com/satomm1/Robot/main/Jetson/jetson-host-install.sh"
-chmod +x jetson-host-install.sh
-sudo ./jetson-host-install.sh</pre>
+wget "https://raw.githubusercontent.com/satomm1/Robot/main/Jetson/wifi_roaming_setup.sh"
+chmod +x wifi_roaming_setup.sh</pre>
                                 <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                             </div>
-                            <p>Verify with <code>curl -s http://127.0.0.1:8081/status</code>. Full details in <a href="setup.html#jetson">Setup → Jetson host service</a>.</p>
+                            <p><strong>Run the installer:</strong></p>
+                            <div class="code-wrap">
+                                <pre class="code-block">sudo ~/wifi_roaming_setup.sh</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Follow the prompts for your lab SSID, password, and regulatory domain (<strong>KR</strong> for Korea). Then reboot:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">sudo reboot</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>After reboot, verify the services are running (replace <code>wlan0</code> if your interface name differs):</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">sudo systemctl status wpa_supplicant@wlan0 custom_wifi.service</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <div class="tip">
+                                <p>Assign a fixed DHCP reservation for each Jetson’s WiFi MAC on your router for a stable IP. Revert steps are in the <a href="https://github.com/satomm1/Robot/blob/main/Jetson/README.md" target="_blank" rel="noopener">Jetson README</a>.</p>
+                            </div>
                         </div>
                     </div>
+                </div>
+
+                </div><!-- #updates-new -->
+
+                <div class="updates-divider" role="separator" aria-label="Previous updates">Previous updates</div>
+
+                <div id="updates-archive">
+                    <p class="updates-empty">No previous updates yet.</p>
                 </div>
 
             </section>
