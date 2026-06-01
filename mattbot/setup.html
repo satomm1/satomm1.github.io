@@ -274,11 +274,24 @@ sudo udevadm control --reload && sudo udevadm trigger</pre>
                             <div class="step-card">
                                 <div class="step-number">3</div>
                                 <h3>Gemini container (optional)</h3>
-                                <p>Download from <a href="https://drive.google.com/file/d/1xQtwj8xyFaPMbaMlJZ36KgxLJ6gVcdOr/view?usp=sharing" target="_blank" rel="noopener">Google Drive</a>, then:</p>
+                                <p>Pull the pre-built image from <a href="https://github.com/users/satomm1/packages" target="_blank" rel="noopener">GitHub Container Registry</a> (<code>ghcr.io/satomm1/gemini:latest</code>). No <code>docker login</code> is required — the package is public on GHCR.</p>
                                 <div class="code-wrap">
-                                    <pre class="code-block">sudo docker load &lt; gemini_latest.tar.gz
-cd ~ && git clone https://github.com/satomm1/gemini_api.git
-sudo docker run -v ~/gemini_api:/gemini_code -v ~/Desktop/audio:/audio -w /gemini_code -it --rm --privileged -p 5000:5000 --name gemini gemini:latest</pre>
+                                    <pre class="code-block">docker pull ghcr.io/satomm1/gemini:latest</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Verify:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">docker images ghcr.io/satomm1/gemini:latest</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>To refresh after an image update, run <code>docker pull ghcr.io/satomm1/gemini:latest</code> again.</p>
+                                <div class="tip">
+                                    <p><strong>Offline / no registry access:</strong> on a connected machine, run <code>docker pull ghcr.io/satomm1/gemini:latest</code>, then <code>docker save ghcr.io/satomm1/gemini:latest | gzip &gt; gemini.tar.gz</code>, copy to the Jetson, and <code>sudo docker load &lt; gemini.tar.gz</code>.</p>
+                                </div>
+                                <p>Clone the API repo and start the container:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">cd ~ && git clone https://github.com/satomm1/gemini_api.git
+sudo docker run -v ~/gemini_api:/gemini_code -v ~/Desktop/audio:/audio -w /gemini_code -it --rm --privileged -p 5000:5000 --name gemini ghcr.io/satomm1/gemini:latest</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
                                 <p>Inside: <code>. start_scripts.sh</code></p>
