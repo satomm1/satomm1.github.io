@@ -297,7 +297,7 @@
                                 <h3>Docker containers</h3>
                                 <p><strong>With GUI remote start</strong> (from downloaded startup script):</p>
                                 <div class="code-wrap">
-                                    <pre class="code-block">sudo docker run --runtime nvidia --network=host -v ~/workspaces/catkin_ws:/workspace/catkin_ws -v ~/gemini_api:/gemini_code -v /dev/bus/usb:/dev/bus/usb -v /dev/video0:/dev/video0 -v /dev/video1:/dev/video1 -it --device=/dev/ttyUSB0 --device=/dev/spidev0.0 --rm --privileged --pid=host --name ros_noetic ghcr.io/satomm1/ml_ros:latest bash -lc 'python3 /workspace/catkin_ws/src/startup_script.py & exec bash'</pre>
+                                    <pre class="code-block">sudo docker run --runtime nvidia --network=host -v ~/workspaces/catkin_ws:/workspace/catkin_ws -v ~/gemini_api:/gemini_code -v /dev/bus/usb:/dev/bus/usb -v /dev/video0:/dev/video0 -v /dev/video1:/dev/video1 -it --device=/dev/ttyUSB0 --device=/dev/spidev0.0 --rm --privileged --name ros_noetic ghcr.io/satomm1/ml_ros:latest bash -lc 'python3 /workspace/catkin_ws/src/startup_script.py & exec bash'</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
                                 <p><strong>Without GUI</strong> (RVIZ / development):</p>
@@ -364,7 +364,7 @@
                                 <h3>Docker containers</h3>
                                 <p><strong>With GUI remote start</strong> (from downloaded startup script):</p>
                                 <div class="code-wrap">
-                                    <pre class="code-block">sudo docker run --runtime nvidia --network=host -v ~/workspaces/catkin_ws:/workspace/catkin_ws -v ~/gemini_api:/gemini_code -v /dev/bus/usb:/dev/bus/usb -v /dev/video0:/dev/video0 -v /dev/video1:/dev/video1 -it --device=/dev/ttyUSB0 --device=/dev/spidev0.0 --rm --privileged --pid=host --name ros_noetic ghcr.io/satomm1/ml_ros:latest bash -lc 'python3 /workspace/catkin_ws/src/startup_script.py & exec bash'</pre>
+                                    <pre class="code-block">sudo docker run --runtime nvidia --network=host -v ~/workspaces/catkin_ws:/workspace/catkin_ws -v ~/gemini_api:/gemini_code -v /dev/bus/usb:/dev/bus/usb -v /dev/video0:/dev/video0 -v /dev/video1:/dev/video1 -it --device=/dev/ttyUSB0 --device=/dev/spidev0.0 --rm --privileged --name ros_noetic ghcr.io/satomm1/ml_ros:latest bash -lc 'python3 /workspace/catkin_ws/src/startup_script.py & exec bash'</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
                                 <p><strong>Without GUI</strong> (RVIZ / development):</p>
