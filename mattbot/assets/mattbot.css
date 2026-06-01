@@ -43,6 +43,14 @@
     --bg-end: #c0392b;
 }
 
+[data-theme="kaist"] {
+    --accent: #7b4397;
+    --accent-dark: #5c2d7a;
+    --accent-border: #7b4397;
+    --bg-start: #5c2d7a;
+    --bg-end: #7b4397;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -906,6 +914,94 @@ body {
     display: block;
     color: var(--header-text);
     margin-bottom: 0.25rem;
+}
+
+/* Subtle collaborator portal link (operation page footer) */
+.collaborator-note {
+    text-align: center;
+    font-size: 0.92rem;
+    color: #95a5a6;
+    margin: 0;
+}
+
+.collaborator-note a {
+    color: var(--text-muted);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.collaborator-note a:hover {
+    color: var(--header-text);
+}
+
+/* KAIST updates log */
+.update-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.update-badge {
+    display: inline-block;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.update-badge.software {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.update-badge.hardware {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.update-badge.script {
+    background: #e8daef;
+    color: #5b2c6f;
+}
+
+.update-badge.other {
+    background: #e8ecef;
+    color: #495057;
+}
+
+.update-date {
+    font-size: 0.88rem;
+    color: #7f8c8d;
+    font-weight: 500;
+}
+
+.collapsible-trigger .update-title {
+    flex: 1;
+}
+
+.collapsible.update-item .collapsible-trigger {
+    flex-wrap: wrap;
+}
+
+.add-update-note {
+    background: #f0f3f5;
+    border: 1px dashed #b0b8c4;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+}
+
+.add-update-note code {
+    font-size: 0.85rem;
+    background: #e8ecef;
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
 }
 
 /* Development / Production workflow toggle */

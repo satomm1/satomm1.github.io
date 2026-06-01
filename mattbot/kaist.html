@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="kaist">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAIST Deployment | MattBot</title>
+    <link rel="stylesheet" href="assets/mattbot.css">
+</head>
+<body>
+    <nav class="site-nav" aria-label="MattBot navigation">
+        <div class="site-nav-inner">
+            <a href="index.html" class="site-nav-brand">MattBot</a>
+            <div class="site-nav-links">
+                <a href="index.html">Overview</a>
+                <a href="instructions.html">Instructions</a>
+                <a href="construction.html">Build</a>
+                <a href="setup.html">Setup</a>
+                <a href="operation.html">Operate</a>
+                <a href="../index.html">← Home</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container with-sidebar">
+        <aside>
+            <button type="button" class="toc-toggle" id="toc-toggle">Table of Contents</button>
+            <nav class="toc-sidebar" aria-label="Table of Contents">
+                <h3>Contents</h3>
+                <div id="page-toc"></div>
+            </nav>
+        </aside>
+
+        <div class="page-layout">
+            <header class="header">
+                <h1>KAIST Deployment</h1>
+                <p class="subtitle">Site-specific instructions and updates for KAIST Mobile Robots</p>
+                <div class="nav-links">
+                    <a href="operation.html" class="nav-link back">← Operation guide</a>
+                    <a href="setup.html" class="nav-link back">← Setup guide</a>
+                </div>
+            </header>
+
+            <section class="section" id="overview">
+                <h2>Overview</h2>
+                <p>This page collects configuration details and ongoing updates for the robot fleet at KAIST. Use the general <a href="setup.html">Setup</a> and <a href="operation.html">Operation</a> guides for baseline procedures; this page covers what is specific to your deployment.</p>
+            </section>
+
+            <section class="section" id="running-instructions">
+                <h2>Running your robots</h2>
+                <p>Follow these steps for the KAIST mobile robot configuration. Replace placeholder text below with your site-specific details.</p>
+
+                <div class="collapsible open">
+                    <button type="button" class="collapsible-trigger" aria-expanded="true">
+                        Daily startup workflow
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Power on and connect</h3>
+                                <p><!-- Describe power-on sequence, battery checks, etc. -->Power on the robot. Confirm it joins the lab network and note its IP address.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Start the operator GUI</h3>
+                                <p>On your workstation, launch the DDS Robot GUI and start the local Docker stack. See <a href="operation.html#dds-setup">Operation → Starting User GUI / DDS</a> for the full workflow.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">3</div>
+                                <h3>Start the robot software</h3>
+                                <p>Use the GUI <strong>Robot Startup</strong> panel to start the ROS container, or SSH to the Jetson and start manually if needed.</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block"># Example — replace with your launch command
+roslaunch mattbot_bringup bringup.launch</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">4</div>
+                                <h3>Verify connection</h3>
+                                <p>Confirm the robot appears in the GUI agent list and responds to teleop or navigation commands before beginning experiments.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Robot configuration reference
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <p>Document each robot's ID, IP address, and any per-unit differences here.</p>
+                            <table class="pin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Robot ID</th>
+                                        <th>Jetson IP</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><!-- e.g. robot_kaist_01 --></td>
+                                        <td><!-- e.g. 192.168.x.x --></td>
+                                        <td><!-- e.g. primary test unit --></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="tip">
+                                <p><strong>robot_env.sh:</strong> Each Jetson should have <code>/workspace/catkin_ws/src/robot_env.sh</code> configured with the correct <code>ROBOT_ID</code>, IP, and sensor settings. See the <a href="setup.html#jetson">Setup Guide → Jetson</a> for details.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Network and firewall
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <p><!-- Lab-specific network notes -->Document SSID, VLAN, static IP reservations, and any firewall rules required for DDS, GraphQL (port 8000), and the Jetson host service (port 8081).</p>
+                            <ul>
+                                <li>Operator workstation and robots must be on the same routable network (or configured for DDS discovery).</li>
+                                <li>Allow inbound/outbound traffic to robot IP addresses — blocked firewalls are a common cause of connection failures.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Shutdown and storage
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <p>Use the GUI <strong>Power Off</strong> button for graceful shutdown when possible. Charge batteries before extended storage. See <a href="operation.html">Operation Guide → Powering down</a> for manual shutdown steps.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="updates">
+                <h2>Updates</h2>
+                <p>Required software, script, and hardware updates for the KAIST deployment. <strong>Most recent updates appear at the top.</strong></p>
+
+                <div class="add-update-note">
+                    <strong>To add a new update:</strong> Copy the HTML block below (from <code>&lt;!-- NEW UPDATE --&gt;</code> through the closing <code>&lt;/div&gt;</code>) and paste it <em>above</em> the existing updates. Set the date, badge type (<code>software</code>, <code>hardware</code>, <code>script</code>, or <code>other</code>), title, and content. Add <code>open</code> to the collapsible class if you want it expanded by default.
+                </div>
+
+                <!--
+                NEW UPDATE TEMPLATE — copy from here:
+
+                <div class="collapsible update-item open">
+                    <button type="button" class="collapsible-trigger" aria-expanded="true">
+                        <span class="update-title">Short title of the update</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="update-meta">
+                                <span class="update-date">YYYY-MM-DD</span>
+                                <span class="update-badge software">Software</span>
+                            </div>
+                            <p>Description of what changed and why.</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">commands or script here</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                end template
+                -->
+
+                <!-- Example update — replace or remove when you add real updates -->
+                <div class="collapsible update-item open">
+                    <button type="button" class="collapsible-trigger" aria-expanded="true">
+                        <span class="update-title">Example: Pull latest Docker image</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="update-meta">
+                                <span class="update-date">2026-06-01</span>
+                                <span class="update-badge software">Software</span>
+                            </div>
+                            <p>Replace this example with your first real update. On each Jetson, pull the latest <code>ml_ros</code> image:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">docker pull ghcr.io/satomm1/ml_ros:latest</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Restart the robot container via the GUI Robot Startup panel, or stop and re-run the container manually.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Older updates accumulate below — keep for reference -->
+                <div class="collapsible update-item">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        <span class="update-title">Example: Run host service installer</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="update-meta">
+                                <span class="update-date">2026-05-15</span>
+                                <span class="update-badge script">Script</span>
+                            </div>
+                            <p>Example of an installer-script update. On each Jetson:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">cd ~
+wget "https://raw.githubusercontent.com/satomm1/Robot/main/Jetson/jetson-host-install.sh"
+chmod +x jetson-host-install.sh
+sudo ./jetson-host-install.sh</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Verify with <code>curl -s http://127.0.0.1:8081/status</code>. Full details in <a href="setup.html#jetson">Setup → Jetson host service</a>.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+    </div>
+
+    <button type="button" class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+    <script src="assets/mattbot.js"></script>
+</body>
+</html>
