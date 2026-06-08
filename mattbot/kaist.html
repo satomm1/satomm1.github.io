@@ -271,7 +271,7 @@ sudo docker pull ghcr.io/satomm1/ml_ros:latest</pre>
 
                 <div class="collapsible update-item">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
-                        <span class="update-title">Download robot_env.sh and startup_script.py</span>
+                        <span class="update-title">Download robot_env.sh, startup_script.py, and cyclonedds.xml</span>
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
                     <div class="collapsible-panel">
@@ -280,11 +280,12 @@ sudo docker pull ghcr.io/satomm1/ml_ros:latest</pre>
                                 <span class="update-date">2026-06-01</span>
                                 <span class="update-badge script">Script</span>
                             </div>
-                            <p>On each Jetson, download these two files into <code>~/workspaces/catkin_ws/src</code>:</p>
+                            <p>On each Jetson, download these files into <code>~/workspaces/catkin_ws/src</code>:</p>
                             <div class="code-wrap">
                                 <pre class="code-block">cd ~/workspaces/catkin_ws/src
 sudo wget -O robot_env.sh "https://raw.githubusercontent.com/satomm1/Robot/main/Jetson/robot_env.sh"
-sudo wget -O startup_script.py "https://raw.githubusercontent.com/satomm1/dds_robot_platform/main/robot/startup_script.py"</pre>
+sudo wget -O startup_script.py "https://raw.githubusercontent.com/satomm1/dds_robot_platform/main/robot/startup_script.py"
+sudo wget -O cyclonedds.xml "https://raw.githubusercontent.com/satomm1/Robot/main/Jetson/cyclonedds.xml"</pre>
                                 <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                             </div>
                             <p><strong>Edit <code>robot_env.sh</code> on each robot</strong> (inside the Docker container this path is <code>/workspace/catkin_ws/src/robot_env.sh</code>):</p>
@@ -303,6 +304,19 @@ export ROBOT_HEIGHT=tall</pre>
                             </div>
                             <p>Use the arrow keys to move the cursor. Type each value after the <code>=</code> on the lines above (leave <code>export</code> and the variable names unchanged).</p>
                             <p>Save and exit nano: press <kbd>Ctrl+O</kbd>, then <kbd>Enter</kbd> to confirm the filename, then <kbd>Ctrl+X</kbd> to close the editor.</p>
+                            <p><strong>Configure <code>cyclonedds.xml</code> on each robot</strong> (host path <code>~/workspaces/catkin_ws/src/cyclonedds.xml</code>; inside Docker, <code>/workspace/catkin_ws/src/cyclonedds.xml</code>). This file disables multicast and uses an explicit peer list for WiFi mesh discovery. <code>robot_env.sh</code> sets <code>CYCLONEDDS_URI</code> to this path — leave that line unchanged.</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">sudo nano ~/workspaces/catkin_ws/src/cyclonedds.xml</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p><strong>You must update the <code>&lt;Peer Address="…"/&gt;</code> entries</strong> so they list the actual IP addresses of every robot and device that should participate in DDS discovery on your network:</p>
+                            <ul>
+                                <li>Include this Jetson’s IP address (the same value you set for <code>ROS_IP</code> in <code>robot_env.sh</code>).</li>
+                                <li>Add the IP addresses of every other KAIST robot and any operator machines running DDS on the mesh.</li>
+                                <li>Remove any placeholder entries that do not correspond to a real device.</li>
+                            </ul>
+                            <p>The default file assumes the <code>wlan0</code> interface; change <code>&lt;NetworkInterface name="…"/&gt;</code> only if your WiFi interface has a different name (run <code>ip link</code> or <code>ifconfig</code> to check).</p>
+                            <p>Save and exit nano: <kbd>Ctrl+O</kbd>, <kbd>Enter</kbd>, <kbd>Ctrl+X</kbd>.</p>
                             <div class="tip">
                                 <p>See <a href="setup.html#jetson">Setup Guide → ROS workspace</a> for sourcing <code>robot_env.sh</code> in <code>~/.bashrc</code> if not already configured.</p>
                             </div>

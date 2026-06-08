@@ -109,12 +109,21 @@ sudo python3 jetson-io.py</pre>
                             <div class="step-card">
                                 <div class="step-number">6</div>
                                 <h3>Load spidev at boot</h3>
-                                <p>Edit <code>/etc/modules-load.d/spidev.conf</code> (e.g. <code>sudo nano /etc/modules-load.d/spidev.conf</code>), add:</p>
+                                <p>The Jetson must load the <code>spidev</code> kernel module at boot for MCU communication over SPI. Use <code>spidev_setup.sh</code> from the Jetson directory in the <a href="https://github.com/satomm1/Robot/blob/main/Jetson/spidev_setup.sh" target="_blank" rel="noopener">Robot repo</a> (run on the Jetson host, outside Docker):</p>
                                 <div class="code-wrap">
-                                    <pre class="code-block">spidev</pre>
+                                    <pre class="code-block">cd ~
+wget "https://raw.githubusercontent.com/satomm1/Robot/main/Jetson/spidev_setup.sh"
+chmod +x spidev_setup.sh
+sudo ./spidev_setup.sh</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
-                                <p>Save and exit nano: <kbd>Ctrl+O</kbd>, <kbd>Enter</kbd>, then <kbd>Ctrl+X</kbd>. Reboot the Jetson for the change to take effect.</p>
+                                <p>The script writes <code>spidev</code> to <code>/etc/modules-load.d/spidev.conf</code>, loads the module immediately if possible, and backs up any existing config. Reboot when prompted, then verify:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">sudo reboot
+# after reboot:
+ls /dev/spidev*</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
                             </div>
                             <div class="step-card">
                                 <div class="step-number">7</div>
