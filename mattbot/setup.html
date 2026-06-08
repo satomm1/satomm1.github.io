@@ -243,17 +243,63 @@ source devel/setup.bash
 cd src</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
-                                <p>Copy <code>clone_repos.sh</code> from the Robot Jetson folder to the Jetson, make executable, and run it to clone mattbot packages, <code>ros_astra_camera</code>, <code>rplidar_ros</code>, <code>robot_env.sh</code>, <code>startup_script.py</code>, etc. (full list in <a href="https://github.com/satomm1/Robot/blob/main/Jetson/README.md" target="_blank" rel="noopener">README</a>).</p>
+                                <p>Inside the container, download and run <code>clone_repos.sh</code> from the <code>/workspace/catkin_ws/src</code> directory. It clones the mattbot packages and third-party ROS repos (all on the <code>noetic</code> branch) and downloads <code>robot_env.sh</code>, <code>startup_script.py</code>, and <code>cyclonedds.xml</code>:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">cd /workspace/catkin_ws/src
+wget "https://raw.githubusercontent.com/satomm1/Robot/main/Jetson/clone_repos.sh"
+chmod +x clone_repos.sh
+./clone_repos.sh</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Repositories cloned: <code>mattbot_bringup</code>, <code>mattbot_dds</code>, <code>mattbot_record</code>, <code>mattbot_image_detection</code>, <code>mattbot_mcl</code>, <code>mattbot_navigation</code>, <code>mattbot_teleop</code>, <code>mattbot_database</code>, <code>ros_astra_camera</code>, <code>rplidar_ros</code>, <code>twist_mux</code>, <code>slam_gmapping</code>.</p>
                                 <div class="code-wrap">
                                     <pre class="code-block">cd /workspace/catkin_ws
 catkin_make
 source devel/setup.bash</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
-                                <p>Edit <code>/workspace/catkin_ws/src/robot_env.sh</code> with Jetson IP, robot ID, MCU SPI, camera type, and robot height. Add to <code>~/.bashrc</code>:</p>
+                                <p>Configure Cyclone DDS peer discovery in <code>cyclonedds.xml</code> (downloaded by <code>clone_repos.sh</code> above). This file disables multicast and uses an explicit peer list for WiFi mesh discovery:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">nano /workspace/catkin_ws/src/cyclonedds.xml</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p><strong>You must update the <code>&lt;Peer Address="…"/&gt;</code> entries</strong> so they list the actual IP addresses of every robot and device that should participate in DDS discovery on your network:</p>
+                                <ul>
+                                    <li>Include this Jetson’s IP address (the same value you set for <code>ROS_IP</code> in <code>robot_env.sh</code>).</li>
+                                    <li>Add the IP addresses of any other robots or machines running ROS on the mesh.</li>
+                                    <li>Remove any placeholder entries that do not correspond to a real device.</li>
+                                </ul>
+                                <p>The default file assumes the <code>wlan0</code> interface; change <code>&lt;NetworkInterface name="…"/&gt;</code> only if your WiFi interface has a different name (run <code>ip link</code> or <code>ifconfig</code> to check).</p>
+                                <p>Edit <code>robot_env.sh</code> with this Jetson’s IP address, robot ID, MCU SPI number, camera type, and robot height. <code>CYCLONEDDS_URI</code> is already set to point at <code>cyclonedds.xml</code> — leave that line unchanged unless you move the file.</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">nano /workspace/catkin_ws/src/robot_env.sh</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Replace the placeholder values on these lines (leave <code>export</code> and the variable names unchanged):</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">export ROS_IP=              # this Jetson's WiFi IP address
+export ROBOT_ID=              # unique integer for this robot (match MCU robot ID)
+export MCU_SPI=               # 1 or 3 — SPI used for MCU comms (SPI1 on header → usually 1)
+export CAMERA_TYPE=           # astra_pro_plus, astra, or astra_pro
+export ROBOT_HEIGHT=          # short or tall
+export ROBOT_CAR=             # true for car configuration, false otherwise</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Use the arrow keys to move the cursor. Type each value after the <code>=</code>. Save and exit nano: <kbd>Ctrl+O</kbd>, <kbd>Enter</kbd>, then <kbd>Ctrl+X</kbd>.</p>
+                                <p>Add these lines to <code>~/.bashrc</code> so ROS and robot settings load in every shell:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">nano ~/.bashrc</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Append at the bottom of the file:</p>
                                 <div class="code-wrap">
                                     <pre class="code-block">source /workspace/catkin_ws/devel/setup.bash
 source /workspace/catkin_ws/src/robot_env.sh</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Save and exit nano (<kbd>Ctrl+O</kbd>, <kbd>Enter</kbd>, <kbd>Ctrl+X</kbd>), then reload:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">source ~/.bashrc</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
                                 <p>Test with <code>roscore</code>. For the Astra camera, outside the container:</p>
@@ -425,7 +471,21 @@ cd dds_robot_platform</pre>
                                 <p><strong>Windows:</strong> Clone into your <strong>WSL</strong> filesystem (e.g. under <code>~/</code> in Ubuntu) so <code>docker compose</code> runs where the README expects. For GUI development from source, you may also clone a second copy on a <strong>Windows path</strong> and run <code>npm start</code> from Windows command line.</p>
                             </div>
                             <p>Install <a href="https://www.docker.com/products/docker-desktop/" target="_blank" rel="noopener">Docker Desktop</a> and ensure the Docker daemon is running.</p>
-                            <p>Copy <code>dds/dds_env.sh.example</code> to <code>dds/dds_env.sh</code> and set <code>AGENT_ID</code>, <code>INFLUXDB_TOKEN</code>, and any other operator variables. The compose stack, DDS container, and GUI read this file.</p>
+                            <p>Copy <code>dds/dds_env.sh.example</code> to <code>dds/dds_env.sh</code> and set <code>AGENT_ID</code>, <code>INFLUXDB_TOKEN</code>, and any other operator variables. The compose stack, DDS container, and GUI read this file. The example file also sets <code>CYCLONEDDS_URI</code> to <code>dds/cyclonedds.xml</code>, which CycloneDDS uses for discovery.</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">cp dds/dds_env.sh.example dds/dds_env.sh
+nano dds/dds_env.sh</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Before connecting to mobile robots, edit <code>dds/cyclonedds.xml</code> for your network:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">nano dds/cyclonedds.xml</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <ul>
+                                <li><strong>Network interface</strong> — set <code>&lt;NetworkInterface name="…"/&gt;</code> to the interface that reaches the robot fleet (run <code>ifconfig</code> or <code>ip link</code>; common names include <code>wlan0</code>, <code>wlp2s0</code>, <code>eth0</code>).</li>
+                                <li><strong>Peer addresses</strong> — replace the placeholder <code>&lt;Peer Address="…"/&gt;</code> entries with the IP address of each robot (or other DDS participant) on that network.</li>
+                            </ul>
                             <div class="tip">
                                 <p><strong>Windows workflow:</strong> Run <code>docker compose</code> and DDS commands via <strong>WSL</strong>. Run the GUI from the <strong>Windows command line</strong> (desktop app) or from source. See the <a href="operation.html#dds-setup">Operation Guide</a> for day-to-day production steps.</p>
                             </div>
