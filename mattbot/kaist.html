@@ -90,7 +90,7 @@
                                 </div>
                                 <p>Then start the docker container:</p>
                                 <div class="code-wrap">
-                                    <pre class="code-block">sudo docker start ros_noetic</pre>
+                                    <pre class="code-block">sudo docker run --runtime nvidia --network=host -v ~/workspaces/catkin_ws:/workspace/catkin_ws -v ~/gemini_api:/gemini_code -v /dev/bus/usb:/dev/bus/usb -v /dev/video0:/dev/video0 -v /dev/video1:/dev/video1 -it --device=/dev/ttyUSB0 --device=/dev/spidev0.0 --rm --privileged --name ros_noetic ghcr.io/satomm1/ml_ros:latest bash -lc 'python3 /workspace/catkin_ws/src/startup_script.py & exec bash'</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
                                 <p>Then start the ROS node via the kaist.launch file:</p>
@@ -185,6 +185,10 @@ roslaunch mattbot_bringup kaist.launch</pre>
                         </div>
                     </div>
                 </div>
+            </section>
+
+            <section class="section" id="mapping">
+                <h2>Mapping</h2>
             </section>
 
             <section class="section" id="updates">
@@ -441,6 +445,133 @@ chmod +x wifi_roaming_setup.sh</pre>
                     <p class="updates-empty">No previous updates yet.</p>
                 </div>
 
+            </section>
+
+            <section class="section" id="one-time-installs">
+                <h2>One Time Installs</h2>
+                <p>Complete these steps once on each <strong>operator workstation</strong> (not on the Jetson). After setup, use <a href="#running-instructions">Running the Robots</a> for day-to-day operation.</p>
+                <p><strong>Prerequisites:</strong> <a href="https://www.docker.com/products/docker-desktop/" target="_blank" rel="noopener">Docker Desktop</a> (daemon running), <a href="https://git-scm.com/downloads" target="_blank" rel="noopener">git</a>, and <a href="https://docs.conda.io/en/latest/miniconda.html" target="_blank" rel="noopener">Miniconda</a> or Anaconda.</p>
+
+                <div class="warning">
+                    <strong>Firewall:</strong> Allow inbound and outbound traffic to your robot IP addresses. Blocked firewall rules are a common cause of connection failures.
+                </div>
+
+                <div class="collapsible open">
+                    <button type="button" class="collapsible-trigger" aria-expanded="true">
+                        1. Install the DDS Robot GUI
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <p>Pre-built installers are produced by GitHub Actions (recommended; no Node.js required).</p>
+                            <ol>
+                                <li>Go to <a href="https://github.com/satomm1/dds_robot_platform/actions/" target="_blank" rel="noopener">dds_robot_platform Actions</a></li>
+                                <li>Open the most recent successful workflow run</li>
+                                <li>Under <strong>Artifacts</strong>, download one ZIP for your system (<strong>you must be logged in to GitHub</strong>):
+                                    <ul>
+                                        <li><strong>Windows:</strong> <code>gui-installer-windows-latest</code> — unzip, run <strong>DDS Robot GUI Setup … .exe</strong>, launch from the Start menu. Unsigned builds may show SmartScreen — <strong>More info</strong> → <strong>Run anyway</strong> if you trust the source.</li>
+                                        <li><strong>macOS:</strong> <code>gui-installer-macos-latest</code> — open <code>.dmg</code>, drag <strong>DDS Robot GUI</strong> to Applications. First launch may need right-click → Open.</li>
+                                        <li><strong>Linux:</strong> <code>gui-installer-ubuntu-latest</code> — unzip <code>.AppImage</code>, <code>chmod +x</code>, run. Install FUSE / libfuse2 if the AppImage will not start.</li>
+                                    </ul>
+                                </li>
+                            </ol>
+                            <div class="warning">
+                                <strong>Backend:</strong> The desktop app is <strong>only the UI</strong>. You still need the Docker stack and host DDS scripts running so the GraphQL API is available at <code>http://localhost:8000/graphql</code>.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        2. Clone dds_robot_platform and configure
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <p>Clone the repository on your workstation:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">git clone https://github.com/satomm1/dds_robot_platform.git
+cd dds_robot_platform</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <div class="tip">
+                                <p><strong>Windows:</strong> Clone into your <strong>WSL</strong> filesystem (e.g. under <code>~/</code> in Ubuntu) so <code>docker compose</code> and DDS scripts run where the README expects. Run the GUI from Windows (desktop app) or from source.</p>
+                            </div>
+                            <p>Copy and edit the DDS environment file:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">cp dds/dds_env.sh.example dds/dds_env.sh
+nano dds/dds_env.sh</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Set <code>AGENT_ID</code>, <code>INFLUXDB_TOKEN</code>, and any other operator variables. The example file also sets <code>CYCLONEDDS_URI</code> to <code>dds/cyclonedds.xml</code>. Save and exit nano: <kbd>Ctrl+O</kbd>, <kbd>Enter</kbd>, <kbd>Ctrl+X</kbd>.</p>
+                            <p>Edit <code>dds/cyclonedds.xml</code> for your network:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">nano dds/cyclonedds.xml</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <ul>
+                                <li><strong>Network interface</strong> — set <code>&lt;NetworkInterface name="…"/&gt;</code> to the interface that reaches the robot fleet (run <code>ip link</code>; common names include <code>wlan0</code>, <code>wlp2s0</code>, <code>eth0</code>).</li>
+                                <li><strong>Peer addresses</strong> — replace placeholder <code>&lt;Peer Address="…"/&gt;</code> entries with the IP address of each KAIST robot and any other DDS participant on the network.</li>
+                            </ul>
+                            <p>Save and exit nano: <kbd>Ctrl+O</kbd>, <kbd>Enter</kbd>, <kbd>Ctrl+X</kbd>.</p>
+                            <p>Pull images and start the Docker services (GraphQL, InfluxDB, Ignite) from the repo root:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">docker compose pull
+docker compose up -d</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Alternatively, use the GUI <strong>Local Stack</strong> panel → <strong>Docker</strong> → <strong>Start</strong> (requires <code>compose.yaml</code> and <code>dds/dds_env.sh</code>).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        3. Set up the DDS conda environment
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <p>DDS Python scripts run on the <strong>host</strong> (WSL on Windows), not inside Docker. Create the <code>dds</code> conda environment from the <code>dds_robot_platform</code> repo root:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">cd dds_robot_platform
+conda env create -f environment.yml
+conda activate dds</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <div class="warning">
+                                <p><strong>Note:</strong> This is the step I am least confident is fully covered by <code>environment.yml</code>. If scripts fail with missing-module errors, install the reported package into the <code>dds</code> env (e.g. <code>pip install &lt;package&gt;</code> with <code>conda activate dds</code>) and let me know so the requirements file can be updated.</p>
+                            </div>
+                            <p>Environment creation can take several minutes. If the environment already exists and you need to refresh it:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">conda env update -f environment.yml --prune</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Verify CycloneDDS is available:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">conda activate dds
+python -c "import cyclonedds; print('OK')"</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Start DDS scripts from the <code>dds</code> directory (<code>start_scripts.sh</code> activates the <code>dds</code> conda env automatically when needed):</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">cd dds
+./start_scripts.sh</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Verify scripts are running:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">pgrep -af python</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>You should see publisher/subscriber scripts such as <code>entry_exit.py</code>, <code>heartbeat_publisher.py</code>, and <code>goal_publisher.py</code>. Stop them with <code>./stop_scripts.sh</code> when finished.</p>
+                            <div class="tip">
+                                <p>Full reference: <a href="https://github.com/satomm1/dds_robot_platform/blob/main/README.md" target="_blank" rel="noopener">dds_robot_platform README</a> and <a href="setup.html#gui-dds">Setup Guide → User GUI / communication</a>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
         </div>
     </div>
