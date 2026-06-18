@@ -46,8 +46,8 @@
             </section>
 
             <section class="section" id="running-instructions">
-                <h2>Running your robots</h2>
-                <p>Follow these steps for the KAIST mobile robot configuration. Replace placeholder text below with your site-specific details.</p>
+                <h2>Running the Robots</h2>
+                <p>Follow these steps for the KAIST mobile robot configuration.</p>
 
                 <div class="collapsible open">
                     <button type="button" class="collapsible-trigger" aria-expanded="true">
@@ -58,29 +58,61 @@
                         <div class="collapsible-content">
                             <div class="step-card">
                                 <div class="step-number">1</div>
-                                <h3>Power on and connect</h3>
-                                <p><!-- Describe power-on sequence, battery checks, etc. -->Power on the robot. Confirm it joins the lab network and note its IP address.</p>
+                                <h3>Power on the robots</h3>
+                                <p>Power on the robots. Turn on the big 12V power bank for the Jetson, the switch at the bottom for the electronics/motors. The Jetson should have a small green light turn on and the LED indicator next to the switch on the bottom should turn red. Wait a few minutes, the display screen should power on and you should see the desktop.</p>
                             </div>
                             <div class="step-card">
                                 <div class="step-number">2</div>
                                 <h3>Start the operator GUI</h3>
                                 <p>On your workstation, launch the DDS Robot GUI and start the local Docker stack. See <a href="operation.html#dds-setup">Operation → Starting User GUI / DDS</a> for the full workflow.</p>
+                                <p>These steps should just include pressing the "Start" button next to the Docker </p>
                             </div>
                             <div class="step-card">
                                 <div class="step-number">3</div>
-                                <h3>Start the robot software</h3>
-                                <p>Use the GUI <strong>Robot Startup</strong> panel to start the ROS container, or SSH to the Jetson and start manually if needed.</p>
+                                <h3>Start the operator DDS Communication</h3>
+                                <p>Navigate to the dds_robot_platform/dds/ repository and run ./start_scripts.sh</p>
                                 <div class="code-wrap">
-                                    <pre class="code-block"># Example — replace with your launch command
-roslaunch mattbot_bringup bringup.launch</pre>
+                                    <pre class="code-block">cd dds_robot_platform/dds
+./start_scripts.sh</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
                             </div>
                             <div class="step-card">
                                 <div class="step-number">4</div>
-                                <h3>Verify connection</h3>
-                                <p>Confirm the robot appears in the GUI agent list and responds to teleop or navigation commands before beginning experiments.</p>
+                                <h3>Start the Robot Software (From DDS Robot GUI)</h3>
+                                <p>I have tried to make this as simple as possible and possible all from the DDS Robot GUI. For each robot in the right hand side selection, you must "Start Docker", select the KAIST checkbox and then click "Start ROS". The robot LiDAR sensor should begin spinning and the robot should appear on the left side column indicating an active robot.</p>
+                                <p>If you prefer to manually start the robot via SSH to the Jetson:</p>
+                                <p>SSH into the Jetson (username/password = jetson):</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block
+">ssh jetson@&lt;jetson_ip_address&gt;</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Then start the docker container:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">sudo docker start ros_noetic</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Then start the ROS node via the kaist.launch file:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">
+roslaunch mattbot_bringup kaist.launch</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
                             </div>
+                            <div class="step-card">
+                                <div class="step-number">5</div>
+                                <h3>Stopping the Robot</h3>
+                                <p>From the GUI, select the robot and click "Shut down" or "Shut down all".</p>
+                                <p>To manually stop the robot via SSH to the Jetson, press <kbd>Ctrl+C</kbd> in the terminal where you ran <code>roslaunch</code>, then stop the Docker container by typing <code>exit</code> into the terminal.</p>
+                                <div class="code-wrap">
+                                </div>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">6</div>
+                                <h3>Power off the robots</h3>
+                                <p>Use the GUI "Power Off" button for graceful shutdown when possible. Turn off the 12V battery and switch off the electronics/motor switch.</p>
+                                <p>To manually power off the Jetson, run <code>sudo shutdown now -h</code> in the terminal. Wait for the Jetson to fully power down before cutting power.</p>
                         </div>
                     </div>
                 </div>
@@ -98,29 +130,24 @@ roslaunch mattbot_bringup bringup.launch</pre>
                                     <tr>
                                         <th>Robot ID</th>
                                         <th>Jetson IP</th>
-                                        <th>Notes</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td>Robot 1</td>
                                         <td>192.168.52.2</td>
-                                        <td></td>
                                     </tr>
                                     <tr>
                                         <td>Robot 2</td>
                                         <td>192.168.52.3</td>
-                                        <td></td>
                                     </tr>
                                     <tr>
                                         <td>Robot 3</td>
                                         <td>192.168.52.4</td>
-                                        <td></td>
                                     </tr>
                                     <tr>
                                         <td>Robot 4</td>
                                         <td>192.168.52.5</td>
-                                        <td></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -161,7 +188,7 @@ roslaunch mattbot_bringup bringup.launch</pre>
             </section>
 
             <section class="section" id="updates">
-                <h2>Updates</h2>
+                <h2>One Time Updates</h2>
                 <p>Required software, script, and hardware updates for the KAIST deployment. <strong>Most recent updates appear at the top.</strong></p>
 
                 <!-- <div class="add-update-note">
