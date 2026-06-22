@@ -264,15 +264,24 @@ git restore .
 git pull</pre>
                                 <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                             </div>
-                            <p><strong>3. Update the robot backend</strong> at <code>~/gemini_api</code> (the display reads messages from this service over HTTP):</p>
+                            <p><strong>3. Update the robot backend</strong> at <code>~/gemini_api</code> (the display reads messages from this service over HTTP). This repository is <strong>private</strong> — Git will prompt for credentials when you clone or pull. Ask Matt for the <strong>password</strong> you will need to access the updates (your GitHub username is fine for the username field):</p>
+                            <p><strong>First time</strong> (repo not on the Jetson yet):</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">cd ~
+git clone https://github.com/satomm1/gemini_api.git</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>When prompted, enter the token above as the password.</p>
+                            <p><strong>Updates</strong> (repo already at <code>~/gemini_api</code>):</p>
                             <div class="code-wrap">
                                 <pre class="code-block">cd ~/gemini_api
 git pull</pre>
                                 <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                             </div>
+                            <p>If Git asks for credentials again on pull, use the same token as the password.</p>
                             <p>If <code>git pull</code> fails because of local changes, run <code>git restore .</code> in <code>~/gemini_api</code> and pull again.</p>
-                            <div class="warning">
-                                <p>If <code>~/gemini_api</code> does not exist on the Jetson, contact Matt (<a href="mailto:satomm@stanford.edu">satomm@stanford.edu</a>) — this repository is private. He will provide an access key so you can clone it into <code>~/gemini_api</code>.</p>
+                            <div class="tip">
+                                <p>If clone or pull still fails, contact Matt (<a href="mailto:satomm@stanford.edu">satomm@stanford.edu</a>).</p>
                             </div>
                             <p><strong>4. Run the installer</strong> from the repo root (installs Piper TTS, systemd service, desktop shortcut, and sudoers for restart):</p>
                             <div class="code-wrap">
