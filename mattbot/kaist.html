@@ -732,6 +732,47 @@ python -c "import cyclonedds; print('OK')"</pre>
                     </div>
                 </div>
             </section>
+
+            <section class="section" id="front-wheel-drive">
+                <h2>Changing to Front-Wheel Drive</h2>
+                <p>The KAIST robots should be converted from rear-wheel drive to <strong>front-wheel drive</strong>. However, <strong>do not make these changes until you have the Snap programmer and can reprogram the microcontroller</strong> (when Matt visits). Follow the steps below when performing this change on a robot unit.</p>
+
+                <div class="collapsible open">
+                    <button type="button" class="collapsible-trigger" aria-expanded="true">
+                        Front-wheel drive conversion
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Power off the robot</h3>
+                                <p>Make sure the Jetson and all robot electronics are fully powered off before starting the mechanical change.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Disconnect upper-level cables from the Jetson</h3>
+                                <p>Unplug the <strong>HDMI</strong> and <strong>USB</strong> cables from the upper levels of the robot that connect to the Jetson. You may also need to disconnect the <strong>microphone wires</strong> so the upper assembly can be rotated freely.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">3</div>
+                                <h3>Rotate the upper assembly 180°</h3>
+                                <p>Unscrew the four screws visible from the top of the <strong>3rd layer platform</strong>. This loosens the top four layers of the robot. Rotate those layers <strong>180 degrees</strong>, then reattach the four screws.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">4</div>
+                                <h3>Reconnect cables to the Jetson</h3>
+                                <p>Reattach the HDMI and USB cables from the upper levels back to the Jetson.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">5</div>
+                                <h3>Reprogram the microcontroller</h3>
+                                <p>Reprogram the MCU using the procedure in <a href="#mcu-flashing">Flashing the MCU</a> above. Use <code>CAR</code> set to <code>1</code> in <code>FrameworkHeaders/ES_Configure.h</code> when building and flashing the firmware.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
 
