@@ -264,7 +264,17 @@ git restore .
 git pull</pre>
                                 <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                             </div>
-                            <p><strong>3. Run the installer</strong> from the repo root (installs Piper TTS, systemd service, desktop shortcut, and sudoers for restart):</p>
+                            <p><strong>3. Update the robot backend</strong> at <code>~/gemini_api</code> (the display reads messages from this service over HTTP):</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">cd ~/gemini_api
+git pull</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>If <code>git pull</code> fails because of local changes, run <code>git restore .</code> in <code>~/gemini_api</code> and pull again.</p>
+                            <div class="warning">
+                                <p>If <code>~/gemini_api</code> does not exist on the Jetson, contact Matt (<a href="mailto:satomm@stanford.edu">satomm@stanford.edu</a>) — this repository is private. He will provide an access key so you can clone it into <code>~/gemini_api</code>.</p>
+                            </div>
+                            <p><strong>4. Run the installer</strong> from the repo root (installs Piper TTS, systemd service, desktop shortcut, and sudoers for restart):</p>
                             <div class="code-wrap">
                                 <pre class="code-block">cd ~/mattbot_display
 chmod +x scripts/install.sh
@@ -272,7 +282,7 @@ sudo ./scripts/install.sh</pre>
                                 <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                             </div>
                             <p>The installer runs <code>scripts/setup_piper.sh</code> (downloads Piper and the voice model), enables the <code>mattbot-display</code> systemd unit, and creates a desktop shortcut <strong>Start-Mattbot-Display.sh</strong>. The service runs Python directly from <code>~/mattbot_display</code> — after pulling code updates, double-click the desktop shortcut (or run <code>./scripts/restart_display.sh</code>) to restart; no separate sync step is needed.</p>
-                            <p><strong>4. Verify</strong> the display service is running:</p>
+                            <p><strong>5. Verify</strong> the display service is running:</p>
                             <div class="code-wrap">
                                 <pre class="code-block">sudo systemctl status mattbot-display
 curl -s http://127.0.0.1:8081/status</pre>
