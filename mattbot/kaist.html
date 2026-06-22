@@ -241,7 +241,7 @@ roslaunch mattbot_bringup kaist.launch</pre>
                                 <span class="update-badge software">Software</span>
                             </div>
                             <p>On each Jetson <strong>host</strong> (outside Docker), install the <strong>robot on-screen display</strong> from <a href="https://github.com/satomm1/mattbot_display" target="_blank" rel="noopener">mattbot_display</a>. The touch-screen UI shows messages from the robot backend, speaks them with local Piper TTS, and provides <strong>Start Robot</strong> / <strong>Stop Robot</strong> controls via the existing host services on ports <strong>8081</strong> (Docker) and <strong>8080</strong> (ROS).</p>
-                            <p><strong>Prerequisites:</strong> Complete the <strong>Install Jetson host service</strong> and <strong>Replace Docker image with ml_ros:latest</strong> updates below first. The display expects <code>robot-host-service</code> on port 8081 and the <code>ghcr.io/satomm1/ml_ros:latest</code> image.</p>
+                            <p><strong>Prerequisites:</strong> Complete the <strong>Install Jetson host service</strong> and <strong>Replace Docker images (ml_ros and gemini)</strong> updates below first. The display expects <code>robot-host-service</code> on port 8081, the <code>ghcr.io/satomm1/ml_ros:latest</code> image, and the <code>ghcr.io/satomm1/gemini:latest</code> image for the voice backend.</p>
                             <p><strong>1. Install system packages</strong> on the Jetson:</p>
                             <div class="code-wrap">
                                 <pre class="code-block">sudo apt update
@@ -345,7 +345,7 @@ chmod +x jetson-host-install.sh</pre>
 
                 <div class="collapsible update-item">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
-                        <span class="update-title">Replace Docker image with ml_ros:latest</span>
+                        <span class="update-title">Replace Docker images (ml_ros and gemini)</span>
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
                     <div class="collapsible-panel">
@@ -354,7 +354,7 @@ chmod +x jetson-host-install.sh</pre>
                                 <span class="update-date">2026-06-01</span>
                                 <span class="update-badge software">Software</span>
                             </div>
-                            <p>On each Jetson, remove the old Docker image and pull the updated <code>ml_ros</code> image from GitHub Container Registry. The pull can take a long time — use <strong>tmux</strong> so it keeps running if your SSH session disconnects.</p>
+                            <p>On each Jetson, remove the old Docker images and pull the updated <code>ml_ros</code> and <code>gemini</code> images from GitHub Container Registry (<code>ghcr.io/satomm1</code>). The pulls can take a long time — use <strong>tmux</strong> so they keep running if your SSH session disconnects.</p>
                             <p><strong>Install tmux:</strong></p>
                             <div class="code-wrap">
                                 <pre class="code-block">sudo apt update
@@ -366,21 +366,33 @@ sudo apt install tmux</pre>
                                 <pre class="code-block">tmux new -s docker-pull</pre>
                                 <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                             </div>
-                            <p>Inside tmux, stop the ROS container if it is running, remove the old image, and pull the new one:</p>
+                            <p>Inside tmux, stop the ROS container if it is running, remove the old <code>ml_ros</code> image, and pull the new one:</p>
                             <div class="code-wrap">
                                 <pre class="code-block">sudo docker stop ros_noetic
 sudo docker rmi ros_ml:latest
 sudo docker pull ghcr.io/satomm1/ml_ros:latest</pre>
                                 <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                             </div>
-                            <p>Verify the new image is present:</p>
+                            <p>Verify the new <code>ml_ros</code> image is present:</p>
                             <div class="code-wrap">
                                 <pre class="code-block">sudo docker images ghcr.io/satomm1/ml_ros:latest</pre>
                                 <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                             </div>
+                            <p>Do the same for the <strong>gemini</strong> backend container — stop it if running, remove the old local image, and pull <code>ghcr.io/satomm1/gemini:latest</code>:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">sudo docker stop gemini
+sudo docker rmi gemini:latest
+sudo docker pull ghcr.io/satomm1/gemini:latest</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Verify the new <code>gemini</code> image is present:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">sudo docker images ghcr.io/satomm1/gemini:latest</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
                             <p>When the pull finishes, detach from tmux without stopping it: press <kbd>Ctrl+B</kbd>, then <kbd>D</kbd>. To reattach later — or if your SSH terminal disconnects during the pull — run <code>tmux attach -t docker-pull</code>. Exit the session when done: type <code>exit</code> inside tmux.</p>
                             <div class="tip">
-                                <p>If <code>docker rmi</code> fails because the image is still in use, ensure <code>ros_noetic</code> is stopped (<code>sudo docker stop ros_noetic</code>) and retry. No <code>docker login</code> is required — the package is public on GHCR.</p>
+                                <p>If <code>docker rmi</code> fails because an image is still in use, stop the container first (<code>sudo docker stop ros_noetic</code> or <code>sudo docker stop gemini</code>) and retry. If the old image tag differs from <code>ros_ml:latest</code> or <code>gemini:latest</code>, remove the tag shown by <code>sudo docker images</code>. No <code>docker login</code> is required — both packages are public on GHCR.</p>
                             </div>
                         </div>
                     </div>
