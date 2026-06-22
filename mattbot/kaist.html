@@ -649,6 +649,89 @@ python -c "import cyclonedds; print('OK')"</pre>
                     </div>
                 </div>
             </section>
+
+            <section class="section" id="mcu-flashing">
+                <h2>Flashing the MCU</h2>
+                <p>Your robots are already programmed with microcontroller firmware. You should not need this section under normal operation — it is here only if the MCU must be re-flashed (for example after a board replacement or an emergency firmware update).</p>
+                <p>These steps run on a <strong>Windows, macOS, or Linux PC</strong> with a Microchip programming tool connected to the robot main board (not on the Jetson). Power the robot electronics on while programming.</p>
+
+                <div class="collapsible open">
+                    <button type="button" class="collapsible-trigger" aria-expanded="true">
+                        MCU flashing workflow
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Install MPLAB X IDE and XC32 compiler</h3>
+                                <p>Download and install <a href="https://www.microchip.com/en-us/tools-resources/develop/mplab-x-ide#tabs" target="_blank" rel="noopener">MPLAB X IDE</a> from Microchip on your PC.</p>
+                                <p>During installation, when prompted to choose which compilers to install, you only need the <strong>XC32</strong> compiler (32-bit MCU). You can skip the other compiler options unless you plan to use them for other projects.</p>
+                                <div class="tip">
+                                    <p>Full firmware project files and additional programming notes are in the <a href="https://github.com/satomm1/Robot/tree/main/Software/MCU" target="_blank" rel="noopener">Robot repo → Software/MCU</a> and the <a href="https://github.com/satomm1/Robot/blob/main/Software/README.md" target="_blank" rel="noopener">Software README</a>.</p>
+                                </div>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Clone the firmware repo and open the MPLAB project</h3>
+                                <p>On your PC, clone the Robot repository:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">git clone https://github.com/satomm1/robot.git</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Open <strong>MPLAB X IDE</strong>, then go to <strong>File → Open Project</strong> and select the <code>robot/Software/MCU</code> directory inside the cloned repo.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">3</div>
+                                <h3>Select device and compiler</h3>
+                                <p>In the bottom-left window, under <strong>Packs</strong>, click <strong>PIC32MZ…</strong> (the label may show a different device name on your machine). In the popup:</p>
+                                <ol>
+                                    <li>Set <strong>Device</strong> to <code>PIC32MZ2048EFH144</code>.</li>
+                                    <li>In the <strong>Compiler Toolchain</strong> box, select the available <strong>XC32</strong> compiler.</li>
+                                    <li>Click <strong>Apply</strong>, then <strong>OK</strong>.</li>
+                                </ol>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">4</div>
+                                <h3>Configure robot settings and build</h3>
+                                <p>In the file navigator (top-left window), open <code>FrameworkHeaders/ES_Configure.h</code>. Update these <code>#define</code> values for the robot you are flashing:</p>
+                                <ul>
+                                    <li><code>ROBOT_ID</code> — set to the ID for this robot (must match the value in <code>robot_env.sh</code> on the Jetson).</li>
+                                    <li><code>PCB_REV</code> — <code>3</code></li>
+                                    <li><code>MOTOR_TYPE</code> — <code>1</code></li>
+                                    <li><code>WHEEL_RADIUS</code> — <code>0.040</code></li>
+                                    <li><code>CAR</code> — <code>1</code></li>
+                                </ul>
+                                <p>After saving the file, click <strong>Clean and Build</strong> at the top of MPLAB (broom icon). Fix any build errors before continuing.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">5</div>
+                                <h3>Connect the MPLAB Snap programmer</h3>
+                                <p>Matt will supply an <strong>MPLAB Snap</strong> In-Circuit Debugger and Programmer when he visits. Only <strong>6 pins</strong> need to be connected: the <strong>left 6 pins</strong> on the Snap programmer cable connect to the matching exposed header pins on the robot main circuit board.</p>
+                                <ol>
+                                    <li>Connect the Snap programmer to the circuit board (6-pin header).</li>
+                                    <li>Connect the Snap to your laptop via USB.</li>
+                                    <li>Turn the microcontroller on using the <strong>main robot power switch</strong>.</li>
+                                </ol>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">6</div>
+                                <h3>Program the MCU</h3>
+                                <p>Click the <strong>Program</strong> button at the top of MPLAB (down-arrow icon) to flash the firmware to the microcontroller. If MPLAB asks you to select a programmer, choose the <strong>Snap</strong> programmer.</p>
+                                <p>If the Snap programmer does not appear in the list:</p>
+                                <ul>
+                                    <li>Make sure the Snap is plugged into your laptop via USB.</li>
+                                    <li>If it still does not show up, quit and restart MPLAB X, then try again.</li>
+                                </ul>
+                                <p>Wait for the operation to finish — MPLAB will report success or show an error if programming failed.</p>
+                                <div class="tip">
+                                    <p><strong>Flashing the other robots:</strong> You only need to change <code>ROBOT_ID</code> in <code>FrameworkHeaders/ES_Configure.h</code> for each robot, then repeat the same programming procedure (connect Snap, power on, click Program).</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
 
