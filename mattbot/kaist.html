@@ -231,6 +231,63 @@ roslaunch mattbot_bringup kaist.launch</pre>
 
                 <div class="collapsible update-item open">
                     <button type="button" class="collapsible-trigger" aria-expanded="true">
+                        <span class="update-title">Install robot on-screen display</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="update-meta">
+                                <span class="update-date">2026-06-22</span>
+                                <span class="update-badge software">Software</span>
+                            </div>
+                            <p>On each Jetson <strong>host</strong> (outside Docker), install the <strong>robot on-screen display</strong> from <a href="https://github.com/satomm1/mattbot_display" target="_blank" rel="noopener">mattbot_display</a>. The touch-screen UI shows messages from the robot backend, speaks them with local Piper TTS, and provides <strong>Start Robot</strong> / <strong>Stop Robot</strong> controls via the existing host services on ports <strong>8081</strong> (Docker) and <strong>8080</strong> (ROS).</p>
+                            <p><strong>Prerequisites:</strong> Complete the <strong>Install Jetson host service</strong> and <strong>Replace Docker image with ml_ros:latest</strong> updates below first. The display expects <code>robot-host-service</code> on port 8081 and the <code>ghcr.io/satomm1/ml_ros:latest</code> image.</p>
+                            <p><strong>1. Install system packages</strong> on the Jetson:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">sudo apt update
+sudo apt install -y python3-tk alsa-utils curl wget git</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p><strong>2. Clone or update the repository</strong> at <code>~/mattbot_display</code>:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">cd ~
+# First time on this Jetson:
+git clone https://github.com/satomm1/mattbot_display.git
+# If the repo already exists:
+cd ~/mattbot_display &amp;&amp; git pull</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>If <code>git pull</code> fails because of local changes (e.g. modified tracked files), discard them and pull again:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">cd ~/mattbot_display
+git restore .
+git pull</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p><strong>3. Run the installer</strong> from the repo root (installs Piper TTS, systemd service, desktop shortcut, and sudoers for restart):</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">cd ~/mattbot_display
+chmod +x scripts/install.sh
+sudo ./scripts/install.sh</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>The installer runs <code>scripts/setup_piper.sh</code> (downloads Piper and the voice model), enables the <code>mattbot-display</code> systemd unit, and creates a desktop shortcut <strong>Start-Mattbot-Display.sh</strong>. The service runs Python directly from <code>~/mattbot_display</code> — after pulling code updates, double-click the desktop shortcut (or run <code>./scripts/restart_display.sh</code>) to restart; no separate sync step is needed.</p>
+                            <p><strong>4. Verify</strong> the display service is running:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">sudo systemctl status mattbot-display
+curl -s http://127.0.0.1:8081/status</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>After reboot, the display should start automatically when the graphical session is up. Use the on-screen <strong>Exit</strong> button to return to the desktop; start it again with the desktop shortcut.</p>
+                            <div class="tip">
+                                <p>Full configuration (backend URL, socket port, ALSA device, launch path) is documented in the <a href="https://github.com/satomm1/mattbot_display/blob/main/README.md" target="_blank" rel="noopener">mattbot_display README</a>. Override install path with <code>INSTALL_DIR=/opt/mattbot/display sudo ./scripts/install.sh</code> if you do not use <code>~/mattbot_display</code>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible update-item">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
                         <span class="update-title">Install Jetson host service (GUI startup)</span>
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
