@@ -49,8 +49,8 @@
                 <h2>Running the Robots</h2>
                 <p>Follow these steps for the KAIST mobile robot configuration.</p>
 
-                <div class="collapsible open">
-                    <button type="button" class="collapsible-trigger" aria-expanded="true">
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
                         Daily startup workflow
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
@@ -189,6 +189,98 @@ roslaunch mattbot_bringup kaist.launch</pre>
 
             <section class="section" id="mapping">
                 <h2>Mapping</h2>
+                <p>Use this workflow to create a new SLAM map on a KAIST robot. Power on the robot first (see <a href="#running-instructions">Running the Robots</a>), then SSH into the Jetson and run the steps below.</p>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Mapping workflow
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>SSH into the Jetson</h3>
+                                <p>Connect to the robot you will map (username/password = jetson):</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">ssh jetson@&lt;jetson_ip_address&gt;</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>See the <a href="#running-instructions">Robot configuration reference</a> for KAIST IP addresses.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Start the ros_noetic Docker container</h3>
+                                <p>On the Jetson, start the ROS container:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">sudo docker run --runtime nvidia --network=host -v ~/workspaces/catkin_ws:/workspace/catkin_ws -v ~/gemini_api:/gemini_code -v /dev/bus/usb:/dev/bus/usb -v /dev/video0:/dev/video0 -v /dev/video1:/dev/video1 -it --device=/dev/ttyUSB0 --device=/dev/spidev0.0 --rm --privileged --name ros_noetic ghcr.io/satomm1/ml_ros:latest bash -lc 'python3 /workspace/catkin_ws/src/startup_script.py & exec bash'</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Wait for the container shell to appear.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">3</div>
+                                <h3>Start the mapping launch file</h3>
+                                <p>In the first terminal (inside the Docker container), launch SLAM mapping:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">roslaunch mattbot_bringup sense_and_map.launch</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">4</div>
+                                <h3>Drive the robot with keyboard teleop</h3>
+                                <p>Open a <strong>second terminal</strong>, SSH into the same Jetson again, and enter the running container:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">docker exec -it ros_noetic bash</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Start the keyboard teleop node:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">roslaunch mattbot_teleop keyboard.launch</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Focus the teleop terminal and use the keyboard to drive the robot through the entire area you want mapped.</p>
+                                <div class="tip">
+                                    <p><strong>Real-time map visualization:</strong> To watch the map build as you drive, use <strong>RViz</strong> on a separate machine on the same network as the Jetson. See <a href="setup.html#rviz">Setup Guide → RVIZ visualization</a> for configuration (<code>ROS_MASTER_URI</code> pointing at the Jetson, then <code>rosrun rviz rviz</code>).</p>
+                                </div>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">5</div>
+                                <h3>Finalize and save the map</h3>
+                                <p>When you have driven through the entire area, press <kbd>Ctrl+C</kbd> in the teleop terminal to exit keyboard control.</p>
+                                <p>In the same terminal (still inside the Docker container), finalize the map — replace <code>&lt;map-name&gt;</code> with a short name for this space (e.g. <code>lab_floor1</code>):</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">rosrun mattbot_mcl finalize_map.py --name &lt;map-name&gt;</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>This saves the map and generates the files needed by the robots and the central operator computer. For large maps, this step can take a few minutes.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">6</div>
+                                <h3>Stop mapping</h3>
+                                <p>Press <kbd>Ctrl+C</kbd> in the <strong>first terminal</strong> (where <code>sense_and_map.launch</code> is running) to stop mapping once map saving has finished. Then stop the Docker container by typing <code>exit</code>.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">7</div>
+                                <h3>Load the map on the central computer GUI</h3>
+                                <p>On your operator workstation, open the DDS Robot GUI and start the local Docker stack (see <a href="operation.html#dds-setup">Operation → Starting User GUI / DDS</a> if needed).</p>
+                                <ol>
+                                    <li>In the right-hand column, select the robot you used for mapping.</li>
+                                    <li>Open the drop-down for loading/syncing robot maps.</li>
+                                    <li>Enter a name for the map (use the same name as in step 5, or another label you prefer for the GUI).</li>
+                                    <li>Click <strong>Sync Map From Robot</strong>.</li>
+                                </ol>
+                                <p>The on-screen map should update with your new map once the sync completes.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">8</div>
+                                <h3>Send the map to other robots</h3>
+                                <p><!-- TODO: add KAIST-specific steps for pushing the map to the rest of the fleet -->Instructions for distributing the new map to the other robots will be added here.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <section class="section" id="updates">
@@ -202,8 +294,8 @@ roslaunch mattbot_bringup kaist.launch</pre>
                 <!--
                 NEW UPDATE TEMPLATE — copy from here:
 
-                <div class="collapsible update-item open">
-                    <button type="button" class="collapsible-trigger" aria-expanded="true">
+                <div class="collapsible update-item">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
                         <span class="update-title">Short title of the update</span>
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
@@ -229,8 +321,8 @@ roslaunch mattbot_bringup kaist.launch</pre>
 
                 <div id="updates-new">
 
-                <div class="collapsible update-item open">
-                    <button type="button" class="collapsible-trigger" aria-expanded="true">
+                <div class="collapsible update-item">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
                         <span class="update-title">Install robot on-screen display</span>
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
@@ -544,8 +636,8 @@ chmod +x wifi_roaming_setup.sh</pre>
                     <strong>Firewall:</strong> Allow inbound and outbound traffic to your robot IP addresses. Blocked firewall rules are a common cause of connection failures.
                 </div>
 
-                <div class="collapsible open">
-                    <button type="button" class="collapsible-trigger" aria-expanded="true">
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
                         1. Install the DDS Robot GUI
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
@@ -667,8 +759,8 @@ python -c "import cyclonedds; print('OK')"</pre>
                 <p>Your robots are already programmed with microcontroller firmware. You should not need this section under normal operation — it is here only if the MCU must be re-flashed (for example after a board replacement or an emergency firmware update).</p>
                 <p>These steps run on a <strong>Windows, macOS, or Linux PC</strong> with a Microchip programming tool connected to the robot main board (not on the Jetson). Power the robot electronics on while programming.</p>
 
-                <div class="collapsible open">
-                    <button type="button" class="collapsible-trigger" aria-expanded="true">
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
                         MCU flashing workflow
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
@@ -749,8 +841,8 @@ python -c "import cyclonedds; print('OK')"</pre>
                 <h2>Changing to Front-Wheel Drive</h2>
                 <p>The KAIST robots should be converted from rear-wheel drive to <strong>front-wheel drive</strong>. However, <strong>do not make these changes until you have the Snap programmer and can reprogram the microcontroller</strong> (when Matt visits). Follow the steps below when performing this change on a robot unit.</p>
 
-                <div class="collapsible open">
-                    <button type="button" class="collapsible-trigger" aria-expanded="true">
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
                         Front-wheel drive conversion
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
