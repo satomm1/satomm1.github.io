@@ -51,6 +51,53 @@
 
                 <div class="collapsible">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Central Machine Startup
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Start the operator GUI</h3>
+                                <p>On your workstation, launch the DDS Robot GUI (from the Desktop (Stanford Logo)). Also, start the Docker Desktop application (also on desktop).</p>
+                                <p>After Docker Desktop is running, click the Local Stack Docker "Start" button in the Robot GUI (bottom right of application).</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Start the operator DDS Communication</h3>
+                                <p>Open the windows Terminal application. At the top of the application click the drop down button and open a new "Ubuntu WSL 1" tab. (Alternatively, you can directly open an Ubuntu WSL 1 terminal by searching for "Ubuntu WSL 1" in the Windows search bar.)</p>
+                                <p>Important: This Ubuntu terminal should be WSL1, make sure you do not use the plan Ubuntu Terminal (which is WSL2)!</p>
+                                    Navigate to the dds_robot_platform/dds/ repository, activate the dds conda environment, and run ./start_scripts.sh</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">cd dds_robot_platform/dds
+conda activate dds
+./start_scripts.sh</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">3</div>
+                                <h3>Data Storage Docker Containers</h3>
+                                <p>NOTE: This step is only necessary if you care about storing all the sensor data for later analysis.</p>
+                                <p>In the Windows Terminal Application, now open an "Ubuntu" Tab (NOT the WSL1 version, just plain Ubuntu (which is now WSL2)).</p>
+                                <p>Navigate to the dds_robot_platform/capture repository and start the docker containers use docker compose:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">cd dds_robot_platform/capture
+docker compose up -d</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">4</div>
+                                <h3>Central Machine Setup Complete</h3>
+                                <p>The central machine setup is now complete. You can click the "Retry loading map" button in the Robot GUI to see the map. If robots are online, they should become available in the right hand side of the GUI.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
                         Daily startup workflow
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
@@ -63,22 +110,6 @@
                             </div>
                             <div class="step-card">
                                 <div class="step-number">2</div>
-                                <h3>Start the operator GUI</h3>
-                                <p>On your workstation, launch the DDS Robot GUI and start the local Docker stack. See <a href="operation.html#dds-setup">Operation → Starting User GUI / DDS</a> for the full workflow.</p>
-                                <p>These steps should just include pressing the "Start" button next to the Docker </p>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">3</div>
-                                <h3>Start the operator DDS Communication</h3>
-                                <p>Navigate to the dds_robot_platform/dds/ repository and run ./start_scripts.sh</p>
-                                <div class="code-wrap">
-                                    <pre class="code-block">cd dds_robot_platform/dds
-./start_scripts.sh</pre>
-                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
-                                </div>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">4</div>
                                 <h3>Start the Robot Software (From DDS Robot GUI)</h3>
                                 <p>I have tried to make this as simple as possible and possible all from the DDS Robot GUI. For each robot in the right hand side selection, you must "Start Docker", select the KAIST checkbox and then click "Start ROS". The robot LiDAR sensor should begin spinning and the robot should appear on the left side column indicating an active robot.</p>
                                 <p>If you prefer to manually start the robot via SSH to the Jetson:</p>
@@ -101,7 +132,7 @@ roslaunch mattbot_bringup kaist.launch</pre>
                                 </div>
                             </div>
                             <div class="step-card">
-                                <div class="step-number">5</div>
+                                <div class="step-number">3</div>
                                 <h3>Stopping the Robot</h3>
                                 <p>From the GUI, select the robot and click "Shut down" or "Shut down all".</p>
                                 <p>To manually stop the robot via SSH to the Jetson, press <kbd>Ctrl+C</kbd> in the terminal where you ran <code>roslaunch</code>, then stop the Docker container by typing <code>exit</code> into the terminal.</p>
@@ -109,7 +140,7 @@ roslaunch mattbot_bringup kaist.launch</pre>
                                 </div>
                             </div>
                             <div class="step-card">
-                                <div class="step-number">6</div>
+                                <div class="step-number">4</div>
                                 <h3>Power off the robots</h3>
                                 <p>Use the GUI "Power Off" button for graceful shutdown when possible. Turn off the 12V battery and switch off the electronics/motor switch.</p>
                                 <p>To manually power off the Jetson, run <code>sudo shutdown now -h</code> in the terminal. Wait for the Jetson to fully power down before cutting power.</p>
