@@ -67,7 +67,7 @@
                                 <h3>Start the operator DDS Communication</h3>
                                 <p>Open the windows Terminal application. At the top of the application click the drop down button and open a new "Ubuntu WSL 1" tab. (Alternatively, you can directly open an Ubuntu WSL 1 terminal by searching for "Ubuntu WSL 1" in the Windows search bar.)</p>
                                 <p>Important: This Ubuntu terminal should be WSL1, make sure you do not use the plan Ubuntu Terminal (which is WSL2)!</p>
-                                    Navigate to the dds_robot_platform/dds/ repository, activate the dds conda environment, and run ./start_scripts.sh</p>
+                                <p>Navigate to the dds_robot_platform/dds/ repository, activate the dds conda environment, and run ./start_scripts.sh</p>
                                 <div class="code-wrap">
                                     <pre class="code-block">cd dds_robot_platform/dds
 conda activate dds
@@ -98,7 +98,7 @@ docker compose up -d</pre>
 
                 <div class="collapsible">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
-                        Daily startup workflow
+                        Robot Startup
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
                     <div class="collapsible-panel">
@@ -106,13 +106,13 @@ docker compose up -d</pre>
                             <div class="step-card">
                                 <div class="step-number">1</div>
                                 <h3>Power on the robots</h3>
-                                <p>Power on the robots. Turn on the big 12V power bank for the Jetson, the switch at the bottom for the electronics/motors. The Jetson should have a small green light turn on and the LED indicator next to the switch on the bottom should turn red. Wait a few minutes, the display screen should power on and you should see the desktop.</p>
+                                <p>Power on the robots, wait a few minutes, the display screen should power on and you should see the desktop. Turn on the switch for the microcontroller and motors (the switch at the bottom), the red LED should turn on to signify the electronics are on.</p>
                             </div>
                             <div class="step-card">
                                 <div class="step-number">2</div>
                                 <h3>Start the Robot Software (From DDS Robot GUI)</h3>
-                                <p>I have tried to make this as simple as possible and possible all from the DDS Robot GUI. For each robot in the right hand side selection, you must "Start Docker", select the KAIST checkbox and then click "Start ROS". The robot LiDAR sensor should begin spinning and the robot should appear on the left side column indicating an active robot.</p>
-                                <p>If you prefer to manually start the robot via SSH to the Jetson:</p>
+                                <p>I have tried to make this as simple as possible and you can do this in multiple ways: by SSHing into the robot from a terminal, from the Robot GUI, or from the display app on the robot itself. Here I will walk you through all possible options.</p>
+                                <h4>Starting via SSH</h4>
                                 <p>SSH into the Jetson (username/password = jetson):</p>
                                 <div class="code-wrap">
                                     <pre class="code-block
@@ -130,20 +130,19 @@ docker compose up -d</pre>
 roslaunch mattbot_bringup kaist.launch</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
+                                <h4>Starting via the Robot GUI</h4>
+                                <p>Select the robot you want to start from the "saved addresses" dropdown under "Robot Startup" on the right hand side column. If the robot is powered on and the Robot GUI detects the robot, the little dot next to the robot should be yellow (not red).</p>
+                                <p>Click the "Start Docker" button for the selected robot to start the required docker containers on the robots.</p>
+                                <p>Click the "KAIST" checkbox to enable startup according to KAIST configuration.</p>
+                                <p>Click the "Start ROS" button to start the ROS node. The LiDAR should start spinning and the robot will show up in the Robot Desktop GUI.</p>
+
+                                <h4>Starting via the Robot Display</h4>
+                                <p>The robot display app should automatically start upon booting up. If it doesn't, or you accidentally exit out, double tap the "Start-Mattbot-Display.sh" icon on the Desktop.</p>
+                                <p>First, start Docker. There should be a button that says "Start Docker". This may take a few seconds and a success message will print on the screen.</p>
+                                <p>Second, start the ROS node. Simply click the "Start ROS" button in the display. The LiDAR should start spinning and the robot will show up in the Robot Desktop GUI.</p>
+                                <h4>Note: These start up procedures must be completed individually for each robot</h4>
+                                <h4>If there are software updates, you should pull software updates via the "Software Update" button in the Robot GUI. You must do this individually for each robot.</h4>
                             </div>
-                            <div class="step-card">
-                                <div class="step-number">3</div>
-                                <h3>Stopping the Robot</h3>
-                                <p>From the GUI, select the robot and click "Shut down" or "Shut down all".</p>
-                                <p>To manually stop the robot via SSH to the Jetson, press <kbd>Ctrl+C</kbd> in the terminal where you ran <code>roslaunch</code>, then stop the Docker container by typing <code>exit</code> into the terminal.</p>
-                                <div class="code-wrap">
-                                </div>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">4</div>
-                                <h3>Power off the robots</h3>
-                                <p>Use the GUI "Power Off" button for graceful shutdown when possible. Turn off the 12V battery and switch off the electronics/motor switch.</p>
-                                <p>To manually power off the Jetson, run <code>sudo shutdown now -h</code> in the terminal. Wait for the Jetson to fully power down before cutting power.</p>
                         </div>
                     </div>
                 </div>
@@ -155,7 +154,19 @@ roslaunch mattbot_bringup kaist.launch</pre>
                     </button>
                     <div class="collapsible-panel">
                         <div class="collapsible-content">
-                            <p>Use the GUI <strong>Power Off</strong> button for graceful shutdown when possible. Charge batteries before extended storage. See <a href="operation.html">Operation Guide → Powering down</a> for manual shutdown steps.</p>
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Stopping the Robot</h3>
+                                <p>From the GUI, select the robot and click "Shut down" or "Shut down all".</p>
+                                <p>To manually stop the robot via SSH to the Jetson, press <kbd>Ctrl+C</kbd> in the terminal where you ran <code>roslaunch</code>, then stop the Docker container by typing <code>exit</code> into the terminal.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Power off the robots</h3>
+                                <p>Use the GUI "Power Off" button for graceful shutdown when possible. Turn off the 12V battery and switch off the electronics/motor switch.</p>
+                                <p>To manually power off the Jetson, run <code>sudo shutdown now -h</code> in the terminal. Wait for the Jetson to fully power down before cutting power.</p>
+                            </div>
+                            <p>Charge batteries before extended storage. See <a href="operation.html">Operation Guide → Powering down</a> for additional manual shutdown steps.</p>
                         </div>
                     </div>
                 </div>
