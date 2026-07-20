@@ -149,6 +149,57 @@ roslaunch mattbot_bringup kaist.launch</pre>
 
                 <div class="collapsible">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Robot Operation
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <p>After startup is complete and robots appear in the DDS Robot GUI, use the map on the central operator workstation to localize each robot and send navigation goals.</p>
+
+                            <h4>Set initial position (GUI)</h4>
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Select the robot</h3>
+                                <p>In the Robot GUI, click the robot you want to operate in the status panel (left column). The selected robot is used for all map clicks until you choose a different one.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Switch to Set Initial Position mode</h3>
+                                <p>In the map toolbar, select <strong>Set Initial Position</strong>. This tells the GUI you are seeding AMCL localization, not sending a navigation goal.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">3</div>
+                                <h3>Set Initial Position</h3>
+                                <p>Click and drag on the map to indicate the robot’s actual location and orientation. This only needs to be in roughly the correct location. The robot will perform a spinning sequence to localize. The robot icon on the map should jump to that pose.</p>
+                            </div>
+
+                            <h4>Set navigation goals (GUI)</h4>
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Confirm localization</h3>
+                                <p>Make sure the robot’s position on the map matches where it is in the room. Navigation goals will fail or behave incorrectly if localization is wrong.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Switch to Set Robot Goal mode</h3>
+                                <p>In the map toolbar, select <strong>Set Robot Goal</strong>.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">3</div>
+                                <h3>Click the destination on the map</h3>
+                                <p>With the correct robot selected, click and drag to set the goal location and orientation on the map. The robot should plan a path and drive to that point.</p>
+                                <p>To send a new goal, stay in <strong>Set Robot Goal</strong> mode and click another point. Use <strong>Stop</strong> in the GUI if you need to halt motion before sending a new goal.</p>
+                            </div>
+
+                            <h4>Automated operation (coming soon)</h4>
+                            <p>Today, goal commands are sent manually through the Robot GUI map (initial pose and click-to-goal). Once the scenarios are decided, I will swith the software so robots can run <strong>patrol routes</strong> or receive <strong>automated goal commands</strong> from an application layer built by <strong>Jaewoo</strong> and <strong>Giwon</strong>, without requiring an operator to click each destination on the map.</p>
+                            <p>That layer will sit above the existing DDS/ROS navigation stack. Until it is integrated and documented here, continue using the GUI workflows above for testing.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
                         Shutdown and storage
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
