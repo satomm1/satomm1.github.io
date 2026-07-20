@@ -200,23 +200,50 @@ roslaunch mattbot_bringup kaist.launch</pre>
 
                 <div class="collapsible">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
-                        Shutdown and storage
+                        Shutdown Robots
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
                     <div class="collapsible-panel">
                         <div class="collapsible-content">
-                            <div class="step-card">
-                                <div class="step-number">1</div>
-                                <h3>Stopping the Robot</h3>
-                                <p>From the GUI, select the robot and click "Shut down" or "Shut down all".</p>
-                                <p>To manually stop the robot via SSH to the Jetson, press <kbd>Ctrl+C</kbd> in the terminal where you ran <code>roslaunch</code>, then stop the Docker container by typing <code>exit</code> into the terminal.</p>
+                            <p>You can stop robot software and power down using SSH, the central Robot GUI, or the touch display on each robot. Complete shutdown individually for each robot.</p>
+
+                            <h4>Shutting down via SSH</h4>
+                            <p>In the terminal where you ran <code>roslaunch</code>, press <kbd>Ctrl+C</kbd> to stop the ROS nodes.</p>
+                            <p>If you started ROS via a different method, SSH into the Jetson if you are not already connected (username/password = jetson):</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">ssh jetson@&lt;jetson_ip_address&gt;</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                             </div>
-                            <div class="step-card">
-                                <div class="step-number">2</div>
-                                <h3>Power off the robots</h3>
-                                <p>Use the GUI "Power Off" button for graceful shutdown when possible. Turn off the 12V battery and switch off the electronics/motor switch.</p>
-                                <p>To manually power off the Jetson, run <code>sudo shutdown now -h</code> in the terminal. Wait for the Jetson to fully power down before cutting power.</p>
+                            <p>Then, connect to the docker container and stop ros nodes:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">docker exec -it ros_noetic bash
+rosnode kill --all</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                             </div>
+
+                            <p>Stop the Docker container by typing <code>exit</code> in the container shell. If you started the container in detached mode or from another session, run:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">sudo docker stop ros_noetic</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>To power off the Jetson gracefully, run:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">sudo shutdown now -h</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Wait for the Jetson to fully power down, then turn off the electronics/motor switch and the 12V battery.</p>
+
+                            <h4>Shutting down via the Robot GUI</h4>
+                            <p>Select the robot from the left-hand column, and then click shutdown to shutdown ROS nodes only on that robot.</p>
+                            <p>Use <strong>Shut down all</strong> if you want to stop ROS execution on every connected robot at once.</p>
+                            <p>Then select the robot in the dropdown box on the right hand column. Under "More", click <strong>Power Off</strong> to shut down the Jetson gracefully. Wait until the robot is fully off before cutting power.</p>
+                            <p>Turn off the electronics/motor switch and the 12V battery.</p>
+
+                            <h4>Shutting down via the Robot Display</h4>
+                            <p>On the robot’s touch display, click <strong>Stop ROS</strong> to stop the running ROS nodes. The LiDAR should stop spinning.</p>
+                            <p>Exit out of the display. From the desktop, tap on the upper right corner of the Ubuntu desktop and then click shutdown. Wait for the Jetson to fully power down.</p>
+                            <p>After the Jetson has shut down, turn off the electronics/motor switch and the 12V battery.</p>
+
                             <p>Charge batteries before extended storage. See <a href="operation.html">Operation Guide → Powering down</a> for additional manual shutdown steps.</p>
                         </div>
                     </div>
