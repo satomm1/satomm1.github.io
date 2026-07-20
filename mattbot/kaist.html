@@ -248,6 +248,60 @@ rosnode kill --all</pre>
                         </div>
                     </div>
                 </div>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Central Machine Shutdown
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <p>Shut down all robots first (see <strong>Shutdown Robots</strong> above), then stop the central operator workstation services in reverse order of startup.</p>
+
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Stop data storage Docker containers (optional)</h3>
+                                <p>Skip this step if you did not start the capture stack during startup.</p>
+                                <p>In Windows Terminal, find your <strong>Ubuntu</strong> tab (plain Ubuntu / WSL2 — not Ubuntu WSL 1).</p>
+                                <p>You should be in the dds_robot_platform/capture directory, tear down the containers:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">docker compose down
+</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Stop operator DDS communication</h3>
+                                <p>In Windows Terminal, find your <strong>Ubuntu WSL 1</strong> tab (the same WSL1 environment used at startup — not plain Ubuntu / WSL2).</p>
+                                <p>End the scripts by pressing <kbd>Ctrl</kbd> + <kbd>C</kbd>:</p>
+                                <p>Alternatively, open a new Ubuntu WSL 1 tab and navigate to the DDS scripts directory and run the stop script:</p>
+
+                                <div class="code-wrap">
+                                    <pre class="code-block">cd dds_robot_platform/dds
+./stop_scripts.sh</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">3</div>
+                                <h3>Stop the Local Stack Docker services</h3>
+                                <p>In the Robot GUI, click the Local Stack Docker <strong>Stop</strong> button (bottom right of the application). This stops the GraphQL, InfluxDB, and related compose services started at startup.</p>
+                                <p>Alternatively, from an Ubuntu terminal in the <code>dds_robot_platform</code> repo root:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">cd dds_robot_platform
+docker compose down</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">4</div>
+                                <h3>Close the operator GUI and Docker Desktop</h3>
+                                <p>Close the DDS Robot GUI application. You may quit Docker Desktop if you are finished for the day; leave it running if you plan to restart the stack soon.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <section class="section" id="mapping">
