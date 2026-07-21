@@ -191,9 +191,8 @@ roslaunch mattbot_bringup kaist.launch</pre>
                                 <p>To send a new goal, stay in <strong>Set Robot Goal</strong> mode and click another point. Use <strong>Stop</strong> in the GUI if you need to halt motion before sending a new goal.</p>
                             </div>
 
-                            <h4>Automated operation (coming soon)</h4>
-                            <p>Today, goal commands are sent manually through the Robot GUI map (initial pose and click-to-goal). Once the scenarios are decided, I will swith the software so robots can run <strong>patrol routes</strong> or receive <strong>automated goal commands</strong> from an application layer built by <strong>Jaewoo</strong> and <strong>Giwon</strong>, without requiring an operator to click each destination on the map.</p>
-                            <p>That layer will sit above the existing DDS/ROS navigation stack. Until it is integrated and documented here, continue using the GUI workflows above for testing.</p>
+                            <h4>Automated operation (GUI goals)</h4>
+                            <p>For manual click-to-goal testing, use the steps above. For scenario runs driven by Jaewoo’s application layer (patrol routes and automated goal commands), complete startup and localization first, then follow <a href="#jaewoo-control">Running the Robots with Jaewoo’s Code</a>.</p>
                         </div>
                     </div>
                 </div>
@@ -298,6 +297,47 @@ docker compose down</pre>
                                 <div class="step-number">4</div>
                                 <h3>Close the operator GUI and Docker Desktop</h3>
                                 <p>Close the DDS Robot GUI application. You may quit Docker Desktop if you are finished for the day; leave it running if you plan to restart the stack soon.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="jaewoo-control">
+                <h2>Running the Robots with Jaewoo’s Code</h2>
+                <p>Jaewoo’s robot control code runs on top of the standard KAIST stack. It sends automated navigation goals and patrol commands through the existing DDS/ROS infrastructure instead of manual map clicks in the Robot GUI.</p>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Workflow
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Complete standard startup</h3>
+                                <p>Follow every step in <a href="#running-instructions">Running the Robots</a> before starting Jaewoo’s code:</p>
+                                <ul>
+                                    <li><strong>Central Machine Startup</strong> — operator GUI, Local Stack Docker, DDS scripts, and capture containers (if needed)</li>
+                                    <li><strong>Robot Startup</strong> — power on and start ROS on each robot (via SSH, Robot GUI, or robot display)</li>
+                                </ul>
+                                <p>Do not skip these steps. Jaewoo’s application layer expects the central DDS stack and all target robots to already be running.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Localize each robot</h3>
+                                <p>In the Robot GUI, set the initial position for <strong>every</strong> robot you plan to control (see <strong>Robot Operation → Set initial position (GUI)</strong> in <a href="#running-instructions">Running the Robots</a>).</p>
+                                <p>Confirm each robot’s icon on the map matches its real location and orientation before proceeding. Automated goal commands will fail or behave incorrectly if localization is wrong.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">3</div>
+                                <h3>Start Jaewoo’s robot control code</h3>
+                                <p>With startup and localization complete, run Jaewoo’s application layer on the central operator workstation. This code publishes goal and patrol commands over DDS to the running robots.</p>
+                                <p>Contact Jaewoo for the current repository location, environment setup, and launch command for your scenario.</p>
+                                <div class="tip">
+                                    <p>Keep the Robot GUI and central DDS stack running while Jaewoo’s code is active. Use the GUI <strong>Stop</strong> button or the shutdown procedures in <a href="#running-instructions">Running the Robots</a> when the scenario is finished.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -444,6 +484,96 @@ docker compose down</pre>
                 -->
 
                 <div id="updates-new">
+
+                <div class="collapsible update-item">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        <span class="update-title">Update Digital Twin API Calls</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="update-meta">
+                                <span class="update-date">2026-07-21</span>
+                                <span class="update-badge software">Software</span>
+                            </div>
+                            <p>The digital twin currently uses the API calls: robotPositions, robotGoals, etc.</p>
+                            <p><strong>However, I have added additional APIs that provide the transformed coordinates to the DT global map. The API calls in the DT must be updated</strong></p>
+                            <ol>
+                                <li>Update the digital twin API calls to now use: globalRobotPositions, globalRobotGoals, etc. (update all api calls you have)</li>
+                                <li>Please see this document for full details: https://github.com/satomm1/dds_robot_platform/blob/main/docs/graphql-application-api.md#global-map-client</li>
+                            </ol>
+                            
+                            <p>Your DT code also provides the ability to set the transformation between robot map and global map. However, since I already perform this in my code, the DT should not utilize this functionality. I recommend disabling it or setting it to be disabled by default. (To get it to work while testing I had to go to advanced mode->tools->calibration->disable the calibration profile)</p>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="collapsible update-item">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        <span class="update-title">Robot software update via GUI (each Jetson)</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="update-meta">
+                                <span class="update-date">2026-07-20</span>
+                                <span class="update-badge software">Software</span>
+                            </div>
+                            <p>After updating the central machine (see <strong>Pull latest dds_robot_platform</strong> in One Time Updates), pull the latest robot-side software on <strong>each Jetson</strong> using the Robot GUI. This must be done <strong>once per robot</strong> — the GUI update button applies only to the currently selected robot.</p>
+                            <p><strong>For each robot:</strong></p>
+                            <ol>
+                                <li>Power on the robot and confirm it appears in the Robot GUI (status dot yellow, not red).</li>
+                                <li>In the right-hand <strong>Robot Startup</strong> panel, select the robot from the <strong>saved addresses</strong> dropdown.</li>
+                                <li>Click <strong>Start Docker</strong> if the robot’s Docker container is not already running.</li>
+                                <li>Click <strong>Software Update</strong> and wait for the update to finish. Do not power off the robot until the GUI reports success.</li>
+                                <li>After the update completes, click <strong>Start ROS</strong> (with the <strong>KAIST</strong> checkbox enabled) if you need the robot running again.</li>
+                            </ol>
+                            <p>Repeat steps 1–5 for every robot in the fleet.</p>
+                            <div class="tip">
+                                <p>If an update fails, check that the Jetson host service is installed (see <strong>Previous updates → Install Jetson host service</strong>) and that the robot is reachable on the network.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible update-item">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        <span class="update-title">Pull latest dds_robot_platform (central machine)</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="update-meta">
+                                <span class="update-date">2026-07-20</span>
+                                <span class="update-badge software">Software</span>
+                            </div>
+                            <p>On the <strong>central operator workstation</strong>, update the existing <code>dds_robot_platform</code> clone in <strong>both</strong> WSL environments used at KAIST: <strong>Ubuntu WSL 1</strong> (DDS scripts) and plain <strong>Ubuntu</strong> / WSL2 (capture stack). Each distro has its own filesystem — run <code>git pull</code> in each one.</p>
+                            <p><strong>1. Ubuntu WSL 1</strong> — open an <strong>Ubuntu WSL 1</strong> tab in Windows Terminal (not plain Ubuntu / WSL2):</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">cd ~/dds_robot_platform
+git pull</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p><strong>2. Ubuntu (WSL2)</strong> — open a plain <strong>Ubuntu</strong> tab in Windows Terminal (WSL2, used for capture):</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">cd ~/dds_robot_platform
+git pull</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>If <code>git pull</code> fails because of local changes in either environment, discard them and pull again:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">cd ~/dds_robot_platform
+git restore .
+git pull</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <div class="tip">
+                                <p>After pulling, restart the central stack if it is already running: stop DDS scripts and Local Stack Docker (see <a href="#running-instructions">Running the Robots → Central Machine Shutdown</a>), then run startup again.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 </div><!-- #updates-new -->
 
