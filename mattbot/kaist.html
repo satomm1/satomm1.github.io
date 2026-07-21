@@ -303,6 +303,57 @@ docker compose down</pre>
                 </div>
             </section>
 
+            <section class="section" id="basic-tests">
+                <h2>Basic Tests</h2>
+                <p>After completing <a href="#running-instructions">Running the Robots</a> (central machine startup, robot startup, and localization), use these quick checks to confirm communication and navigation are working before scenario runs or further debugging.</p>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Image testing
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <p>This page polls the capture API for the latest camera frame from each robot. Use it to verify that robot image streams are reaching the central machine.</p>
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Download the viewer HTML</h3>
+                                <p>On the central machine, download <a href="https://github.com/satomm1/dds_robot_platform/blob/main/docs/watch_robot_images.html" target="_blank" rel="noopener">watch_robot_images.html</a> from the <code>dds_robot_platform</code> docs folder (use <strong>Raw</strong> → Save As, or open the file from your local clone at <code>dds_robot_platform/docs/watch_robot_images.html</code>).</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Open it and set robot IDs</h3>
+                                <p>Open the HTML file in a browser on the central machine. At the top of the page, set the four robot ID fields to <strong>1</strong>, <strong>2</strong>, <strong>3</strong>, and <strong>4</strong> (match the IDs used on your KAIST fleet).</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">3</div>
+                                <h3>Start robots and confirm live images</h3>
+                                <p>Make sure the central stack is running, including the <strong>capture</strong> Docker containers from Central Machine Startup, and start at least one robot as in <a href="#running-instructions">Running the Robots</a>. Live camera images for active robots should appear in the 2×2 grid on the page.</p>
+                                <p>If a cell shows “no frame” or “unreachable,” check that that robot’s ROS stack is up, capture is running, and the robot ID matches the GUI / <code>robot_env.sh</code> configuration.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Position and goal testing
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <p>Use the Robot GUI to confirm localization and navigation end-to-end (see <strong>Robot Operation</strong> under <a href="#running-instructions">Running the Robots</a>):</p>
+                            <ul>
+                                <li>Select a robot and set its <strong>initial position</strong> on the map. The robot icon should move to the clicked pose and the robot should spin to localize.</li>
+                                <li>Switch to <strong>Set Robot Goal</strong> and click a nearby destination. The robot should plan a path and drive toward the goal.</li>
+                                <li>Confirm you see motion on the physical robot and that the pose updates on the map as it moves.</li>
+                            </ul>
+                            <p>If initial pose, goals, and motion all work, DDS communication, localization, and navigation are functioning as expected for day-to-day GUI control.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section class="section" id="jaewoo-control">
                 <h2>Running the Robots with Jaewoo’s Code</h2>
                 <p>Jaewoo’s robot control code runs on top of the standard KAIST stack. It sends automated navigation goals and patrol commands through the existing DDS/ROS infrastructure instead of manual map clicks in the Robot GUI.</p>
