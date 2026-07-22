@@ -410,9 +410,11 @@ docker compose down</pre>
                             <div class="step-card">
                                 <div class="step-number">5</div>
                                 <h3>Update cyclonedds.xml on the central machine (WSL1)</h3>
-                                <p>On the central machine, open an <strong>Ubuntu WSL 1</strong> terminal and run the Wi-Fi IP update script. It prompts for the central machine IP and each robot IP, then updates <code>cyclonedds.xml</code> automatically:</p>
+                                <p>On the central machine, open an <strong>Ubuntu WSL 1</strong> terminal. Pull the latest <code>dds_robot_platform</code> so you have <code>update_wifi_ips.sh</code>, then run the script. It prompts for the central machine IP and each robot IP, then updates <code>cyclonedds.xml</code> automatically:</p>
                                 <div class="code-wrap">
-                                    <pre class="code-block">cd ~/dds_robot_platform/dds
+                                    <pre class="code-block">cd ~/dds_robot_platform
+git pull
+cd dds
 ./update_wifi_ips.sh</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
@@ -421,60 +423,42 @@ docker compose down</pre>
                             </div>
                             <div class="step-card">
                                 <div class="step-number">6</div>
-                                <h3>Update robot_env.sh and cyclonedds.xml on each robot</h3>
+                                <h3>Update Wi-Fi IPs on each robot</h3>
                                 <p>Repeat this step for <strong>every</strong> robot.</p>
                                 <p><strong>Start Docker</strong> on the robot if it is not already running (Robot GUI <strong>Start Docker</strong>, or <strong>Start Docker</strong> on the robot display app).</p>
-                                <p>Open a shell on that Jetson in one of these ways:</p>
-                                <ul>
-                                    <li><strong>SSH (from central machine, Ubuntu WSL 1):</strong>
-                                        <div class="code-wrap">
-                                            <pre class="code-block">ssh jetson@&lt;robot_ip_address&gt;</pre>
-                                            <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
-                                        </div>
-                                        <p>Use the IP from step 2 (username/password = jetson).</p>
-                                    </li>
-                                    <li><strong>On the robot display:</strong> exit the display app, open a terminal from the Ubuntu desktop, and plug in a USB keyboard.</li>
-                                </ul>
+                                <p>SSH into the Jetson from an <strong>Ubuntu WSL 1</strong> terminal on the central machine (username/password = jetson):</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">ssh jetson@&lt;robot_ip_address&gt;</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
                                 <p>Enter the running ROS container:</p>
                                 <div class="code-wrap">
                                     <pre class="code-block">docker exec -it ros_noetic bash</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
-                                <p>Inside the container, edit <code>robot_env.sh</code> and set <code>ROS_IP</code> on the first line to this robot’s new IP:</p>
+                                <p>Download and run the Wi-Fi IP update script. It prompts for the central machine IP and each robot IP, then updates <code>robot_env.sh</code> and <code>cyclonedds.xml</code> automatically:</p>
                                 <div class="code-wrap">
-                                    <pre class="code-block">sudo nano /workspace/catkin_ws/src/robot_env.sh</pre>
+                                    <pre class="code-block">cd /workspace/catkin_ws/src
+wget -O update_wifi_ips.sh "https://raw.githubusercontent.com/satomm1/Robot/main/Jetson/update_wifi_ips.sh"
+chmod +x update_wifi_ips.sh
+./update_wifi_ips.sh</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
-                                <p>Update the line that looks like <code>export ROS_IP=…</code> to the new address from step 2. Save and exit nano: <kbd>Ctrl+O</kbd>, <kbd>Enter</kbd>, then <kbd>Ctrl+X</kbd>.</p>
-                                <p>Next edit <code>cyclonedds.xml</code> on the same robot:</p>
-                                <div class="code-wrap">
-                                    <pre class="code-block">sudo nano /workspace/catkin_ws/src/cyclonedds.xml</pre>
-                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
-                                </div>
-                                <p>Find the peer / IP address section and update it to include <strong>all robot IPs</strong> plus the <strong>central machine IP</strong> (same peer list as in step 5). Save and exit: <kbd>Ctrl+O</kbd>, <kbd>Enter</kbd>, <kbd>Ctrl+X</kbd>.</p>
+                                <p>Enter the same IP addresses you used in step 5 when prompted.</p>
                             </div>
                             <div class="step-card">
                                 <div class="step-number">7</div>
-                                <h3>Source robot_env.sh</h3>
-                                <p>Still inside the <code>ros_noetic</code> container on that robot, load the updated environment:</p>
-                                <div class="code-wrap">
-                                    <pre class="code-block">source /workspace/catkin_ws/src/robot_env.sh</pre>
-                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
-                                </div>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">8</div>
                                 <h3>Test locally with minimal.launch</h3>
-                                <p>With the electronics/motor switch on and still inside the container, run:</p>
+                                <p>Still inside the container, with the electronics/motor switch on, run:</p>
                                 <div class="code-wrap">
                                     <pre class="code-block">roslaunch mattbot_bringup minimal.launch</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
                                 <p>If everything is working, you should see a launch summary (Parameters, Nodes), messages about processes that were started, and an <code>[INFO]</code> message that includes the robot ID.</p>
-                                <p>Press <kbd>Ctrl+C</kbd> to stop the test launch when finished. Repeat steps 6–8 for each remaining robot.</p>
+                                <p>Press <kbd>Ctrl+C</kbd> to stop the test launch when finished. Repeat steps 6–7 for each remaining robot.</p>
                             </div>
                             <div class="step-card">
-                                <div class="step-number">9</div>
+                                <div class="step-number">8</div>
                                 <h3>Test on the network</h3>
                                 <p>After every robot has been updated and tested locally, verify that the central machine can talk to the robots over the new Wi-Fi network.</p>
                                 <ol>
