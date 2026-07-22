@@ -354,6 +354,119 @@ docker compose down</pre>
                 </div>
             </section>
 
+            <section class="section" id="updating-wifi">
+                <h2>Updating Wi-Fi (IP Addresses)</h2>
+                <p>Use this procedure when the robots or central machine move to a new Wi-Fi network (new SSID, passwords, or DHCP leases). Complete the steps below on every robot and on the central machine so the Robot GUI and DDS discovery use the new addresses.</p>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Update Wi-Fi and IP addresses
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Connect each robot to the new Wi-Fi</h3>
+                                <p>On each robot’s display, go to the Ubuntu desktop. In the upper-right corner, click the power/system menu, then open the Wi-Fi settings. Select the new Wi-Fi SSID and enter the password to connect.</p>
+                                <p>Repeat for every robot in the fleet.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Record each robot’s new IP address</h3>
+                                <p>Plug a USB keyboard into the Jetson. Open a terminal and run:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">ifconfig</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Find the <code>wlan0</code> section and note the address next to <code>inet</code> — that is the robot’s Wi-Fi IP. Write down both the <strong>robot number</strong> and this IP address.</p>
+                                <p>Repeat for every robot so you have a full list (e.g. Robot 1 → 192.168.x.x, Robot 2 → …).</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">3</div>
+                                <h3>Update saved addresses in the Robot GUI</h3>
+                                <p>On the central machine, open the Robot GUI. In the right-hand <strong>Robot Startup</strong> panel:</p>
+                                <ol>
+                                    <li>Under <strong>saved addresses</strong>, select each existing robot entry one by one and click the <strong>X</strong> next to it to remove the old address.</li>
+                                    <li>For each robot, enter the robot ID in the <strong>label</strong> field, type the new IP from step 2, and click <strong>Save</strong>.</li>
+                                </ol>
+                                <p>If the robots are powered on and reachable, the new IPs should be recognized and the status dot next to each robot should be <strong>solid gray</strong> (not red, and not flashing gray).</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">4</div>
+                                <h3>Update cyclonedds.xml on the central machine (WSL1)</h3>
+                                <p>On the central machine, open an <strong>Ubuntu WSL 1</strong> terminal and edit the CycloneDDS peer list:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">nano ~/dds_robot_platform/dds/cyclonedds.xml</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Use the arrow keys to find the peer / IP address section. Update it so it lists:</p>
+                                <ul>
+                                    <li>The <strong>central machine</strong> IP address on this Wi-Fi network</li>
+                                    <li>Every <strong>robot</strong> IP address recorded in step 2</li>
+                                </ul>
+                                <p>Remove any old peer entries that no longer apply. Save and exit nano: <kbd>Ctrl+O</kbd>, <kbd>Enter</kbd>, then <kbd>Ctrl+X</kbd>.</p>
+                                <p>If you are already running the <code>./start_scripts.sh</code> shell file, restart it after saving (stop with <code>./stop_scripts.sh</code>, then start again with <code>./start_scripts.sh</code> from <code>~/dds_robot_platform/dds</code>) so discovery picks up the new peers.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">5</div>
+                                <h3>Update robot_env.sh and cyclonedds.xml on each robot</h3>
+                                <p>Repeat this step for <strong>every</strong> robot.</p>
+                                <p><strong>Start Docker</strong> on the robot if it is not already running (Robot GUI <strong>Start Docker</strong>, or <strong>Start Docker</strong> on the robot display app).</p>
+                                <p>Open a shell on that Jetson in one of these ways:</p>
+                                <ul>
+                                    <li><strong>SSH (from central machine, Ubuntu WSL 1):</strong>
+                                        <div class="code-wrap">
+                                            <pre class="code-block">ssh jetson@&lt;robot_ip_address&gt;</pre>
+                                            <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                        </div>
+                                        <p>Use the IP from step 2 (username/password = jetson).</p>
+                                    </li>
+                                    <li><strong>On the robot display:</strong> exit the display app, open a terminal from the Ubuntu desktop, and plug in a USB keyboard.</li>
+                                </ul>
+                                <p>Enter the running ROS container:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">docker exec -it ros_noetic bash</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Inside the container, edit <code>robot_env.sh</code> and set <code>ROS_IP</code> on the first line to this robot’s new IP:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">sudo nano /workspace/catkin_ws/src/robot_env.sh</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Update the line that looks like <code>export ROS_IP=…</code> to the new address from step 2. Save and exit nano: <kbd>Ctrl+O</kbd>, <kbd>Enter</kbd>, then <kbd>Ctrl+X</kbd>.</p>
+                                <p>Next edit <code>cyclonedds.xml</code> on the same robot:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">sudo nano /workspace/catkin_ws/src/cyclonedds.xml</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Find the peer / IP address section and update it to include <strong>all robot IPs</strong> plus the <strong>central machine IP</strong> (same peer list as in step 4). Save and exit: <kbd>Ctrl+O</kbd>, <kbd>Enter</kbd>, <kbd>Ctrl+X</kbd>.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">6</div>
+                                <h3>Source robot_env.sh</h3>
+                                <p>Still inside the <code>ros_noetic</code> container on that robot, load the updated environment:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">source /workspace/catkin_ws/src/robot_env.sh</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">7</div>
+                                <h3>Test with minimal.launch</h3>
+                                <p>With the electronics/motor switch on and still inside the container, run:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">roslaunch mattbot_bringup minimal.launch</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>If everything is working, you should see a launch summary (Parameters, Nodes), messages about processes that were started, and an <code>[INFO]</code> message that includes the robot ID.</p>
+                                <p>Press <kbd>Ctrl+C</kbd> to stop the test launch when finished. Repeat steps 5–7 for each remaining robot.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section class="section" id="jaewoo-control">
                 <h2>Running the Robots with Jaewoo’s Code</h2>
                 <p>Jaewoo’s robot control code runs on top of the standard KAIST stack. It sends automated navigation goals and patrol commands through the existing DDS/ROS infrastructure instead of manual map clicks in the Robot GUI.</p>
@@ -538,30 +651,6 @@ docker compose down</pre>
 
                 <div class="collapsible update-item">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
-                        <span class="update-title">Update Digital Twin API Calls</span>
-                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                    </button>
-                    <div class="collapsible-panel">
-                        <div class="collapsible-content">
-                            <div class="update-meta">
-                                <span class="update-date">2026-07-21</span>
-                                <span class="update-badge software">Software</span>
-                            </div>
-                            <p>The digital twin currently uses the API calls: robotPositions, robotGoals, etc.</p>
-                            <p><strong>However, I have added additional APIs that provide the transformed coordinates to the DT global map. The API calls in the DT must be updated</strong></p>
-                            <ol>
-                                <li>Update the digital twin API calls to now use: globalRobotPositions, globalRobotGoals, etc. (update all api calls you have)</li>
-                                <li>Please see this document for full details: https://github.com/satomm1/dds_robot_platform/blob/main/docs/graphql-application-api.md#global-map-client</li>
-                            </ol>
-                            
-                            <p>Your DT code also provides the ability to set the transformation between robot map and global map. However, since I already perform this in my code, the DT should not utilize this functionality. I recommend disabling it or setting it to be disabled by default. (To get it to work while testing I had to go to advanced mode->tools->calibration->disable the calibration profile)</p>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="collapsible update-item">
-                    <button type="button" class="collapsible-trigger" aria-expanded="false">
                         <span class="update-title">Robot software update via GUI (each Jetson)</span>
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
@@ -631,6 +720,29 @@ git pull</pre>
                 <div class="updates-divider" role="separator" aria-label="Previous updates">Previous updates</div>
 
                 <div id="updates-archive">
+
+                <div class="collapsible update-item">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        <span class="update-title">Update Digital Twin API Calls</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="update-meta">
+                                <span class="update-date">2026-07-21</span>
+                                <span class="update-badge software">Software</span>
+                            </div>
+                            <p>The digital twin currently uses the API calls: robotPositions, robotGoals, etc.</p>
+                            <p><strong>However, I have added additional APIs that provide the transformed coordinates to the DT global map. The API calls in the DT must be updated</strong></p>
+                            <ol>
+                                <li>Update the digital twin API calls to now use: globalRobotPositions, globalRobotGoals, etc. (update all api calls you have)</li>
+                                <li>Please see this document for full details: https://github.com/satomm1/dds_robot_platform/blob/main/docs/graphql-application-api.md#global-map-client</li>
+                            </ol>
+                            
+                            <p>Your DT code also provides the ability to set the transformation between robot map and global map. However, since I already perform this in my code, the DT should not utilize this functionality. I recommend disabling it or setting it to be disabled by default. (To get it to work while testing I had to go to advanced mode->tools->calibration->disable the calibration profile)</p>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="collapsible update-item">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
