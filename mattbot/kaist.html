@@ -394,6 +394,21 @@ docker compose down</pre>
                             </div>
                             <div class="step-card">
                                 <div class="step-number">4</div>
+                                <h3>Update Windows Firewall (ROS Rule)</h3>
+                                <p>On the central Windows machine, allow the new robot IPs through Windows Defender Firewall so ROS/DDS traffic is not blocked.</p>
+                                <ol>
+                                    <li>Open the <strong>Windows Defender Firewall</strong> app (search for “Windows Defender” in the Windows search box).</li>
+                                    <li>In the left column, click <strong>Inbound Rules</strong>.</li>
+                                    <li>Find the rule labeled <strong>ROS Rule</strong> (scroll down if the list is alphabetical).</li>
+                                    <li>Double-click <strong>ROS Rule</strong>. In the dialog that opens, select the <strong>Scope</strong> tab at the top.</li>
+                                    <li>Under <strong>Remote IP address</strong>, add the robot IP addresses from step 2. You can add each IP individually, or use an IP address range to include all robots at once. You may remove old robot IPs, but that is optional.</li>
+                                    <li>Click <strong>Apply</strong>, then <strong>OK</strong>.</li>
+                                    <li>In the left column, click <strong>Outbound Rules</strong>. The <strong>ROS Rule</strong> should be near the top of this list.</li>
+                                    <li>Double-click <strong>ROS Rule</strong>, open the <strong>Scope</strong> tab, and again add the robot IPs under <strong>Remote IP address</strong> (optionally remove old IPs). Click <strong>Apply</strong>, then <strong>OK</strong>.</li>
+                                </ol>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">5</div>
                                 <h3>Update cyclonedds.xml on the central machine (WSL1)</h3>
                                 <p>On the central machine, open an <strong>Ubuntu WSL 1</strong> terminal and edit the CycloneDDS peer list:</p>
                                 <div class="code-wrap">
@@ -409,7 +424,7 @@ docker compose down</pre>
                                 <p>If you are already running the <code>./start_scripts.sh</code> shell file, restart it after saving (stop with <code>./stop_scripts.sh</code>, then start again with <code>./start_scripts.sh</code> from <code>~/dds_robot_platform/dds</code>) so discovery picks up the new peers.</p>
                             </div>
                             <div class="step-card">
-                                <div class="step-number">5</div>
+                                <div class="step-number">6</div>
                                 <h3>Update robot_env.sh and cyclonedds.xml on each robot</h3>
                                 <p>Repeat this step for <strong>every</strong> robot.</p>
                                 <p><strong>Start Docker</strong> on the robot if it is not already running (Robot GUI <strong>Start Docker</strong>, or <strong>Start Docker</strong> on the robot display app).</p>
@@ -440,10 +455,10 @@ docker compose down</pre>
                                     <pre class="code-block">sudo nano /workspace/catkin_ws/src/cyclonedds.xml</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
-                                <p>Find the peer / IP address section and update it to include <strong>all robot IPs</strong> plus the <strong>central machine IP</strong> (same peer list as in step 4). Save and exit: <kbd>Ctrl+O</kbd>, <kbd>Enter</kbd>, <kbd>Ctrl+X</kbd>.</p>
+                                <p>Find the peer / IP address section and update it to include <strong>all robot IPs</strong> plus the <strong>central machine IP</strong> (same peer list as in step 5). Save and exit: <kbd>Ctrl+O</kbd>, <kbd>Enter</kbd>, <kbd>Ctrl+X</kbd>.</p>
                             </div>
                             <div class="step-card">
-                                <div class="step-number">6</div>
+                                <div class="step-number">7</div>
                                 <h3>Source robot_env.sh</h3>
                                 <p>Still inside the <code>ros_noetic</code> container on that robot, load the updated environment:</p>
                                 <div class="code-wrap">
@@ -452,15 +467,33 @@ docker compose down</pre>
                                 </div>
                             </div>
                             <div class="step-card">
-                                <div class="step-number">7</div>
-                                <h3>Test with minimal.launch</h3>
+                                <div class="step-number">8</div>
+                                <h3>Test locally with minimal.launch</h3>
                                 <p>With the electronics/motor switch on and still inside the container, run:</p>
                                 <div class="code-wrap">
                                     <pre class="code-block">roslaunch mattbot_bringup minimal.launch</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
                                 <p>If everything is working, you should see a launch summary (Parameters, Nodes), messages about processes that were started, and an <code>[INFO]</code> message that includes the robot ID.</p>
-                                <p>Press <kbd>Ctrl+C</kbd> to stop the test launch when finished. Repeat steps 5–7 for each remaining robot.</p>
+                                <p>Press <kbd>Ctrl+C</kbd> to stop the test launch when finished. Repeat steps 6–8 for each remaining robot.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">9</div>
+                                <h3>Test on the network</h3>
+                                <p>After every robot has been updated and tested locally, verify that the central machine can talk to the robots over the new Wi-Fi network.</p>
+                                <ol>
+                                    <li>On the central machine, start Local Stack Docker from the Robot GUI if it is not already running.</li>
+                                    <li>In an <strong>Ubuntu WSL 1</strong> terminal, start the DDS scripts:
+                                        <div class="code-wrap">
+                                            <pre class="code-block">cd ~/dds_robot_platform/dds
+conda activate dds
+./start_scripts.sh</pre>
+                                            <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                        </div>
+                                    </li>
+                                    <li>From the Robot GUI, start each robot (Docker + ROS with the <strong>KAIST</strong> checkbox, as in <a href="#running-instructions">Running the Robots</a>).</li>
+                                </ol>
+                                <p>If the network configuration is correct, the robots should appear on the map in the Robot GUI. In the terminal where <code>./start_scripts.sh</code> is running, you should also see messages indicating that the central machine has connected to the robots that were started.</p>
                             </div>
                         </div>
                     </div>
