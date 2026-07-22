@@ -657,7 +657,7 @@ docker compose down</pre>
                     <div class="collapsible-panel">
                         <div class="collapsible-content">
                             <div class="update-meta">
-                                <span class="update-date">2026-07-20</span>
+                                <span class="update-date">2026-07-22</span>
                                 <span class="update-badge software">Software</span>
                             </div>
                             <p>After updating the central machine (see <strong>Pull latest dds_robot_platform</strong> in One Time Updates), pull the latest robot-side software on <strong>each Jetson</strong> using the Robot GUI. This must be done <strong>once per robot</strong> — the GUI update button applies only to the currently selected robot.</p>
@@ -685,7 +685,7 @@ docker compose down</pre>
                     <div class="collapsible-panel">
                         <div class="collapsible-content">
                             <div class="update-meta">
-                                <span class="update-date">2026-07-20</span>
+                                <span class="update-date">2026-07-22</span>
                                 <span class="update-badge software">Software</span>
                             </div>
                             <p>On the <strong>central operator workstation</strong>, update the existing <code>dds_robot_platform</code> clone in <strong>both</strong> WSL environments used at KAIST: <strong>Ubuntu WSL 1</strong> (DDS scripts) and plain <strong>Ubuntu</strong> / WSL2 (capture stack). Each distro has its own filesystem — run <code>git pull</code> in each one.</p>
@@ -708,8 +708,9 @@ git restore .
 git pull</pre>
                                 <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                             </div>
-                            <div class="tip">
-                                <p>After pulling, restart the central stack if it is already running: stop DDS scripts and Local Stack Docker (see <a href="#running-instructions">Running the Robots → Central Machine Shutdown</a>), then run startup again.</p>
+                            <div class="warning">
+                                <p><strong>After pulling updates:</strong> if the Local Stack Docker containers are already running, you <strong>must restart them</strong>. Stop them via the Robot GUI (Local Stack Docker <strong>Stop</strong>), then start them again with <strong>Start</strong>.</p>
+                                <p>If <code>./start_scripts.sh</code> is running in the Ubuntu WSL 1 terminal, stop it with <kbd>Ctrl+C</kbd>, then run <code>./start_scripts.sh</code> again from <code>~/dds_robot_platform/dds</code>.</p>
                             </div>
                         </div>
                     </div>
