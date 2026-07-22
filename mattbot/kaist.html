@@ -651,6 +651,23 @@ docker compose down</pre>
 
                 <div class="collapsible update-item">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        <span class="update-title">Update Wi-Fi IP addresses (central machine and robots)</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="update-meta">
+                                <span class="update-date">2026-07-22</span>
+                                <span class="update-badge other">Other</span>
+                            </div>
+                            <p>If the lab Wi-Fi network, SSID, or DHCP leases have changed, update connectivity and IP configuration on <strong>every robot</strong> and on the <strong>central machine</strong> (Robot GUI saved addresses, CycloneDDS peer lists, and each Jetson’s <code>robot_env.sh</code> / <code>cyclonedds.xml</code>).</p>
+                            <p>Follow the full procedure in <a href="#updating-wifi">Updating Wi-Fi (IP Addresses)</a> — connect to the new network, record IPs, update the Robot GUI and central <code>cyclonedds.xml</code>, then update and test each robot.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible update-item">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
                         <span class="update-title">Robot software update via GUI (each Jetson)</span>
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
