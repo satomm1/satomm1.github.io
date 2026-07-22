@@ -410,18 +410,14 @@ docker compose down</pre>
                             <div class="step-card">
                                 <div class="step-number">5</div>
                                 <h3>Update cyclonedds.xml on the central machine (WSL1)</h3>
-                                <p>On the central machine, open an <strong>Ubuntu WSL 1</strong> terminal and edit the CycloneDDS peer list:</p>
+                                <p>On the central machine, open an <strong>Ubuntu WSL 1</strong> terminal and run the Wi-Fi IP update script. It prompts for the central machine IP and each robot IP, then updates <code>cyclonedds.xml</code> automatically:</p>
                                 <div class="code-wrap">
-                                    <pre class="code-block">nano ~/dds_robot_platform/dds/cyclonedds.xml</pre>
+                                    <pre class="code-block">cd ~/dds_robot_platform/dds
+./update_wifi_ips.sh</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
-                                <p>Use the arrow keys to find the peer / IP address section. Update it so it lists:</p>
-                                <ul>
-                                    <li>The <strong>central machine</strong> IP address on this Wi-Fi network</li>
-                                    <li>Every <strong>robot</strong> IP address recorded in step 2</li>
-                                </ul>
-                                <p>Remove any old peer entries that no longer apply. Save and exit nano: <kbd>Ctrl+O</kbd>, <kbd>Enter</kbd>, then <kbd>Ctrl+X</kbd>.</p>
-                                <p>If you are already running the <code>./start_scripts.sh</code> shell file, restart it after saving (stop with <code>./stop_scripts.sh</code>, then start again with <code>./start_scripts.sh</code> from <code>~/dds_robot_platform/dds</code>) so discovery picks up the new peers.</p>
+                                <p>Enter the <strong>central machine</strong> IP and every <strong>robot</strong> IP from step 2 when prompted.</p>
+                                <p>If you are already running <code>./start_scripts.sh</code>, restart it after the script finishes (stop with <code>./stop_scripts.sh</code> or <kbd>Ctrl+C</kbd>, then run <code>./start_scripts.sh</code> again from <code>~/dds_robot_platform/dds</code>) so discovery picks up the new peers.</p>
                             </div>
                             <div class="step-card">
                                 <div class="step-number">6</div>
