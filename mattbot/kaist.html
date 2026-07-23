@@ -393,18 +393,19 @@ docker compose down</pre>
                     </div>
                 </div>
 
-                <div class="collapsible update-item">
+                <div class="collapsible update-item" id="mattbot-stack-pull-update">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
-                        <span class="update-title">Robot software update via GUI (each Jetson)</span>
+                        <span class="update-title">Robot software update via GUI (each Jetson) — last commit: <!--MATTBOT_STACK_LAST_COMMIT-->2026-07-23 14:05 KST<!--/MATTBOT_STACK_LAST_COMMIT--></span>
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
                     <div class="collapsible-panel">
                         <div class="collapsible-content">
                             <div class="update-meta">
-                                <span class="update-date">2026-07-22</span>
+                                <span class="update-date"><!--MATTBOT_STACK_LAST_DATE-->2026-07-23<!--/MATTBOT_STACK_LAST_DATE--></span>
                                 <span class="update-badge software">Software</span>
                             </div>
                             <p>After updating the central machine (see <strong>Pull latest dds_robot_platform</strong> in One Time Updates), pull the latest robot-side software on <strong>each Jetson</strong> using the Robot GUI. This must be done <strong>once per robot</strong> — the GUI update button applies only to the currently selected robot.</p>
+                            <p>The timestamp above is the most recent commit across <code>mattbot_bringup</code>, <code>mattbot_dds</code>, <code>mattbot_capture</code>, <code>mattbot_mcl</code>, and <code>mattbot_navigation</code> (<code>noetic</code>/<code>main</code>). If your robots were last updated before that time, run <strong>Software Update</strong> on each Jetson.</p>
                             <p><strong>For each robot:</strong></p>
                             <ol>
                                 <li>Power on the robot and confirm it appears in the Robot GUI (status dot yellow, not red).</li>
@@ -421,15 +422,15 @@ docker compose down</pre>
                     </div>
                 </div>
 
-                <div class="collapsible update-item">
+                <div class="collapsible update-item" id="dds-rp-pull-update">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
-                        <span class="update-title">Pull latest dds_robot_platform (central machine)</span>
+                        <span class="update-title">Pull latest dds_robot_platform (central machine) — last commit: <!--DDS_RP_LAST_COMMIT-->2026-07-23 13:56 KST<!--/DDS_RP_LAST_COMMIT--></span>
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
                     <div class="collapsible-panel">
                         <div class="collapsible-content">
                             <div class="update-meta">
-                                <span class="update-date">2026-07-22</span>
+                                <span class="update-date"><!--DDS_RP_LAST_DATE-->2026-07-23<!--/DDS_RP_LAST_DATE--></span>
                                 <span class="update-badge software">Software</span>
                             </div>
                             <p>On the <strong>central operator workstation</strong>, update the existing <code>dds_robot_platform</code> clone in <strong>both</strong> WSL environments used at KAIST: <strong>Ubuntu WSL 1</strong> (DDS scripts) and plain <strong>Ubuntu</strong> / WSL2 (capture stack). Each distro has its own filesystem — run <code>git pull</code> in each one.</p>
