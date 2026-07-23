@@ -1,0 +1,217 @@
+name: Update KAIST mattbot stack stamp
+
+# Reusable + manual workflow: write the newest package-repo commit time into
+# satomm1.github.io/mattbot/kaist.html (Robot software update via GUI card).
+#
+# Called from mattbot_bringup / mattbot_dds / mattbot_capture / mattbot_mcl /
+# mattbot_navigation on push. Also runnable here via workflow_dispatch to
+# recompute the aggregate from the GitHub API.
+on:
+  workflow_call:
+    inputs:
+      commit_iso:
+        description: "ISO timestamp of the triggering commit (push events)"
+        required: false
+        type: string
+        default: ""
+      commit_sha:
+        description: "SHA of the triggering commit"
+        required: false
+        type: string
+        default: ""
+      source_repo:
+        description: "owner/name of the source package repo"
+        required: false
+        type: string
+        default: ""
+    secrets:
+      SITE_REPO_TOKEN:
+        required: false
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  update-site:
+    runs-on: ubuntu-latest
+    # Skip the bot's own follow-up pushes if any; this workflow only touches the site repo.
+    if: github.actor != 'github-actions[bot]'
+    permissions:
+      contents: write
+    steps:
+      - name: Check site write credential
+        env:
+          SITE_REPO_TOKEN: ${{ secrets.SITE_REPO_TOKEN }}
+        run: |
+          if [ -z "$SITE_REPO_TOKEN" ] && [ "${{ github.repository }}" != "satomm1/satomm1.github.io" ]; then
+            echo "::error::Missing secret SITE_REPO_TOKEN. Add the same fine-grained PAT used by dds_robot_platform (Contents: Read and write on satomm1/satomm1.github.io) as SITE_REPO_TOKEN on this repository, or as an organization secret."
+            exit 1
+          fi
+
+      - name: Checkout website repo
+        uses: actions/checkout@v6
+        with:
+          repository: satomm1/satomm1.github.io
+          token: ${{ secrets.SITE_REPO_TOKEN || github.token }}
+          path: site
+
+      - name: Update aggregate last-commit markers in kaist.html
+        env:
+          COMMIT_ISO: ${{ inputs.commit_iso }}
+          COMMIT_SHA: ${{ inputs.commit_sha }}
+          SOURCE_REPO: ${{ inputs.source_repo }}
+          EVENT_NAME: ${{ github.event_name }}
+          GH_TOKEN: ${{ secrets.SITE_REPO_TOKEN || github.token }}
+        run: |
+          python3 <<'PY'
+          import json
+          import os
+          import re
+          import urllib.error
+          import urllib.request
+          from datetime import datetime, timezone, timedelta
+          from pathlib import Path
+
+          PACKAGES = [
+              "satomm1/mattbot_bringup",
+              "satomm1/mattbot_dds",
+              "satomm1/mattbot_capture",
+              "satomm1/mattbot_mcl",
+              "satomm1/mattbot_navigation",
+          ]
+          BRANCHES = ("noetic", "main")
+
+          path = Path("site/mattbot/kaist.html")
+          text = path.read_text(encoding="utf-8")
+          kst = timezone(timedelta(hours=9), name="KST")
+
+          def api_get(url: str):
+              req = urllib.request.Request(
+                  url,
+                  headers={
+                      "Accept": "application/vnd.github+json",
+                      "User-Agent": "mattbot-stack-stamp-workflow",
+                      **(
+                          {"Authorization": f"Bearer {os.environ['GH_TOKEN']}"}
+                          if os.environ.get("GH_TOKEN")
+                          else {}
+                      ),
+                  },
+              )
+              with urllib.request.urlopen(req) as resp:
+                  return json.load(resp)
+
+          def latest_across_packages():
+              best_dt = None
+              best_meta = None
+              for repo in PACKAGES:
+                  for branch in BRANCHES:
+                      url = f"https://api.github.com/repos/{repo}/commits?sha={branch}&per_page=1"
+                      try:
+                          data = api_get(url)
+                      except urllib.error.HTTPError as e:
+                          if e.code == 404:
+                              continue
+                          raise
+                      if not data:
+                          continue
+                      raw = data[0]["commit"]["committer"]["date"]
+                      dt = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+                      if best_dt is None or dt > best_dt:
+                          best_dt = dt
+                          best_meta = (repo, branch, data[0]["sha"][:7], raw)
+              if best_dt is None:
+                  raise SystemExit("Could not resolve any package commits")
+              return best_dt, best_meta
+
+          raw = (os.environ.get("COMMIT_ISO") or "").strip()
+          source = (os.environ.get("SOURCE_REPO") or "").strip()
+          sha = (os.environ.get("COMMIT_SHA") or "").strip()
+          event_name = os.environ.get("EVENT_NAME", "")
+
+          # Prefer the caller's push timestamp; on workflow_dispatch (or empty
+          # input), recompute the aggregate from all tracked package repos.
+          if not raw or event_name == "workflow_dispatch":
+              dt, meta = latest_across_packages()
+              raw = meta[3]
+              source = source or meta[0]
+              sha = sha or meta[2]
+              print(f"Recomputed aggregate from API → {meta[0]}@{meta[1]} {meta[2]}")
+          else:
+              dt = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+
+          dt_kst = dt.astimezone(kst)
+          stamp = dt_kst.strftime("%Y-%m-%d %H:%M KST")
+          day = dt_kst.strftime("%Y-%m-%d")
+
+          def read_marked(src: str, start: str, end: str) -> str:
+              pattern = re.compile(
+                  re.escape(start) + r"(.*?)" + re.escape(end),
+                  re.DOTALL,
+              )
+              m = pattern.search(src)
+              if not m:
+                  raise SystemExit(f"Missing markers {start}…{end} in {path}")
+              return m.group(1)
+
+          def replace_marked(src: str, start: str, end: str, value: str) -> str:
+              pattern = re.compile(
+                  re.escape(start) + r".*?" + re.escape(end),
+                  re.DOTALL,
+              )
+              replacement = f"{start}{value}{end}"
+              new_src, n = pattern.subn(replacement, src, count=1)
+              if n != 1:
+                  raise SystemExit(
+                      f"Expected exactly one {start}…{end} marker in {path}, found {n}"
+                  )
+              return new_src
+
+          existing = read_marked(
+              text,
+              "<!--MATTBOT_STACK_LAST_COMMIT-->",
+              "<!--/MATTBOT_STACK_LAST_COMMIT-->",
+          ).strip()
+          if existing:
+              try:
+                  old = datetime.strptime(existing, "%Y-%m-%d %H:%M KST").replace(
+                      tzinfo=kst
+                  )
+                  if dt_kst <= old:
+                      print(
+                          f"No update needed (incoming {stamp} <= existing {existing})"
+                      )
+                      raise SystemExit(0)
+              except ValueError:
+                  print(f"Could not parse existing stamp {existing!r}; overwriting")
+
+          text = replace_marked(
+              text,
+              "<!--MATTBOT_STACK_LAST_COMMIT-->",
+              "<!--/MATTBOT_STACK_LAST_COMMIT-->",
+              stamp,
+          )
+          text = replace_marked(
+              text,
+              "<!--MATTBOT_STACK_LAST_DATE-->",
+              "<!--/MATTBOT_STACK_LAST_DATE-->",
+              day,
+          )
+          path.write_text(text, encoding="utf-8")
+          who = source or "aggregate"
+          print(f"Updated kaist.html → mattbot stack last commit {stamp} (from {who} {sha})")
+          PY
+
+      - name: Commit and push website change
+        working-directory: site
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add mattbot/kaist.html
+          if git diff --staged --quiet; then
+            echo "No change (timestamp already up to date)."
+            exit 0
+          fi
+          git commit -m "chore: sync mattbot stack last-commit time on KAIST page"
+          git push
