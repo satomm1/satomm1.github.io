@@ -29,16 +29,13 @@ on:
         required: false
   workflow_dispatch:
 
-permissions:
-  contents: read
-
 jobs:
   update-site:
     runs-on: ubuntu-latest
     # Skip the bot's own follow-up pushes if any; this workflow only touches the site repo.
+    # No GITHUB_TOKEN contents:write — site updates use SITE_REPO_TOKEN (or github.token
+    # when this workflow runs directly on satomm1.github.io).
     if: github.actor != 'github-actions[bot]'
-    permissions:
-      contents: write
     steps:
       - name: Check site write credential
         env:
