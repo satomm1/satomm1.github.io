@@ -45,6 +45,41 @@
                 <p>This page collects configuration details and ongoing updates for the robot fleet at KAIST. Use the general <a href="setup.html">Setup</a> and <a href="operation.html">Operation</a> guides for baseline procedures; this page covers what is specific to your deployment.</p>
             </section>
 
+            <section class="section" id="ip-addresses">
+                <h2>IP Address Reference</h2>
+                <p>Current Wi-Fi IP addresses for the central operator workstation and each robot. Use these for SSH, Robot GUI saved addresses, CycloneDDS peers, and firewall rules. If the network changes, follow <a href="#updating-wifi">Updating Wi-Fi (IP Addresses)</a> and update this table.</p>
+                <table class="pin-table">
+                    <thead>
+                        <tr>
+                            <th>Device</th>
+                            <th>IP address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Central machine</td>
+                            <td>192.168.68.52</td>
+                        </tr>
+                        <tr>
+                            <td>Robot 1</td>
+                            <td>192.168.68.54</td>
+                        </tr>
+                        <tr>
+                            <td>Robot 2</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>Robot 3</td>
+                            <td>192.168.68.53</td>
+                        </tr>
+                        <tr>
+                            <td>Robot 4</td>
+                            <td>192.168.68.51</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
             <section class="section" id="running-instructions">
                 <h2>Running the Robots</h2>
                 <p>Follow these steps for the KAIST mobile robot configuration.</p>
@@ -297,327 +332,6 @@ docker compose down</pre>
                                 <div class="step-number">4</div>
                                 <h3>Close the operator GUI and Docker Desktop</h3>
                                 <p>Close the DDS Robot GUI application. You may quit Docker Desktop if you are finished for the day; leave it running if you plan to restart the stack soon.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="section" id="basic-tests">
-                <h2>Basic Tests</h2>
-                <p>After completing <a href="#running-instructions">Running the Robots</a> (central machine startup, robot startup, and localization), use these quick checks to confirm communication and navigation are working before scenario runs or further debugging.</p>
-
-                <div class="collapsible">
-                    <button type="button" class="collapsible-trigger" aria-expanded="false">
-                        Image testing
-                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                    </button>
-                    <div class="collapsible-panel">
-                        <div class="collapsible-content">
-                            <p>This page polls the capture API for the latest camera frame from each robot. Use it to verify that robot image streams are reaching the central machine.</p>
-                            <div class="step-card">
-                                <div class="step-number">1</div>
-                                <h3>Download the viewer HTML</h3>
-                                <p>On the central machine, download <a href="https://github.com/satomm1/dds_robot_platform/blob/main/docs/watch_robot_images.html" target="_blank" rel="noopener">watch_robot_images.html</a> from the <code>dds_robot_platform</code> docs folder (use <strong>Raw</strong> → Save As, or open the file from your local clone at <code>dds_robot_platform/docs/watch_robot_images.html</code>).</p>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">2</div>
-                                <h3>Open it and set robot IDs</h3>
-                                <p>Open the HTML file in a browser on the central machine. At the top of the page, set the four robot ID fields to <strong>1</strong>, <strong>2</strong>, <strong>3</strong>, and <strong>4</strong> (match the IDs used on your KAIST fleet).</p>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">3</div>
-                                <h3>Start robots and confirm live images</h3>
-                                <p>Make sure the central stack is running, including the <strong>capture</strong> Docker containers from Central Machine Startup, and start at least one robot as in <a href="#running-instructions">Running the Robots</a>. Live camera images for active robots should appear in the 2×2 grid on the page.</p>
-                                <p>If a cell shows “no frame” or “unreachable,” check that that robot’s ROS stack is up, capture is running, and the robot ID matches the GUI / <code>robot_env.sh</code> configuration.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="collapsible">
-                    <button type="button" class="collapsible-trigger" aria-expanded="false">
-                        Position and goal testing
-                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                    </button>
-                    <div class="collapsible-panel">
-                        <div class="collapsible-content">
-                            <p>Use the Robot GUI to confirm localization and navigation end-to-end (see <strong>Robot Operation</strong> under <a href="#running-instructions">Running the Robots</a>):</p>
-                            <ul>
-                                <li>Select a robot and set its <strong>initial position</strong> on the map. The robot icon should move to the clicked pose and the robot should spin to localize.</li>
-                                <li>Switch to <strong>Set Robot Goal</strong> and click a nearby destination. The robot should plan a path and drive toward the goal.</li>
-                                <li>Confirm you see motion on the physical robot and that the pose updates on the map as it moves.</li>
-                            </ul>
-                            <p>If initial pose, goals, and motion all work, DDS communication, localization, and navigation are functioning as expected for day-to-day GUI control.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="section" id="updating-wifi">
-                <h2>Updating Wi-Fi (IP Addresses)</h2>
-                <p>Use this procedure when the robots or central machine move to a new Wi-Fi network (new SSID, passwords, or DHCP leases). Complete the steps below on every robot and on the central machine so the Robot GUI and DDS discovery use the new addresses.</p>
-
-                <div class="collapsible">
-                    <button type="button" class="collapsible-trigger" aria-expanded="false">
-                        Update Wi-Fi and IP addresses
-                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                    </button>
-                    <div class="collapsible-panel">
-                        <div class="collapsible-content">
-                            <div class="step-card">
-                                <div class="step-number">1</div>
-                                <h3>Connect each robot to the new Wi-Fi</h3>
-                                <p>On each robot’s display, go to the Ubuntu desktop. In the upper-right corner, click the power/system menu, then open the Wi-Fi settings. Select the new Wi-Fi SSID and enter the password to connect.</p>
-                                <p>Repeat for every robot in the fleet.</p>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">2</div>
-                                <h3>Record each robot’s new IP address</h3>
-                                <p>Plug a USB keyboard into the Jetson. Open a terminal and run:</p>
-                                <div class="code-wrap">
-                                    <pre class="code-block">ifconfig</pre>
-                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
-                                </div>
-                                <p>Find the <code>wlan0</code> section and note the address next to <code>inet</code> — that is the robot’s Wi-Fi IP. Write down both the <strong>robot number</strong> and this IP address.</p>
-                                <p>Repeat for every robot so you have a full list (e.g. Robot 1 → 192.168.x.x, Robot 2 → …).</p>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">3</div>
-                                <h3>Update saved addresses in the Robot GUI</h3>
-                                <p>On the central machine, open the Robot GUI. In the right-hand <strong>Robot Startup</strong> panel:</p>
-                                <ol>
-                                    <li>Under <strong>saved addresses</strong>, select each existing robot entry one by one and click the <strong>X</strong> next to it to remove the old address.</li>
-                                    <li>For each robot, enter the robot ID in the <strong>label</strong> field, type the new IP from step 2, and click <strong>Save</strong>.</li>
-                                </ol>
-                                <p>If the robots are powered on and reachable, the new IPs should be recognized and the status dot next to each robot should be <strong>solid gray</strong> (not red, and not flashing gray).</p>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">4</div>
-                                <h3>Update Windows Firewall (ROS Rule)</h3>
-                                <p>On the central Windows machine, allow the new robot IPs through Windows Defender Firewall so ROS/DDS traffic is not blocked.</p>
-                                <ol>
-                                    <li>Open the <strong>Windows Defender Firewall</strong> app (search for “Windows Defender” in the Windows search box).</li>
-                                    <li>In the left column, click <strong>Inbound Rules</strong>.</li>
-                                    <li>Find the rule labeled <strong>ROS Rule</strong> (scroll down if the list is alphabetical).</li>
-                                    <li>Double-click <strong>ROS Rule</strong>. In the dialog that opens, select the <strong>Scope</strong> tab at the top.</li>
-                                    <li>Under <strong>Remote IP address</strong>, add the robot IP addresses from step 2. You can add each IP individually, or use an IP address range to include all robots at once. You may remove old robot IPs, but that is optional.</li>
-                                    <li>Click <strong>Apply</strong>, then <strong>OK</strong>.</li>
-                                    <li>In the left column, click <strong>Outbound Rules</strong>. The <strong>ROS Rule</strong> should be near the top of this list.</li>
-                                    <li>Double-click <strong>ROS Rule</strong>, open the <strong>Scope</strong> tab, and again add the robot IPs under <strong>Remote IP address</strong> (optionally remove old IPs). Click <strong>Apply</strong>, then <strong>OK</strong>.</li>
-                                </ol>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">5</div>
-                                <h3>Update cyclonedds.xml on the central machine (WSL1)</h3>
-                                <p>On the central machine, open an <strong>Ubuntu WSL 1</strong> terminal. Pull the latest <code>dds_robot_platform</code> so you have <code>update_wifi_ips.sh</code>, then run the script. It prompts for the central machine IP and each robot IP, then updates <code>cyclonedds.xml</code> automatically:</p>
-                                <div class="code-wrap">
-                                    <pre class="code-block">cd ~/dds_robot_platform
-git pull
-cd dds
-./update_wifi_ips.sh</pre>
-                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
-                                </div>
-                                <p>Enter the <strong>central machine</strong> IP and every <strong>robot</strong> IP from step 2 when prompted.</p>
-                                <p>If you are already running <code>./start_scripts.sh</code>, restart it after the script finishes (stop with <code>./stop_scripts.sh</code> or <kbd>Ctrl+C</kbd>, then run <code>./start_scripts.sh</code> again from <code>~/dds_robot_platform/dds</code>) so discovery picks up the new peers.</p>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">6</div>
-                                <h3>Update Wi-Fi IPs on each robot</h3>
-                                <p>Repeat this step for <strong>every</strong> robot.</p>
-                                <p><strong>Start Docker</strong> on the robot if it is not already running (Robot GUI <strong>Start Docker</strong>, or <strong>Start Docker</strong> on the robot display app).</p>
-                                <p>SSH into the Jetson from an <strong>Ubuntu WSL 1</strong> terminal on the central machine (username/password = jetson):</p>
-                                <div class="code-wrap">
-                                    <pre class="code-block">ssh jetson@&lt;robot_ip_address&gt;</pre>
-                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
-                                </div>
-                                <p>Enter the running ROS container:</p>
-                                <div class="code-wrap">
-                                    <pre class="code-block">docker exec -it ros_noetic bash</pre>
-                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
-                                </div>
-                                <p>Download and run the Wi-Fi IP update script. It prompts for the central machine IP and each robot IP, then updates <code>robot_env.sh</code> and <code>cyclonedds.xml</code> automatically:</p>
-                                <div class="code-wrap">
-                                    <pre class="code-block">cd /workspace/catkin_ws/src
-wget -O update_wifi_ips.sh "https://raw.githubusercontent.com/satomm1/Robot/main/Jetson/update_wifi_ips.sh"
-chmod +x update_wifi_ips.sh
-./update_wifi_ips.sh</pre>
-                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
-                                </div>
-                                <p>Enter the same IP addresses you used in step 5 when prompted.</p>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">7</div>
-                                <h3>Test locally with minimal.launch</h3>
-                                <p>Still inside the container, with the electronics/motor switch on, run:</p>
-                                <div class="code-wrap">
-                                    <pre class="code-block">roslaunch mattbot_bringup minimal.launch</pre>
-                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
-                                </div>
-                                <p>If everything is working, you should see a launch summary (Parameters, Nodes), messages about processes that were started, and an <code>[INFO]</code> message that includes the robot ID.</p>
-                                <p>Press <kbd>Ctrl+C</kbd> to stop the test launch when finished. Repeat steps 6–7 for each remaining robot.</p>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">8</div>
-                                <h3>Test on the network</h3>
-                                <p>After every robot has been updated and tested locally, verify that the central machine can talk to the robots over the new Wi-Fi network.</p>
-                                <ol>
-                                    <li>On the central machine, start Local Stack Docker from the Robot GUI if it is not already running.</li>
-                                    <li>In an <strong>Ubuntu WSL 1</strong> terminal, start the DDS scripts:
-                                        <div class="code-wrap">
-                                            <pre class="code-block">cd ~/dds_robot_platform/dds
-conda activate dds
-./start_scripts.sh</pre>
-                                            <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
-                                        </div>
-                                    </li>
-                                    <li>From the Robot GUI, start each robot (Docker + ROS with the <strong>KAIST</strong> checkbox, as in <a href="#running-instructions">Running the Robots</a>).</li>
-                                </ol>
-                                <p>If the network configuration is correct, the robots should appear on the map in the Robot GUI. In the terminal where <code>./start_scripts.sh</code> is running, you should also see messages indicating that the central machine has connected to the robots that were started.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="section" id="jaewoo-control">
-                <h2>Running the Robots with Jaewoo’s Code</h2>
-                <p>Jaewoo’s robot control code runs on top of the standard KAIST stack. It sends automated navigation goals and patrol commands through the existing DDS/ROS infrastructure instead of manual map clicks in the Robot GUI.</p>
-
-                <div class="collapsible">
-                    <button type="button" class="collapsible-trigger" aria-expanded="false">
-                        Workflow
-                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                    </button>
-                    <div class="collapsible-panel">
-                        <div class="collapsible-content">
-                            <div class="step-card">
-                                <div class="step-number">1</div>
-                                <h3>Complete standard startup</h3>
-                                <p>Follow every step in <a href="#running-instructions">Running the Robots</a> before starting Jaewoo’s code:</p>
-                                <ul>
-                                    <li><strong>Central Machine Startup</strong> — operator GUI, Local Stack Docker, DDS scripts, and capture containers (if needed)</li>
-                                    <li><strong>Robot Startup</strong> — power on and start ROS on each robot (via SSH, Robot GUI, or robot display)</li>
-                                </ul>
-                                <p>Do not skip these steps. Jaewoo’s application layer expects the central DDS stack and all target robots to already be running.</p>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">2</div>
-                                <h3>Localize each robot</h3>
-                                <p>In the Robot GUI, set the initial position for <strong>every</strong> robot you plan to control (see <strong>Robot Operation → Set initial position (GUI)</strong> in <a href="#running-instructions">Running the Robots</a>).</p>
-                                <p>Confirm each robot’s icon on the map matches its real location and orientation before proceeding. Automated goal commands will fail or behave incorrectly if localization is wrong.</p>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">3</div>
-                                <h3>Start Jaewoo’s robot control code</h3>
-                                <p>With startup and localization complete, run Jaewoo’s application layer on the central operator workstation. This code publishes goal and patrol commands over DDS to the running robots.</p>
-                                <p>Contact Jaewoo for the current repository location, environment setup, and launch command for your scenario.</p>
-                                <div class="tip">
-                                    <p>Keep the Robot GUI and central DDS stack running while Jaewoo’s code is active. Use the GUI <strong>Stop</strong> button or the shutdown procedures in <a href="#running-instructions">Running the Robots</a> when the scenario is finished.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="section" id="mapping">
-                <h2>Mapping</h2>
-                <p>Use this workflow to create a new SLAM map on a KAIST robot. Power on the robot first (see <a href="#running-instructions">Running the Robots</a>), then SSH into the Jetson and run the steps below.</p>
-
-                <div class="collapsible">
-                    <button type="button" class="collapsible-trigger" aria-expanded="false">
-                        Mapping workflow
-                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                    </button>
-                    <div class="collapsible-panel">
-                        <div class="collapsible-content">
-                            <div class="step-card">
-                                <div class="step-number">1</div>
-                                <h3>SSH into the Jetson</h3>
-                                <p>Connect to the robot you will map (username/password = jetson):</p>
-                                <div class="code-wrap">
-                                    <pre class="code-block">ssh jetson@&lt;jetson_ip_address&gt;</pre>
-                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
-                                </div>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">2</div>
-                                <h3>Start the ros_noetic Docker container</h3>
-                                <p>On the Jetson, start the ROS container:</p>
-                                <div class="code-wrap">
-                                    <pre class="code-block">sudo docker run --runtime nvidia --network=host -v ~/workspaces/catkin_ws:/workspace/catkin_ws -v ~/gemini_api:/gemini_code -v /dev/bus/usb:/dev/bus/usb -v /dev/video0:/dev/video0 -v /dev/video1:/dev/video1 -it --device=/dev/ttyUSB0 --device=/dev/spidev0.0 --rm --privileged --name ros_noetic ghcr.io/satomm1/ml_ros:latest bash -lc 'python3 /workspace/catkin_ws/src/startup_script.py & exec bash'</pre>
-                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
-                                </div>
-                                <p>Wait for the container shell to appear.</p>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">3</div>
-                                <h3>Start the mapping launch file</h3>
-                                <p>In the first terminal (inside the Docker container), launch SLAM mapping:</p>
-                                <div class="code-wrap">
-                                    <pre class="code-block">roslaunch mattbot_bringup sense_and_map.launch</pre>
-                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
-                                </div>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">4</div>
-                                <h3>Drive the robot with keyboard teleop</h3>
-                                <p>Open a <strong>second terminal</strong>, SSH into the same Jetson again, and enter the running container:</p>
-                                <div class="code-wrap">
-                                    <pre class="code-block">docker exec -it ros_noetic bash</pre>
-                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
-                                </div>
-                                <p>Start the keyboard teleop node:</p>
-                                <div class="code-wrap">
-                                    <pre class="code-block">roslaunch mattbot_teleop keyboard.launch</pre>
-                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
-                                </div>
-                                <p>Focus the teleop terminal and use the keyboard to drive the robot through the entire area you want mapped.</p>
-                                <div class="tip">
-                                    <p><strong>Real-time map visualization:</strong> To watch the map build as you drive, use <strong>RViz</strong> on a separate machine on the same network as the Jetson. See <a href="setup.html#rviz">Setup Guide → RVIZ visualization</a> for configuration (<code>ROS_MASTER_URI</code> pointing at the Jetson, then <code>rosrun rviz rviz</code>).</p>
-                                </div>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">5</div>
-                                <h3>Finalize and save the map</h3>
-                                <p>When you have driven through the entire area, press <kbd>Ctrl+C</kbd> in the teleop terminal to exit keyboard control.</p>
-                                <p>In the same terminal (still inside the Docker container), finalize the map — replace <code>&lt;map-name&gt;</code> with a short name for this space (e.g. <code>lab_floor1</code>):</p>
-                                <div class="code-wrap">
-                                    <pre class="code-block">rosrun mattbot_mcl finalize_map.py --name &lt;map-name&gt;</pre>
-                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
-                                </div>
-                                <p>This saves the map and generates the files needed by the robots and the central operator computer. For large maps, this step can take a few minutes.</p>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">6</div>
-                                <h3>Stop mapping</h3>
-                                <p>Press <kbd>Ctrl+C</kbd> in the <strong>first terminal</strong> (where <code>sense_and_map.launch</code> is running) to stop mapping once map saving has finished. Then stop the Docker container by typing <code>exit</code>.</p>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">7</div>
-                                <h3>Load the map on the central computer GUI</h3>
-                                <p>On your operator workstation, open the DDS Robot GUI and start the local Docker stack (see <a href="operation.html#dds-setup">Operation → Starting User GUI / DDS</a> if needed).</p>
-                                <ol>
-                                    <li>In the right-hand column, select the robot you used for mapping.</li>
-                                    <li>Open the drop-down for loading/syncing robot maps.</li>
-                                    <li>Enter a name for the map (use the same name as in step 5, or another label you prefer for the GUI).</li>
-                                    <li>Click <strong>Sync Map From Robot</strong>.</li>
-                                </ol>
-                                <p>The on-screen map should update with your new map once the sync completes.</p>
-                            </div>
-                            <div class="step-card">
-                                <div class="step-number">8</div>
-                                <h3>Send the map to other robots</h3>
-                                <p>Repeat these steps for each robot that should use the new map (on the central computer GUI):</p>
-                                <ol>
-                                    <li>In the right-hand column, select the robot you want to send the map to.</li>
-                                    <li>Open the <strong>Maps</strong> drop-down.</li>
-                                    <li>Click the <strong>Send Map</strong> option.</li>
-                                    <li>Select the map to send.</li>
-                                    <li>Click the button to send the map.</li>
-                                </ol>
-                                <p>Repeat for every other robot in the fleet that needs the updated map.</p>
                             </div>
                         </div>
                     </div>
@@ -1073,6 +787,327 @@ chmod +x wifi_roaming_setup.sh</pre>
 
                 </div><!-- #updates-archive -->
 
+            </section>
+
+            <section class="section" id="basic-tests">
+                <h2>Basic Tests</h2>
+                <p>After completing <a href="#running-instructions">Running the Robots</a> (central machine startup, robot startup, and localization), use these quick checks to confirm communication and navigation are working before scenario runs or further debugging.</p>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Image testing
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <p>This page polls the capture API for the latest camera frame from each robot. Use it to verify that robot image streams are reaching the central machine.</p>
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Download the viewer HTML</h3>
+                                <p>On the central machine, download <a href="https://github.com/satomm1/dds_robot_platform/blob/main/docs/watch_robot_images.html" target="_blank" rel="noopener">watch_robot_images.html</a> from the <code>dds_robot_platform</code> docs folder (use <strong>Raw</strong> → Save As, or open the file from your local clone at <code>dds_robot_platform/docs/watch_robot_images.html</code>).</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Open it and set robot IDs</h3>
+                                <p>Open the HTML file in a browser on the central machine. At the top of the page, set the four robot ID fields to <strong>1</strong>, <strong>2</strong>, <strong>3</strong>, and <strong>4</strong> (match the IDs used on your KAIST fleet).</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">3</div>
+                                <h3>Start robots and confirm live images</h3>
+                                <p>Make sure the central stack is running, including the <strong>capture</strong> Docker containers from Central Machine Startup, and start at least one robot as in <a href="#running-instructions">Running the Robots</a>. Live camera images for active robots should appear in the 2×2 grid on the page.</p>
+                                <p>If a cell shows “no frame” or “unreachable,” check that that robot’s ROS stack is up, capture is running, and the robot ID matches the GUI / <code>robot_env.sh</code> configuration.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Position and goal testing
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <p>Use the Robot GUI to confirm localization and navigation end-to-end (see <strong>Robot Operation</strong> under <a href="#running-instructions">Running the Robots</a>):</p>
+                            <ul>
+                                <li>Select a robot and set its <strong>initial position</strong> on the map. The robot icon should move to the clicked pose and the robot should spin to localize.</li>
+                                <li>Switch to <strong>Set Robot Goal</strong> and click a nearby destination. The robot should plan a path and drive toward the goal.</li>
+                                <li>Confirm you see motion on the physical robot and that the pose updates on the map as it moves.</li>
+                            </ul>
+                            <p>If initial pose, goals, and motion all work, DDS communication, localization, and navigation are functioning as expected for day-to-day GUI control.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="updating-wifi">
+                <h2>Updating Wi-Fi (IP Addresses)</h2>
+                <p>Use this procedure when the robots or central machine move to a new Wi-Fi network (new SSID, passwords, or DHCP leases). Complete the steps below on every robot and on the central machine so the Robot GUI and DDS discovery use the new addresses.</p>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Update Wi-Fi and IP addresses
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Connect each robot to the new Wi-Fi</h3>
+                                <p>On each robot’s display, go to the Ubuntu desktop. In the upper-right corner, click the power/system menu, then open the Wi-Fi settings. Select the new Wi-Fi SSID and enter the password to connect.</p>
+                                <p>Repeat for every robot in the fleet.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Record each robot’s new IP address</h3>
+                                <p>Plug a USB keyboard into the Jetson. Open a terminal and run:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">ifconfig</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Find the <code>wlan0</code> section and note the address next to <code>inet</code> — that is the robot’s Wi-Fi IP. Write down both the <strong>robot number</strong> and this IP address.</p>
+                                <p>Repeat for every robot so you have a full list (e.g. Robot 1 → 192.168.x.x, Robot 2 → …).</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">3</div>
+                                <h3>Update saved addresses in the Robot GUI</h3>
+                                <p>On the central machine, open the Robot GUI. In the right-hand <strong>Robot Startup</strong> panel:</p>
+                                <ol>
+                                    <li>Under <strong>saved addresses</strong>, select each existing robot entry one by one and click the <strong>X</strong> next to it to remove the old address.</li>
+                                    <li>For each robot, enter the robot ID in the <strong>label</strong> field, type the new IP from step 2, and click <strong>Save</strong>.</li>
+                                </ol>
+                                <p>If the robots are powered on and reachable, the new IPs should be recognized and the status dot next to each robot should be <strong>solid gray</strong> (not red, and not flashing gray).</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">4</div>
+                                <h3>Update Windows Firewall (Matts Rule)</h3>
+                                <p>On the central Windows machine, allow the new robot IPs through Windows Defender Firewall so ROS/DDS traffic is not blocked.</p>
+                                <ol>
+                                    <li>Open the <strong>Windows Defender Firewall</strong> app (search for “Windows Defender” in the Windows search box).</li>
+                                    <li>In the left column, click <strong>Inbound Rules</strong>.</li>
+                                    <li>Find the rule labeled <strong>Matts Rule</strong> (scroll down if the list is alphabetical).</li>
+                                    <li>Double-click <strong>Matts Rule</strong>. In the dialog that opens, select the <strong>Scope</strong> tab at the top.</li>
+                                    <li>Under <strong>Remote IP address</strong>, add the robot IP addresses from step 2. You can add each IP individually, or use an IP address range to include all robots at once. You may remove old robot IPs, but that is optional.</li>
+                                    <li>Click <strong>Apply</strong>, then <strong>OK</strong>.</li>
+                                    <li>In the left column, click <strong>Outbound Rules</strong>. The <strong>Matts Rule</strong> should be near the top of this list.</li>
+                                    <li>Double-click <strong>Matts Rule</strong>, open the <strong>Scope</strong> tab, and again add the robot IPs under <strong>Remote IP address</strong> (optionally remove old IPs). Click <strong>Apply</strong>, then <strong>OK</strong>.</li>
+                                </ol>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">5</div>
+                                <h3>Update cyclonedds.xml on the central machine (WSL1)</h3>
+                                <p>On the central machine, open an <strong>Ubuntu WSL 1</strong> terminal. Pull the latest <code>dds_robot_platform</code> so you have <code>update_wifi_ips.sh</code>, then run the script. It prompts for the central machine IP and each robot IP, then updates <code>cyclonedds.xml</code> automatically:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">cd ~/dds_robot_platform
+git pull
+cd dds
+./update_wifi_ips.sh</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Enter the <strong>central machine</strong> IP and every <strong>robot</strong> IP from step 2 when prompted.</p>
+                                <p>If you are already running <code>./start_scripts.sh</code>, restart it after the script finishes (stop with <code>./stop_scripts.sh</code> or <kbd>Ctrl+C</kbd>, then run <code>./start_scripts.sh</code> again from <code>~/dds_robot_platform/dds</code>) so discovery picks up the new peers.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">6</div>
+                                <h3>Update Wi-Fi IPs on each robot</h3>
+                                <p>Repeat this step for <strong>every</strong> robot.</p>
+                                <p><strong>Start Docker</strong> on the robot if it is not already running (Robot GUI <strong>Start Docker</strong>, or <strong>Start Docker</strong> on the robot display app).</p>
+                                <p>SSH into the Jetson from an <strong>Ubuntu WSL 1</strong> terminal on the central machine (username/password = jetson):</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">ssh jetson@&lt;robot_ip_address&gt;</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Enter the running ROS container:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">docker exec -it ros_noetic bash</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Download and run the Wi-Fi IP update script. It prompts for the central machine IP and each robot IP, then updates <code>robot_env.sh</code> and <code>cyclonedds.xml</code> automatically:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">cd /workspace/catkin_ws/src
+wget -O update_wifi_ips.sh "https://raw.githubusercontent.com/satomm1/Robot/main/Jetson/update_wifi_ips.sh"
+chmod +x update_wifi_ips.sh
+./update_wifi_ips.sh</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Enter the same IP addresses you used in step 5 when prompted.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">7</div>
+                                <h3>Test locally with minimal.launch</h3>
+                                <p>Still inside the container, with the electronics/motor switch on, run:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">roslaunch mattbot_bringup minimal.launch</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>If everything is working, you should see a launch summary (Parameters, Nodes), messages about processes that were started, and an <code>[INFO]</code> message that includes the robot ID.</p>
+                                <p>Press <kbd>Ctrl+C</kbd> to stop the test launch when finished. Repeat steps 6–7 for each remaining robot.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">8</div>
+                                <h3>Test on the network</h3>
+                                <p>After every robot has been updated and tested locally, verify that the central machine can talk to the robots over the new Wi-Fi network.</p>
+                                <ol>
+                                    <li>On the central machine, start Local Stack Docker from the Robot GUI if it is not already running.</li>
+                                    <li>In an <strong>Ubuntu WSL 1</strong> terminal, start the DDS scripts:
+                                        <div class="code-wrap">
+                                            <pre class="code-block">cd ~/dds_robot_platform/dds
+conda activate dds
+./start_scripts.sh</pre>
+                                            <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                        </div>
+                                    </li>
+                                    <li>From the Robot GUI, start each robot (Docker + ROS with the <strong>KAIST</strong> checkbox, as in <a href="#running-instructions">Running the Robots</a>).</li>
+                                </ol>
+                                <p>If the network configuration is correct, the robots should appear on the map in the Robot GUI. In the terminal where <code>./start_scripts.sh</code> is running, you should also see messages indicating that the central machine has connected to the robots that were started.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="jaewoo-control">
+                <h2>Running the Robots with Jaewoo’s Code</h2>
+                <p>Jaewoo’s robot control code runs on top of the standard KAIST stack. It sends automated navigation goals and patrol commands through the existing DDS/ROS infrastructure instead of manual map clicks in the Robot GUI.</p>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Workflow
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Complete standard startup</h3>
+                                <p>Follow every step in <a href="#running-instructions">Running the Robots</a> before starting Jaewoo’s code:</p>
+                                <ul>
+                                    <li><strong>Central Machine Startup</strong> — operator GUI, Local Stack Docker, DDS scripts, and capture containers (if needed)</li>
+                                    <li><strong>Robot Startup</strong> — power on and start ROS on each robot (via SSH, Robot GUI, or robot display)</li>
+                                </ul>
+                                <p>Do not skip these steps. Jaewoo’s application layer expects the central DDS stack and all target robots to already be running.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Localize each robot</h3>
+                                <p>In the Robot GUI, set the initial position for <strong>every</strong> robot you plan to control (see <strong>Robot Operation → Set initial position (GUI)</strong> in <a href="#running-instructions">Running the Robots</a>).</p>
+                                <p>Confirm each robot’s icon on the map matches its real location and orientation before proceeding. Automated goal commands will fail or behave incorrectly if localization is wrong.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">3</div>
+                                <h3>Start Jaewoo’s robot control code</h3>
+                                <p>With startup and localization complete, run Jaewoo’s application layer on the central operator workstation. This code publishes goal and patrol commands over DDS to the running robots.</p>
+                                <p>Contact Jaewoo for the current repository location, environment setup, and launch command for your scenario.</p>
+                                <div class="tip">
+                                    <p>Keep the Robot GUI and central DDS stack running while Jaewoo’s code is active. Use the GUI <strong>Stop</strong> button or the shutdown procedures in <a href="#running-instructions">Running the Robots</a> when the scenario is finished.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="mapping">
+                <h2>Mapping</h2>
+                <p>Use this workflow to create a new SLAM map on a KAIST robot. Power on the robot first (see <a href="#running-instructions">Running the Robots</a>), then SSH into the Jetson and run the steps below.</p>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Mapping workflow
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>SSH into the Jetson</h3>
+                                <p>Connect to the robot you will map (username/password = jetson):</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">ssh jetson@&lt;jetson_ip_address&gt;</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Start the ros_noetic Docker container</h3>
+                                <p>On the Jetson, start the ROS container:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">sudo docker run --runtime nvidia --network=host -v ~/workspaces/catkin_ws:/workspace/catkin_ws -v ~/gemini_api:/gemini_code -v /dev/bus/usb:/dev/bus/usb -v /dev/video0:/dev/video0 -v /dev/video1:/dev/video1 -it --device=/dev/ttyUSB0 --device=/dev/spidev0.0 --rm --privileged --name ros_noetic ghcr.io/satomm1/ml_ros:latest bash -lc 'python3 /workspace/catkin_ws/src/startup_script.py & exec bash'</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Wait for the container shell to appear.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">3</div>
+                                <h3>Start the mapping launch file</h3>
+                                <p>In the first terminal (inside the Docker container), launch SLAM mapping:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">roslaunch mattbot_bringup sense_and_map.launch</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">4</div>
+                                <h3>Drive the robot with keyboard teleop</h3>
+                                <p>Open a <strong>second terminal</strong>, SSH into the same Jetson again, and enter the running container:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">docker exec -it ros_noetic bash</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Start the keyboard teleop node:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">roslaunch mattbot_teleop keyboard.launch</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Focus the teleop terminal and use the keyboard to drive the robot through the entire area you want mapped.</p>
+                                <div class="tip">
+                                    <p><strong>Real-time map visualization:</strong> To watch the map build as you drive, use <strong>RViz</strong> on a separate machine on the same network as the Jetson. See <a href="setup.html#rviz">Setup Guide → RVIZ visualization</a> for configuration (<code>ROS_MASTER_URI</code> pointing at the Jetson, then <code>rosrun rviz rviz</code>).</p>
+                                </div>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">5</div>
+                                <h3>Finalize and save the map</h3>
+                                <p>When you have driven through the entire area, press <kbd>Ctrl+C</kbd> in the teleop terminal to exit keyboard control.</p>
+                                <p>In the same terminal (still inside the Docker container), finalize the map — replace <code>&lt;map-name&gt;</code> with a short name for this space (e.g. <code>lab_floor1</code>):</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">rosrun mattbot_mcl finalize_map.py --name &lt;map-name&gt;</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>This saves the map and generates the files needed by the robots and the central operator computer. For large maps, this step can take a few minutes.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">6</div>
+                                <h3>Stop mapping</h3>
+                                <p>Press <kbd>Ctrl+C</kbd> in the <strong>first terminal</strong> (where <code>sense_and_map.launch</code> is running) to stop mapping once map saving has finished. Then stop the Docker container by typing <code>exit</code>.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">7</div>
+                                <h3>Load the map on the central computer GUI</h3>
+                                <p>On your operator workstation, open the DDS Robot GUI and start the local Docker stack (see <a href="operation.html#dds-setup">Operation → Starting User GUI / DDS</a> if needed).</p>
+                                <ol>
+                                    <li>In the right-hand column, select the robot you used for mapping.</li>
+                                    <li>Open the drop-down for loading/syncing robot maps.</li>
+                                    <li>Enter a name for the map (use the same name as in step 5, or another label you prefer for the GUI).</li>
+                                    <li>Click <strong>Sync Map From Robot</strong>.</li>
+                                </ol>
+                                <p>The on-screen map should update with your new map once the sync completes.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">8</div>
+                                <h3>Send the map to other robots</h3>
+                                <p>Repeat these steps for each robot that should use the new map (on the central computer GUI):</p>
+                                <ol>
+                                    <li>In the right-hand column, select the robot you want to send the map to.</li>
+                                    <li>Open the <strong>Maps</strong> drop-down.</li>
+                                    <li>Click the <strong>Send Map</strong> option.</li>
+                                    <li>Select the map to send.</li>
+                                    <li>Click the button to send the map.</li>
+                                </ol>
+                                <p>Repeat for every other robot in the fleet that needs the updated map.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <section class="section" id="one-time-installs">
