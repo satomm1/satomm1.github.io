@@ -482,17 +482,25 @@ docker compose down</pre>
 
                 <div class="collapsible update-item">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
-                        <span class="update-title">Update Wi-Fi IP addresses (central machine and robots)</span>
+                        <span class="update-title">Reinstall the DDS Robot GUI (central machine)</span>
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
                     <div class="collapsible-panel">
                         <div class="collapsible-content">
                             <div class="update-meta">
-                                <span class="update-date">2026-07-22</span>
-                                <span class="update-badge other">Other</span>
+                                <span class="update-date">2026-07-23</span>
+                                <span class="update-badge software">Software</span>
                             </div>
-                            <p>If the lab Wi-Fi network, SSID, or DHCP leases have changed, update connectivity and IP configuration on <strong>every robot</strong> and on the <strong>central machine</strong> (Robot GUI saved addresses, CycloneDDS peer lists, and each Jetson’s <code>robot_env.sh</code> / <code>cyclonedds.xml</code>).</p>
-                            <p>Follow the full procedure in <a href="#updating-wifi">Updating Wi-Fi (IP Addresses)</a> — connect to the new network, record IPs, update the Robot GUI and central <code>cyclonedds.xml</code>, then update and test each robot.</p>
+                            <p>On the <strong>central operator workstation</strong>, reinstall the DDS Robot GUI from the latest Windows installer release.</p>
+                            <ol>
+                                <li>Open the <a href="https://github.com/satomm1/dds_robot_platform/releases/" target="_blank" rel="noopener">dds_robot_platform Releases</a> page.</li>
+                                <li>Under the latest release assets, download <strong>DDS.Robot.GUI.Setup.0.1.0.exe</strong>.</li>
+                                <li>Run the installer and complete the setup prompts. If Windows SmartScreen warns about an unsigned app, choose <strong>More info</strong> → <strong>Run anyway</strong> if you trust the source.</li>
+                                <li>Launch the Robot GUI from the Start menu or desktop shortcut when installation finishes.</li>
+                            </ol>
+                            <div class="tip">
+                                <p>After reinstalling, start Docker Desktop and use Local Stack <strong>Docker Start</strong> (and <strong>Capture Start</strong> if needed) as in <a href="#running-instructions">Running the Robots</a>. You may need to re-enter the <code>dds_robot_platform</code> path and WSL distro in the Local Stack panel.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -570,6 +578,23 @@ git pull</pre>
                 <div class="updates-divider" role="separator" aria-label="Previous updates">Previous updates</div>
 
                 <div id="updates-archive">
+
+                <div class="collapsible update-item">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        <span class="update-title">Update Wi-Fi IP addresses (central machine and robots)</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="update-meta">
+                                <span class="update-date">2026-07-22</span>
+                                <span class="update-badge other">Other</span>
+                            </div>
+                            <p>If the lab Wi-Fi network, SSID, or DHCP leases have changed, update connectivity and IP configuration on <strong>every robot</strong> and on the <strong>central machine</strong> (Robot GUI saved addresses, CycloneDDS peer lists, and each Jetson’s <code>robot_env.sh</code> / <code>cyclonedds.xml</code>).</p>
+                            <p>Follow the full procedure in <a href="#updating-wifi">Updating Wi-Fi (IP Addresses)</a> — connect to the new network, record IPs, update the Robot GUI and central <code>cyclonedds.xml</code>, then update and test each robot.</p>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="collapsible update-item">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
