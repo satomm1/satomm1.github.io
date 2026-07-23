@@ -45,39 +45,155 @@
                 <p>This page collects configuration details and ongoing updates for the robot fleet at KAIST. Use the general <a href="setup.html">Setup</a> and <a href="operation.html">Operation</a> guides for baseline procedures; this page covers what is specific to your deployment.</p>
             </section>
 
-            <section class="section" id="ip-addresses">
-                <h2>IP Address Reference</h2>
-                <p>Current Wi-Fi IP addresses for the central operator workstation and each robot. Use these for SSH, Robot GUI saved addresses, CycloneDDS peers, and firewall rules. If the network changes, follow <a href="#updating-wifi">Updating Wi-Fi (IP Addresses)</a> and update this table.</p>
-                <table class="pin-table">
-                    <thead>
-                        <tr>
-                            <th>Device</th>
-                            <th>IP address</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Central machine</td>
-                            <td>192.168.68.52</td>
-                        </tr>
-                        <tr>
-                            <td>Robot 1</td>
-                            <td>192.168.68.54</td>
-                        </tr>
-                        <tr>
-                            <td>Robot 2</td>
-                            <td>—</td>
-                        </tr>
-                        <tr>
-                            <td>Robot 3</td>
-                            <td>192.168.68.53</td>
-                        </tr>
-                        <tr>
-                            <td>Robot 4</td>
-                            <td>192.168.68.51</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <section class="section" id="cheatsheet">
+                <h2>Cheatsheet / Quickstart</h2>
+                <p>Quick reference for day-to-day operation. For full detail, see <a href="#running-instructions">Running the Robots</a>. If Wi-Fi or IPs change, follow <a href="#updating-wifi">Updating Wi-Fi (IP Addresses)</a> and update the table below.</p>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        IP addresses
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <table class="pin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Device</th>
+                                        <th>IP address</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Central machine</td>
+                                        <td>192.168.68.52</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Robot 1</td>
+                                        <td>192.168.68.54</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Robot 2</td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Robot 3</td>
+                                        <td>192.168.68.53</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Robot 4</td>
+                                        <td>192.168.68.51</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p>Jetson login: username/password = <code>jetson</code>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Central machine startup (short)
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <ol>
+                                <li>Start <strong>Docker Desktop</strong> and the <strong>DDS Robot GUI</strong> (Stanford logo on desktop).</li>
+                                <li>In the GUI Local Stack panel, click Docker <strong>Start</strong>.</li>
+                                <li>Open <strong>Ubuntu WSL 1</strong> (not plain Ubuntu / WSL2) and start DDS:
+                                    <div class="code-wrap">
+                                        <pre class="code-block">cd ~/dds_robot_platform/dds
+conda activate dds
+./start_scripts.sh</pre>
+                                        <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                    </div>
+                                </li>
+                                <li>(Optional) For data capture, in plain <strong>Ubuntu</strong> / WSL2:
+                                    <div class="code-wrap">
+                                        <pre class="code-block">cd ~/dds_robot_platform/capture
+docker compose up -d</pre>
+                                        <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                    </div>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Robot startup (short)
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <ol>
+                                <li>Power on each robot; wait for the desktop. Turn on the bottom electronics/motor switch (red LED on).</li>
+                                <li>In the Robot GUI → <strong>Robot Startup</strong>: select robot → <strong>Start Docker</strong> → enable <strong>KAIST</strong> → <strong>Start ROS</strong>.</li>
+                                <li>LiDAR should spin; robot should appear on the map. Set <strong>initial position</strong>, then send goals as needed.</li>
+                            </ol>
+                            <p>Alternate: use the robot display app (<strong>Start Docker</strong> / <strong>Start ROS</strong>) or SSH (commands below). Full options: <a href="#running-instructions">Running the Robots</a>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        Useful commands
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <h4>SSH into a robot</h4>
+                            <div class="code-wrap">
+                                <pre class="code-block">ssh jetson@&lt;robot_ip&gt;</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Example: <code>ssh jetson@192.168.68.54</code> (Robot 1).</p>
+
+                            <h4>Enter the running ROS container</h4>
+                            <div class="code-wrap">
+                                <pre class="code-block">docker exec -it ros_noetic bash</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+
+                            <h4>Start ROS manually (inside container)</h4>
+                            <div class="code-wrap">
+                                <pre class="code-block">roslaunch mattbot_bringup kaist.launch</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+
+                            <h4>Stop ROS / leave container</h4>
+                            <p>In the <code>roslaunch</code> terminal: <kbd>Ctrl+C</kbd>. Then <code>exit</code> to leave the container, or from the Jetson host:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">sudo docker stop ros_noetic</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+
+                            <h4>Check robot Wi-Fi IP (on Jetson)</h4>
+                            <div class="code-wrap">
+                                <pre class="code-block">ifconfig</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Look under <code>wlan0</code> for <code>inet</code>.</p>
+
+                            <h4>Power off Jetson (graceful)</h4>
+                            <div class="code-wrap">
+                                <pre class="code-block">sudo shutdown now -h</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+
+                            <h4>Stop central DDS scripts (WSL1)</h4>
+                            <div class="code-wrap">
+                                <pre class="code-block">cd ~/dds_robot_platform/dds
+./stop_scripts.sh</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>Or press <kbd>Ctrl+C</kbd> in the terminal where <code>./start_scripts.sh</code> is running.</p>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <section class="section" id="running-instructions">
