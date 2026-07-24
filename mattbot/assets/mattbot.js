@@ -172,6 +172,23 @@
         });
     }
 
+    // Notice modal (shown on page load where present)
+    var noticeModal = document.getElementById('robot-update-notice');
+    if (noticeModal) {
+        var noticeClose = document.getElementById('robot-update-notice-close');
+        function closeNotice() {
+            noticeModal.setAttribute('hidden', '');
+        }
+        noticeModal.removeAttribute('hidden');
+        if (noticeClose) noticeClose.addEventListener('click', closeNotice);
+        noticeModal.addEventListener('click', function (e) {
+            if (e.target === noticeModal) closeNotice();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && !noticeModal.hasAttribute('hidden')) closeNotice();
+        });
+    }
+
     // Back to top
     var backBtn = document.getElementById('backToTop');
     if (backBtn) {

@@ -862,6 +862,61 @@ body {
     object-fit: contain;
 }
 
+/* Notice modal */
+.notice-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1100;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.notice-modal[hidden] {
+    display: none;
+}
+
+.notice-modal-box {
+    background: var(--card-bg);
+    color: var(--text);
+    max-width: 30rem;
+    width: 100%;
+    border-radius: 12px;
+    border-top: 5px solid var(--accent);
+    padding: 1.75rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+.notice-modal-box h2 {
+    color: var(--header-text);
+    font-size: 1.2rem;
+    margin-bottom: 0.85rem;
+}
+
+.notice-modal-box p {
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+}
+
+.notice-modal-btn {
+    margin-top: 0.5rem;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.6rem 1.25rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.notice-modal-btn:hover {
+    background: var(--accent-dark);
+}
+
 /* Back to top */
 .back-to-top {
     position: fixed;
