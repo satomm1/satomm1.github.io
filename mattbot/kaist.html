@@ -933,6 +933,71 @@ chmod +x wifi_roaming_setup.sh</pre>
 
             </section>
 
+            <section class="section" id="new-gui-features">
+                <h2>New GUI Features</h2>
+                <div class="tip">
+                    <p><strong>Required first:</strong> These features only work after you complete the current One Time Updates — install the <strong>DDS Robot GUI</strong> update, run the <strong>robot software updates</strong> on each Jetson (then stop/restart Docker on the robots), and <strong>git pull</strong> <code>dds_robot_platform</code> on the central machine. See <a href="#updates">One Time Updates</a>.</p>
+                </div>
+
+                <div class="collapsible open">
+                    <button type="button" class="collapsible-trigger" aria-expanded="true">
+                        Capture checkbox
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <p>The GUI includes a <strong>Capture</strong> checkbox that controls whether robot images are saved.</p>
+                            <ul>
+                                <li><strong>Checked</strong> — image capture and saving are enabled.</li>
+                                <li><strong>Unchecked</strong> — no images are saved (useful during testing when you do not need recorded frames).</li>
+                            </ul>
+                            <img src="images/gui_capture_checkbox.png" alt="Robot GUI Capture checkbox" class="section-image">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible open">
+                    <button type="button" class="collapsible-trigger" aria-expanded="true">
+                        Patrol checkbox and Set Patrol
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <p>The <strong>Patrol</strong> checkbox puts the selected robot into patrol mode. The robot patrols between points you choose and save from the GUI.</p>
+                            <img src="images/gui_patrol_checkbox.png" alt="Robot GUI Patrol checkbox under Robot Startup" class="section-image">
+
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Select the robot and enable patrol</h3>
+                                <p>Under <strong>Robot Startup</strong> on the right-hand side, select the desired robot, then check the <strong>Patrol</strong> checkbox.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Open the patrol panel</h3>
+                                <p>Click <strong>Set Patrol</strong>. A panel opens on the left-hand side showing the patrol points for that robot.</p>
+                                <img src="images/gui_set_patrol_panel.png" alt="Set Patrol left-hand panel with patrol points" class="section-image">
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">3</div>
+                                <h3>Edit points and dwell time</h3>
+                                <p>Remove existing points or add new ones by clicking/dragging on the map. You can also set how long the robot should stay at each patrol point before moving to the next one.</p>
+                                <img src="images/gui_patrol_map_points.png" alt="Map with patrol points being edited in the GUI" class="section-image">
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">4</div>
+                                <h3>Send to the robot</h3>
+                                <p>When finished, click <strong>Send to Robot</strong>.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">5</div>
+                                <h3>Start ROS to begin patrolling</h3>
+                                <p>The next time you <strong>Start ROS</strong> for that robot, it will automatically patrol between the saved points. You still need to <strong>initialize the robot position</strong> (set initial pose) as usual before navigation will work correctly.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section class="section" id="basic-tests">
                 <h2>Basic Tests</h2>
                 <p>After completing <a href="#running-instructions">Running the Robots</a> (central machine startup, robot startup, and localization), use these quick checks to confirm communication and navigation are working before scenario runs or further debugging.</p>
@@ -1507,6 +1572,7 @@ python -c "import cyclonedds; print('OK')"</pre>
         </div>
     </div>
 
+    <div class="lightbox" id="lightbox" role="dialog" aria-label="Enlarged image"><img src="" alt=""></div>
     <div class="notice-modal" id="robot-update-notice" role="dialog" aria-modal="true" aria-labelledby="robot-update-notice-title" hidden>
         <div class="notice-modal-box">
             <h2 id="robot-update-notice-title">Special Instructions for Today's Robot Software Updates</h2>
