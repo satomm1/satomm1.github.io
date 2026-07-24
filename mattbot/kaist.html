@@ -546,9 +546,10 @@ docker compose down</pre>
                                 <span class="update-badge software">Software</span>
                             </div>
                             <p>On the <strong>central operator workstation</strong>, update the existing <code>dds_robot_platform</code> clone in <strong>both</strong> WSL environments used at KAIST: <strong>Ubuntu WSL 1</strong> (DDS scripts) and plain <strong>Ubuntu</strong> / WSL2 (capture stack). Each distro has its own filesystem — run <code>git pull</code> in each one.</p>
-                            <p><strong>1. Ubuntu WSL 1</strong> — open an <strong>Ubuntu WSL 1</strong> tab in Windows Terminal (not plain Ubuntu / WSL2):</p>
+                            <p><strong>1. Ubuntu WSL 1</strong> — open an <strong>Ubuntu WSL 1</strong> tab in Windows Terminal (not plain Ubuntu / WSL2). If DNS/network lookups fail in WSL1, fix the resolver first, then pull:</p>
                             <div class="code-wrap">
-                                <pre class="code-block">cd ~/dds_robot_platform
+                                <pre class="code-block">sudo sh -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf'
+cd ~/dds_robot_platform
 git pull</pre>
                                 <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                             </div>
