@@ -4,390 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matthew Sato - Personal Website</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            min-height: 100vh;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        
-        .header {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 3rem 2rem;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-        }
-
-        .header .profile-photo {
-            width: 160px;
-            height: 160px;
-            object-fit: cover;
-            object-position: center top;
-            border-radius: 50%;
-            margin-bottom: 1.25rem;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-        }
-        
-        .header h1 {
-            color: #2c3e50;
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-            font-weight: 300;
-        }
-        
-        .header .subtitle {
-            color: #7f8c8d;
-            font-size: 1.2rem;
-            margin-bottom: 0;
-        }
-        
-        .projects {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            margin-top: 2rem;
-        }
-        
-        .projects h2 {
-            color: #2c3e50;
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-        
-        .project-card {
-            background: linear-gradient(135deg, #ff6b6b, #ffa500);
-            padding: 2rem;
-            border-radius: 10px;
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            margin-bottom: 1rem;
-        }
-        
-        .project-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
-        }
-        
-        .project-card h3 {
-            color: white;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .project-card p {
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 1.5rem;
-        }
-        
-        .project-link {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            text-decoration: none;
-            border-radius: 25px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-        
-        .project-link:hover {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.5);
-            transform: scale(1.05);
-        }
-
-        .project-card:last-child {
-            margin-bottom: 0;
-        }
-
-        .other-projects {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-top: 1.25rem;
-        }
-
-        .project-card-secondary {
-            background: #f4f6f8;
-            border: 1px solid #e1e6eb;
-            padding: 1.25rem 1.5rem;
-            border-radius: 10px;
-            text-align: left;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .project-card-secondary:hover {
-            border-color: #cfd6dd;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-        }
-
-        .project-card-secondary h3 {
-            color: #2c3e50;
-            font-size: 1.1rem;
-            margin-bottom: 0.4rem;
-            font-weight: 600;
-        }
-
-        .project-card-secondary p {
-            color: #7f8c8d;
-            font-size: 0.95rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .project-link-secondary {
-            color: #2c3e50;
-            font-size: 0.95rem;
-            font-weight: 500;
-            text-decoration: none;
-            border-bottom: 1px solid rgba(44, 62, 80, 0.25);
-        }
-
-        .project-link-secondary:hover {
-            color: #ff6b6b;
-            border-bottom-color: #ff6b6b;
-        }
-        
-        .about {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            margin-top: 2rem;
-        }
-        
-        .about h2 {
-            color: #2c3e50;
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-        
-        .about p {
-            color: #555;
-            font-size: 1.1rem;
-            text-align: left;
-            max-width: 650px;
-            margin: 0 auto;
-        }
-
-        .about p + p {
-            margin-top: 1rem;
-        }
-
-        .about .contact {
-            margin-top: 1.25rem;
-            font-size: 1rem;
-            color: #7f8c8d;
-        }
-
-        .about .contact a {
-            color: #2c3e50;
-            text-decoration: none;
-            border-bottom: 1px solid rgba(44, 62, 80, 0.25);
-        }
-
-        .about .contact a:hover {
-            color: #ff6b6b;
-            border-bottom-color: #ff6b6b;
-        }
-
-        .about ul {
-            color: #555;
-            font-size: 1.05rem;
-            max-width: 650px;
-            margin: 0 auto;
-            padding-left: 1.25rem;
-            text-align: left;
-        }
-
-        .about li {
-            margin-bottom: 0.75rem;
-        }
-
-        .publications {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            margin-top: 2rem;
-        }
-
-        .publications summary {
-            color: #2c3e50;
-            text-align: center;
-            cursor: pointer;
-            list-style: none;
-            user-select: none;
-        }
-
-        .publications summary::-webkit-details-marker {
-            display: none;
-        }
-
-        .publications-title {
-            display: block;
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-
-        .publication-preview {
-            display: block;
-            max-width: 700px;
-            margin: 0 auto;
-            text-align: left;
-        }
-
-        .publication-preview ol {
-            color: #555;
-            font-size: 1rem;
-            font-weight: normal;
-            line-height: 1.55;
-            margin: 0;
-            padding-left: 1.5rem;
-        }
-
-        .publication-preview li {
-            margin-bottom: 0;
-        }
-
-        .more-indicator {
-            display: block;
-            margin-top: 1rem;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #7f8c8d;
-        }
-
-        .more-indicator::after {
-            content: " ▼";
-        }
-
-        .publications[open] .publication-preview,
-        .publications[open] .more-indicator {
-            display: none;
-        }
-
-        .publications summary:hover .publications-title,
-        .publications summary:hover .more-indicator {
-            color: #ff6b6b;
-        }
-
-        .less-toggle {
-            display: block;
-            margin: 0 auto;
-            padding: 0;
-            border: none;
-            background: none;
-            font-family: inherit;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #7f8c8d;
-            cursor: pointer;
-        }
-
-        .less-toggle:hover {
-            color: #ff6b6b;
-        }
-
-        .publications ol {
-            color: #555;
-            font-size: 1rem;
-            line-height: 1.55;
-            max-width: 700px;
-            margin: 1.5rem auto 0;
-            padding-left: 1.5rem;
-        }
-
-        .publications li {
-            margin-bottom: 1.1rem;
-        }
-
-        .publications em {
-            font-style: italic;
-        }
-
-        .publications a {
-            color: #2c3e50;
-            word-break: break-all;
-        }
-
-        .publications a:hover {
-            color: #ff6b6b;
-        }
-        
-        .social-links {
-            text-align: center;
-            margin-top: 1rem;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-        
-        .social-links a {
-            display: inline-block;
-            margin: 0 1rem;
-            font-size: 2.5rem;
-            text-decoration: none;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-        
-        .social-links a:hover {
-            transform: scale(1.2);
-            opacity: 0.8;
-        }
-
-        .social-links img {
-            width: 40px;
-            height: 40px;
-            max-width: none;
-            object-fit: contain;
-            vertical-align: middle;
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-            
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .header .subtitle {
-                font-size: 1rem;
-            }
-
-            .other-projects {
-                grid-template-columns: 1fr;
-            }
-
-            .social-links img {
-                width: 32px;
-                height: 32px;
-            }
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
@@ -396,79 +16,81 @@
             <h1>Matthew Sato</h1>
             <p class="subtitle">PhD Student, Stanford Civil &amp; Environmental Engineering</p>
         </header>
-        
-        <section class="about">
-            <h2>About Me</h2>
-            <p>Hello! I am a PhD student at Stanford University in the Department of Civil and Environmental Engineering. I am a researcher in the <a href="https://eil.stanford.edu/" target="_blank" rel="noopener noreferrer">Engineering Informatics Group</a> under Professor Kincho Law.</p>
-            <p class="contact">Email: <a href="mailto:satomm@stanford.edu">satomm@stanford.edu</a></p>
-        </section>
 
-        <!-- <section class="about">
-            <h2>Research Interests</h2>
-            <ul>
-                <li>Machine learning for additive manufacturing process monitoring and melt pool analysis</li>
-                <li>Hybrid quantum–classical computing for engineering applications</li>
-                <li>Autonomous mobile robots, multi-robot navigation, and LLM-enabled perception</li>
-            </ul>
-        </section> -->
+        <div class="panel">
+            <section class="about">
+                <h2>About Me</h2>
+                <p>Hello! I am a PhD student at Stanford University in the Department of Civil and Environmental Engineering. I am a researcher in the <a href="https://eil.stanford.edu/" target="_blank" rel="noopener noreferrer">Engineering Informatics Group</a> under Professor Kincho Law.</p>
+                <p class="contact">Email: <a href="mailto:satomm@stanford.edu">satomm@stanford.edu</a></p>
+            </section>
 
-        <section class="about">
-            <h2>Education</h2>
-            <ul>
-                <li>PhD in Civil and Environmental Engineering, Stanford University (Expected 2027)</li>
-                <li>MS in Electrical Engineering, Stanford University (2025)</li>
-                <li>MS in Civil and Environmental Engineering, Stanford University (2023)</li>
-                <li>BS in Civil Engineering and Mathematics, Vanderbilt University (2021)</li>
-            </ul>
-        </section>
+            <!-- <section class="about">
+                <h2>Research Interests</h2>
+                <ul>
+                    <li>Machine learning for additive manufacturing process monitoring and melt pool analysis</li>
+                    <li>Hybrid quantum–classical computing for engineering applications</li>
+                    <li>Autonomous mobile robots, multi-robot navigation, and LLM-enabled perception</li>
+                </ul>
+            </section> -->
 
-        <details class="publications">
-            <summary>
-                <span class="publications-title">Publications</span>
-                <span class="publication-preview">
-                    <ol>
-                        <li><strong>M. Sato</strong> and K. Law, “LPBF Melt Pool Prediction Using Quantum Computers and Machine Learning,” <em>2026 IEEE International Conference on Quantum Computing and Engineering (QCE)</em>, Toronto, CAN, September 13–18, 2026.</li>
-                    </ol>
-                </span>
-                <span class="more-indicator">More</span>
-            </summary>
-            <ol>
-                <li><strong>M. Sato</strong> and K. Law, “LPBF Melt Pool Prediction Using Quantum Computers and Machine Learning,” <em>2026 IEEE International Conference on Quantum Computing and Engineering (QCE)</em>, Toronto, CAN, September 13–18, 2026.</li>
-                <li><strong>M. Sato</strong> and K. Law, “Socially Consistent Multi-Robot Navigation Using Decoupled Planning and Trajectory Coordination,” June 2026, doi: <a href="https://doi.org/10.48550/arXiv.2607.20772" target="_blank" rel="noopener noreferrer">10.48550/arXiv.2607.20772</a>. [Submitted to <em>Civil Engineering Sciences</em>]</li>
-                <li><strong>M. Sato</strong> and K. Law, “A Hybrid Quantum-Classical Approach for Melt Pool Prediction in Laser Powder Bed Fusion,” <em>Proceedings of the ASME 2026 International Design Engineering Technical Conferences and Computers and Information in Engineering Conference</em>, Houston, TX, Aug. 23–26, 2026, doi: <a href="https://doi.org/10.48550/arXiv.2606.23719" target="_blank" rel="noopener noreferrer">10.48550/arXiv.2606.23719</a>.</li>
-                <li><strong>M. Sato</strong> and K. Law, “A Mobile Robot Framework for Learning to Detect New Objects with Large Language Models,” <em>J. Comput. Inf. Sci. Eng.</em>, vol. 26, no. 6, June 2026, doi: <a href="https://doi.org/10.1115/1.4071863" target="_blank" rel="noopener noreferrer">10.1115/1.4071863</a>.</li>
-                <li><strong>M. Sato</strong> and K. Law, “A Mobile Robot Framework for Learning to Detect New Objects with Large Language Models,” <em>Proceedings of the ASME 2025 International Design Engineering Technical Conferences and Computers and Information in Engineering Conference</em>, Anaheim, CA, Aug. 17–20, 2025, doi: <a href="https://doi.org/10.1115/DETC2025-164474" target="_blank" rel="noopener noreferrer">10.1115/DETC2025-164474</a>.</li>
-                <li><strong>M. Sato</strong>, V. Wong, H. Yeung, P. Witherell, and K. Law, “Identification and Interpretation of Melt Pool Shapes in Laser Powder Bed Fusion with Machine Learning,” <em>Smart and Sustainable Manufacturing Systems</em>, vol. 8, no. 1, Apr. 2024, doi: <a href="https://doi.org/10.1520/SSMS20230035" target="_blank" rel="noopener noreferrer">10.1520/SSMS20230035</a>.</li>
-                <li><strong>M. Sato</strong>, V. Wong, K. Law, H. Yeung, P. Witherell, “Explainability of Laser Powder Bed Fusion Melt Pool Classification Using Deep Learning,” <em>Proceedings of the ASME 2023 International Design Engineering Technical Conferences and Computers and Information in Engineering Conference</em>, Boston, MA, Aug. 20–23, 2023, doi: <a href="https://doi.org/10.1115/DETC2023-109137" target="_blank" rel="noopener noreferrer">10.1115/DETC2023-109137</a>.</li>
-                <li><strong>M. Sato</strong>, V. Wong, K. Law, H. Yeung, Z. Yang, B. Lane, and P. Witherell, “Anomaly Detection of Laser Powder Bed Fusion Melt Pool Images Using Combined Unsupervised and Supervised Learning Methods,” <em>Proceedings of the ASME 2022 International Design Engineering Technical Conferences and Computers and Information in Engineering Conference</em>, St. Louis, MO, Aug. 14–17, 2022, doi: <a href="https://doi.org/10.1115/DETC2022-88313" target="_blank" rel="noopener noreferrer">10.1115/DETC2022-88313</a>.</li>
-                <li>P. Nath, <strong>M. Sato</strong>, P. Karve, and S. Mahadevan, “Multi-fidelity Modeling for Uncertainty Quantification in Laser Powder Bed Fusion Additive Manufacturing,” <em>Integrating Materials and Manufacturing Innovation</em>, vol. 11, no. 2, pp. 256–275, 2022, doi: <a href="https://doi.org/10.1007/s40192-022-00260-9" target="_blank" rel="noopener noreferrer">10.1007/s40192-022-00260-9</a>.</li>
-                <li>B. Kapusuzoglu, P. Nath, <strong>M. Sato</strong>, S. Mahadevan, and P. Witherell, “Multi-Objective Optimization Under Uncertainty of Part Quality in Fused Filament Fabrication,” <em>ASCE-ASME J Risk and Uncert in Engrg Sys Part B Mech Engrg</em>, vol. 8, no. 1, Jan. 2022, doi: <a href="https://doi.org/10.1115/1.4053181" target="_blank" rel="noopener noreferrer">10.1115/1.4053181</a>.</li>
-                <li>B. Kapusuzoglu, <strong>M. Sato</strong>, S. Mahadevan, and P. Witherell, “Process Optimization Under Uncertainty for Improving the Bond Quality of Polymer Filaments in Fused Filament Fabrication,” <em>Journal of Manufacturing Science and Engineering</em>, vol. 143, no. 2, Oct. 2020, doi: <a href="https://doi.org/10.1115/1.4048073" target="_blank" rel="noopener noreferrer">10.1115/1.4048073</a>.</li>
-            </ol>
-            <button type="button" class="less-toggle">Less ▲</button>
-        </details>
+            <section class="about">
+                <h2>Education</h2>
+                <ul>
+                    <li>PhD in Civil and Environmental Engineering, Stanford University (Expected 2027)</li>
+                    <li>MS in Electrical Engineering, Stanford University (2025)</li>
+                    <li>MS in Civil and Environmental Engineering, Stanford University (2023)</li>
+                    <li>BS in Civil Engineering and Mathematics, Vanderbilt University (2021)</li>
+                </ul>
+            </section>
 
-        <section class="projects">
-            <h2>Featured Projects</h2>
-            <div class="project-card">
-                <h3>Autonomous Mobile Robot</h3>
-                <p>Explore my open source autonomous mobile robot project.</p>
-                <a href="./mattbot/index.html" class="project-link">View Project →</a>
-            </div>
-            <div class="other-projects">
-                <div class="project-card-secondary">
-                    <h3>ME218B Final Project</h3>
-                    <p>Wheeled robot</p>
-                    <a href="https://reporoadrunna.weebly.com/" class="project-link-secondary" target="_blank" rel="noopener noreferrer">View project →</a>
+            <details class="publications">
+                <summary>
+                    <span class="publications-title">Publications</span>
+                    <span class="publication-preview">
+                        <ol>
+                            <li><strong>M. Sato</strong> and K. Law, “LPBF Melt Pool Prediction Using Quantum Computers and Machine Learning,” <em>2026 IEEE International Conference on Quantum Computing and Engineering (QCE)</em>, Toronto, CAN, September 13–18, 2026.</li>
+                        </ol>
+                    </span>
+                    <span class="more-indicator">More</span>
+                </summary>
+                <ol>
+                    <li><strong>M. Sato</strong> and K. Law, “LPBF Melt Pool Prediction Using Quantum Computers and Machine Learning,” <em>2026 IEEE International Conference on Quantum Computing and Engineering (QCE)</em>, Toronto, CAN, September 13–18, 2026.</li>
+                    <li><strong>M. Sato</strong> and K. Law, “Socially Consistent Multi-Robot Navigation Using Decoupled Planning and Trajectory Coordination,” June 2026, doi: <a href="https://doi.org/10.48550/arXiv.2607.20772" target="_blank" rel="noopener noreferrer">10.48550/arXiv.2607.20772</a>. [Submitted to <em>Civil Engineering Sciences</em>]</li>
+                    <li><strong>M. Sato</strong> and K. Law, “A Hybrid Quantum-Classical Approach for Melt Pool Prediction in Laser Powder Bed Fusion,” <em>Proceedings of the ASME 2026 International Design Engineering Technical Conferences and Computers and Information in Engineering Conference</em>, Houston, TX, Aug. 23–26, 2026, doi: <a href="https://doi.org/10.48550/arXiv.2606.23719" target="_blank" rel="noopener noreferrer">10.48550/arXiv.2606.23719</a>.</li>
+                    <li><strong>M. Sato</strong> and K. Law, “A Mobile Robot Framework for Learning to Detect New Objects with Large Language Models,” <em>J. Comput. Inf. Sci. Eng.</em>, vol. 26, no. 6, June 2026, doi: <a href="https://doi.org/10.1115/1.4071863" target="_blank" rel="noopener noreferrer">10.1115/1.4071863</a>.</li>
+                    <li><strong>M. Sato</strong> and K. Law, “A Mobile Robot Framework for Learning to Detect New Objects with Large Language Models,” <em>Proceedings of the ASME 2025 International Design Engineering Technical Conferences and Computers and Information in Engineering Conference</em>, Anaheim, CA, Aug. 17–20, 2025, doi: <a href="https://doi.org/10.1115/DETC2025-164474" target="_blank" rel="noopener noreferrer">10.1115/DETC2025-164474</a>.</li>
+                    <li><strong>M. Sato</strong>, V. Wong, H. Yeung, P. Witherell, and K. Law, “Identification and Interpretation of Melt Pool Shapes in Laser Powder Bed Fusion with Machine Learning,” <em>Smart and Sustainable Manufacturing Systems</em>, vol. 8, no. 1, Apr. 2024, doi: <a href="https://doi.org/10.1520/SSMS20230035" target="_blank" rel="noopener noreferrer">10.1520/SSMS20230035</a>.</li>
+                    <li><strong>M. Sato</strong>, V. Wong, K. Law, H. Yeung, P. Witherell, “Explainability of Laser Powder Bed Fusion Melt Pool Classification Using Deep Learning,” <em>Proceedings of the ASME 2023 International Design Engineering Technical Conferences and Computers and Information in Engineering Conference</em>, Boston, MA, Aug. 20–23, 2023, doi: <a href="https://doi.org/10.1115/DETC2023-109137" target="_blank" rel="noopener noreferrer">10.1115/DETC2023-109137</a>.</li>
+                    <li><strong>M. Sato</strong>, V. Wong, K. Law, H. Yeung, Z. Yang, B. Lane, and P. Witherell, “Anomaly Detection of Laser Powder Bed Fusion Melt Pool Images Using Combined Unsupervised and Supervised Learning Methods,” <em>Proceedings of the ASME 2022 International Design Engineering Technical Conferences and Computers and Information in Engineering Conference</em>, St. Louis, MO, Aug. 14–17, 2022, doi: <a href="https://doi.org/10.1115/DETC2022-88313" target="_blank" rel="noopener noreferrer">10.1115/DETC2022-88313</a>.</li>
+                    <li>P. Nath, <strong>M. Sato</strong>, P. Karve, and S. Mahadevan, “Multi-fidelity Modeling for Uncertainty Quantification in Laser Powder Bed Fusion Additive Manufacturing,” <em>Integrating Materials and Manufacturing Innovation</em>, vol. 11, no. 2, pp. 256–275, 2022, doi: <a href="https://doi.org/10.1007/s40192-022-00260-9" target="_blank" rel="noopener noreferrer">10.1007/s40192-022-00260-9</a>.</li>
+                    <li>B. Kapusuzoglu, P. Nath, <strong>M. Sato</strong>, S. Mahadevan, and P. Witherell, “Multi-Objective Optimization Under Uncertainty of Part Quality in Fused Filament Fabrication,” <em>ASCE-ASME J Risk and Uncert in Engrg Sys Part B Mech Engrg</em>, vol. 8, no. 1, Jan. 2022, doi: <a href="https://doi.org/10.1115/1.4053181" target="_blank" rel="noopener noreferrer">10.1115/1.4053181</a>.</li>
+                    <li>B. Kapusuzoglu, <strong>M. Sato</strong>, S. Mahadevan, and P. Witherell, “Process Optimization Under Uncertainty for Improving the Bond Quality of Polymer Filaments in Fused Filament Fabrication,” <em>Journal of Manufacturing Science and Engineering</em>, vol. 143, no. 2, Oct. 2020, doi: <a href="https://doi.org/10.1115/1.4048073" target="_blank" rel="noopener noreferrer">10.1115/1.4048073</a>.</li>
+                </ol>
+                <button type="button" class="less-toggle">Less ↑</button>
+            </details>
+
+            <section class="projects">
+                <h2>Featured Projects</h2>
+                <div class="project-card">
+                    <h3>Autonomous Mobile Robot</h3>
+                    <p>Explore my open source autonomous mobile robot project.</p>
+                    <a href="./mattbot/index.html" class="project-link">View Project →</a>
                 </div>
-                <div class="project-card-secondary">
-                    <h3>ME218C Final Project</h3>
-                    <p>RC boat</p>
-                    <a href="https://raveraft.weebly.com/" class="project-link-secondary" target="_blank" rel="noopener noreferrer">View project →</a>
+                <div class="other-projects">
+                    <div class="project-card-secondary">
+                        <h3>ME218B Final Project</h3>
+                        <p>Wheeled robot</p>
+                        <a href="https://reporoadrunna.weebly.com/" class="project-link-secondary" target="_blank" rel="noopener noreferrer">View project →</a>
+                    </div>
+                    <div class="project-card-secondary">
+                        <h3>ME218C Final Project</h3>
+                        <p>RC boat</p>
+                        <a href="https://raveraft.weebly.com/" class="project-link-secondary" target="_blank" rel="noopener noreferrer">View project →</a>
+                    </div>
                 </div>
-            </div>
-        </section>
-        
+            </section>
+        </div>
+
         <section class="social-links">
             <a href="https://www.linkedin.com/in/matthew-sato-4ab47514b" title="LinkedIn" target="_blank" rel="noopener noreferrer"><img src="images/LI-In-Bug.png" alt="LinkedIn"></a>
             <a href="https://scholar.google.com/citations?user=rNj6LR4AAAAJ&hl=en" title="Google Scholar" target="_blank" rel="noopener noreferrer"><img src="images/scholar.png" alt="Google Scholar"></a>
@@ -483,4 +105,4 @@
         });
     </script>
 </body>
-</html>"
+</html>
