@@ -114,6 +114,57 @@
             border-color: rgba(255, 255, 255, 0.5);
             transform: scale(1.05);
         }
+
+        .project-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .other-projects {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1.25rem;
+        }
+
+        .project-card-secondary {
+            background: #f4f6f8;
+            border: 1px solid #e1e6eb;
+            padding: 1.25rem 1.5rem;
+            border-radius: 10px;
+            text-align: left;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .project-card-secondary:hover {
+            border-color: #cfd6dd;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .project-card-secondary h3 {
+            color: #2c3e50;
+            font-size: 1.1rem;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+        }
+
+        .project-card-secondary p {
+            color: #7f8c8d;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .project-link-secondary {
+            color: #2c3e50;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(44, 62, 80, 0.25);
+        }
+
+        .project-link-secondary:hover {
+            color: #ff6b6b;
+            border-bottom-color: #ff6b6b;
+        }
         
         .about {
             background: rgba(255, 255, 255, 0.95);
@@ -327,6 +378,10 @@
                 font-size: 1rem;
             }
 
+            .other-projects {
+                grid-template-columns: 1fr;
+            }
+
             .social-links img {
                 width: 32px;
                 height: 32px;
@@ -347,6 +402,15 @@
             <p>Hello! I am a PhD student at Stanford University in the Department of Civil and Environmental Engineering. I am a researcher in the <a href="https://eil.stanford.edu/" target="_blank" rel="noopener noreferrer">Engineering Informatics Group</a> under Professor Kincho Law.</p>
             <p class="contact">Email: <a href="mailto:satomm@stanford.edu">satomm@stanford.edu</a></p>
         </section>
+
+        <!-- <section class="about">
+            <h2>Research Interests</h2>
+            <ul>
+                <li>Machine learning for additive manufacturing process monitoring and melt pool analysis</li>
+                <li>Hybrid quantum–classical computing for engineering applications</li>
+                <li>Autonomous mobile robots, multi-robot navigation, and LLM-enabled perception</li>
+            </ul>
+        </section> -->
 
         <section class="about">
             <h2>Education</h2>
@@ -390,6 +454,18 @@
                 <h3>Autonomous Mobile Robot</h3>
                 <p>Explore my open source autonomous mobile robot project.</p>
                 <a href="./mattbot/index.html" class="project-link">View Project →</a>
+            </div>
+            <div class="other-projects">
+                <div class="project-card-secondary">
+                    <h3>ME218B Final Project</h3>
+                    <p>Wheeled robot</p>
+                    <a href="https://reporoadrunna.weebly.com/" class="project-link-secondary" target="_blank" rel="noopener noreferrer">View project →</a>
+                </div>
+                <div class="project-card-secondary">
+                    <h3>ME218C Final Project</h3>
+                    <p>RC boat</p>
+                    <a href="https://raveraft.weebly.com/" class="project-link-secondary" target="_blank" rel="noopener noreferrer">View project →</a>
+                </div>
             </div>
         </section>
         
