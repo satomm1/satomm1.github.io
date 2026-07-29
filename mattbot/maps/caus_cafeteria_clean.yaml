@@ -1,0 +1,7 @@
+image: /workspace/catkin_ws/src/mattbot_mcl/maps/caus_cafeteria_clean.pgm
+resolution: 0.050000
+origin: [-50.000000, -50.000000, 0.000000]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196
+
