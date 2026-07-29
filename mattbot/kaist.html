@@ -468,31 +468,6 @@ rosnode kill --all</pre>
 
                 <div id="updates-new">
 
-                <div class="collapsible update-item">
-                    <button type="button" class="collapsible-trigger" aria-expanded="false">
-                        <span class="update-title">Update DDS Robot GUI to v0.1.2 (central machine) (New for 2026-07-27)</span>
-                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                    </button>
-                    <div class="collapsible-panel">
-                        <div class="collapsible-content">
-                            <div class="update-meta">
-                                <span class="update-date">2026-07-24</span>
-                                <span class="update-badge software">Software</span>
-                            </div>
-                            <p>On the <strong>central operator workstation</strong>, install the updated DDS Robot GUI (v0.1.2).</p>
-                            <ol>
-                                <li>Open the <a href="https://github.com/satomm1/dds_robot_platform/releases/tag/0.1.2" target="_blank" rel="noopener">v0.1.2 release</a> page.</li>
-                                <li>Download the Windows installer executable from the release assets (e.g. <code>DDS.Robot.GUI.Setup.0.1.2.exe</code>).</li>
-                                <li>Run the installer and complete the setup prompts to reinstall the GUI. If Windows SmartScreen warns about an unsigned app, choose <strong>More info</strong> → <strong>Run anyway</strong> if you trust the source.</li>
-                                <li>Launch the Robot GUI from the Start menu or desktop shortcut when installation finishes.</li>
-                            </ol>
-                            <div class="tip">
-                                <p>After updating, start Docker Desktop and use Local Stack <strong>Docker Start</strong> (and <strong>Capture Start</strong> if needed) as in <a href="#running-instructions">Running the Robots</a>. You may need to re-enter the <code>dds_robot_platform</code> path and WSL distro in the Local Stack panel.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="collapsible update-item" id="mattbot-stack-pull-update">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
                         <span class="update-title">Robot software update via GUI (each Jetson) — last commit: <!--MATTBOT_STACK_LAST_COMMIT-->2026-07-26 01:06 KST<!--/MATTBOT_STACK_LAST_COMMIT--></span>
@@ -567,6 +542,31 @@ git pull</pre>
                 <div class="updates-divider" role="separator" aria-label="Previous updates">Previous updates</div>
 
                 <div id="updates-archive">
+
+                <div class="collapsible update-item">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        <span class="update-title">Update DDS Robot GUI to v0.1.2 (central machine)</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="update-meta">
+                                <span class="update-date">2026-07-24</span>
+                                <span class="update-badge software">Software</span>
+                            </div>
+                            <p>On the <strong>central operator workstation</strong>, install the updated DDS Robot GUI (v0.1.2).</p>
+                            <ol>
+                                <li>Open the <a href="https://github.com/satomm1/dds_robot_platform/releases/tag/0.1.2" target="_blank" rel="noopener">v0.1.2 release</a> page.</li>
+                                <li>Download the Windows installer executable from the release assets (e.g. <code>DDS.Robot.GUI.Setup.0.1.2.exe</code>).</li>
+                                <li>Run the installer and complete the setup prompts to reinstall the GUI. If Windows SmartScreen warns about an unsigned app, choose <strong>More info</strong> → <strong>Run anyway</strong> if you trust the source.</li>
+                                <li>Launch the Robot GUI from the Start menu or desktop shortcut when installation finishes.</li>
+                            </ol>
+                            <div class="tip">
+                                <p>After updating, start Docker Desktop and use Local Stack <strong>Docker Start</strong> (and <strong>Capture Start</strong> if needed) as in <a href="#running-instructions">Running the Robots</a>. You may need to re-enter the <code>dds_robot_platform</code> path and WSL distro in the Local Stack panel.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="collapsible update-item">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
@@ -1573,14 +1573,6 @@ python -c "import cyclonedds; print('OK')"</pre>
     </div>
 
     <div class="lightbox" id="lightbox" role="dialog" aria-label="Enlarged image"><img src="" alt=""></div>
-    <div class="notice-modal" id="robot-update-notice" role="dialog" aria-modal="true" aria-labelledby="robot-update-notice-title" hidden>
-        <div class="notice-modal-box">
-            <h2 id="robot-update-notice-title">Special Instructions for Today's Robot Software Updates</h2>
-            <p>Once you finish the <strong>robot software updates</strong> (Software Update on each Jetson), <strong>stop the Docker containers on the robots and start them again</strong>. The new software will not load until Docker has been restarted.</p>
-            <p>For each robot: in the Robot GUI (or on the robot display), use <strong>Stop Docker</strong>, then <strong>Start Docker</strong>.</p>
-            <button type="button" class="notice-modal-btn" id="robot-update-notice-close">Got it</button>
-        </div>
-    </div>
 
     <button type="button" class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
     <script src="assets/mattbot.js"></script>
