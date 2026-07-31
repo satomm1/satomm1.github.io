@@ -468,6 +468,37 @@ rosnode kill --all</pre>
 
                 <div id="updates-new">
 
+                <div class="collapsible update-item">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        <span class="update-title">Motor Wire Check (Robot 1)</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="update-meta">
+                                <span class="update-date">2026-07-31</span>
+                                <span class="update-badge hardware">Hardware</span>
+                            </div>
+                            <p>On <strong>Robot 1</strong>, reseat the motor connectors and tidy the motor wiring. This may help with the robot’s tendency to <strong>veer right</strong>.</p>
+                            <img src="images/motor_wire_check_robot1.png" alt="Robot 1 motors with red arrows marking where the white plastic connectors plug into each motor" class="section-image">
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Press the connectors firmly onto the motors</h3>
+                                <p>At each motor, press down on the <strong>plastic part of the wire connector</strong> where it plugs into the matching plastic connector on the motor (see the red circles/arrows in the photo). Press <strong>gently but firmly</strong>. The easiest way is to put one finger on either side of the wires and push straight down.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Check the motor-to-board wiring</h3>
+                                <p>Inspect the six-wire bundles that run from each motor to the circuit board:</p>
+                                <ul>
+                                    <li>Try to keep these motor wires from <strong>crossing</strong> other cables — especially the white/green twisted-pair wires.</li>
+                                    <li>Spread the six motor wires apart a bit if they are tightly bunched together (they stay joined at the connector, but separating them along the run helps).</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Update Maps — hidden for now; remove the hidden attribute below to show again -->
                 <div class="collapsible update-item">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
@@ -539,7 +570,7 @@ python3 generate_dds_map.py --map_file caus_cafeteria</pre>
                                 <h3>Copy the map JSON to the central machine</h3>
                                 <p>This step only needs to be done <strong>once</strong>. Use any Jetson that already has the updated map. On the central machine, open an <strong>Ubuntu WSL 1</strong> terminal:</p>
                                 <div class="code-wrap">
-                                    <pre class="code-block">cd ~/dds_robot_platform
+                                    <pre class="code-block">cd ~/dds_robot_platform/dds
 scp jetson@&lt;jetson_ip&gt;:~/workspaces/catkin_ws/src/mattbot_mcl/map_json/current_map_mod.json .</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
