@@ -470,6 +470,140 @@ rosnode kill --all</pre>
 
                 <div class="collapsible update-item">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        <span class="update-title">Robot 3 OS Bootloader Error</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="update-meta">
+                                <span class="update-date">2026-08-01</span>
+                                <span class="update-badge hardware">Hardware</span>
+                            </div>
+                            <p><strong>Jetson Orin Nano: boots to UEFI shell instead of Linux</strong> — applies to <strong>Robot 3</strong> (and the same symptoms on any other Jetson).</p>
+
+                            <h3>What you’re seeing</h3>
+                            <p>On startup, instead of booting normally, you get a screen like this:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">UEFI Interactive Shell v2.2
+EDK II
+UEFI v2.70 (EDK II, 0x00010000)
+Mapping table
+      FS1: Alias(s):F1:
+      FS0: Alias(s):F0:
+Press ESC in 5 seconds to skip startup.nsh or any other key to continue.
+Shell&gt;</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>This isn’t a specific “error code” — it means the board’s firmware (UEFI) tried to find a bootable operating system and couldn’t, so it dropped into this fallback shell instead. It’s usually fixable without reflashing anything. Work through the steps below <strong>in order</strong> — start at Fix 1, and only move to the next one if it doesn’t resolve the issue.</p>
+
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Fix 1: Boot manually from the shell (do this first)</h3>
+                                <p>Safe and no risk. Robot 3’s Jetson is normally connected only to a touchscreen, so you need a keyboard to type at the UEFI shell.</p>
+                                <ol>
+                                    <li>Connect a <strong>wired USB keyboard</strong> to the Jetson (prefer wired over a wireless USB keyboard — wireless receivers are less reliable in the UEFI shell).</li>
+                                    <li>Power on / boot the Jetson and wait until you see the <code>Shell&gt;</code> prompt.</li>
+                                </ol>
+                                <div class="tip">
+                                    <p><strong>If you have trouble reaching or staying at the <code>Shell&gt;</code> prompt:</strong> when you see <em>“Press ESC in 5 seconds to skip startup.nsh or any other key to continue,”</em> press <strong>any key</strong> during that 5-second countdown — don’t let it run out. That takes you to the <code>Shell&gt;</code> prompt, where you can type the commands below.</p>
+                                </div>
+                                <p>At the <code>Shell&gt;</code> prompt, list the available filesystems:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">map -r</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>You’ll see a few entries (<code>fs0:</code>, <code>fs1:</code>, <code>fs2:</code>, etc.) — some belong to the SD card, some to firmware volumes. Check each one:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">fs0:
+ls</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Repeat with <code>fs1:</code>, <code>fs2:</code>, etc. Look for a folder called <code>EFI\BOOT\</code> containing a file named <code>BOOTAA64.EFI</code>. Once you find it, boot it directly (replace <code>fs2:</code> with whichever filesystem actually had it):</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">fs2:\EFI\BOOT\BOOTAA64.EFI</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <ul>
+                                    <li><strong>If this boots you into Linux normally</strong> → the SD card itself is fine; it’s just not being prioritized correctly. Skip ahead to <strong>Fix 3</strong>.</li>
+                                    <li><strong>If none of the filesystems have that folder/file</strong> → continue to Fix 2.</li>
+                                </ul>
+                            </div>
+
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Fix 2: Reseat / check the SD card</h3>
+                                <ol>
+                                    <li>Power off the board completely.</li>
+                                    <li>Reseat the SD card — remove it and firmly reinsert it into the slot on the underside of the module.</li>
+                                    <li>Power back on and check <code>map -r</code> again at the <code>Shell&gt;</code> prompt to see if a new filesystem shows up.</li>
+                                    <li>If you have a USB drive handy, try plugging it in before powering on — this has been reported to “jolt” detection and let the SD card show up on some units.</li>
+                                    <li>If possible, try a different SD card. Some cards are flaky or incompatible with the Orin Nano.</li>
+                                </ol>
+                                <p>If the SD card still isn’t detected at all after this, move to <strong>Fix 5</strong> (reflash) — that points to either a bad card or a deeper firmware issue.</p>
+                            </div>
+
+                            <div class="step-card">
+                                <div class="step-number">3</div>
+                                <h3>Fix 3: Fix the boot order</h3>
+                                <p>This is the most common root cause when the board has <strong>both an SD card and an NVMe drive installed</strong>. The firmware checks both storage devices at boot and tries whichever is first in its list — if that happens to be the NVMe drive and it doesn’t have a valid, currently-bootable OS, the boot attempt fails and you land in the shell instead of falling back to the SD card.</p>
+                                <p><strong>Option A — from the boot menu:</strong></p>
+                                <ol>
+                                    <li>Reboot the board.</li>
+                                    <li>When prompted, press <kbd>ESC</kbd> to enter setup.</li>
+                                    <li>Go to <strong>Boot Maintenance Manager → Boot Options → Change Boot Order</strong>.</li>
+                                    <li>Move the SD card (may be labeled eMMC/SD) entry to the <strong>top</strong>, above any NVMe entry.</li>
+                                    <li>Save and exit, then reboot to test.</li>
+                                </ol>
+                                <p><strong>Option B — from inside Linux</strong> (use this if Fix 1 got you booted):</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">sudo efibootmgr -v</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>This lists all boot entries, something like:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">Boot000A* Jetson NVME: ... File(\EFI\BOOTAA64.EFI)
+Boot000B* Jetson eMMC: ... File(\EFI\BOOTAA64.EFI)</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Reorder so the SD/eMMC entry boots first (swap in the actual entry numbers shown on your device):</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">sudo efibootmgr -o 000B,000A</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>This is written to persistent firmware storage, so it should survive future reboots.</p>
+                            </div>
+
+                            <div class="step-card">
+                                <div class="step-number">4</div>
+                                <h3>Fix 4: Note what triggered it</h3>
+                                <p>This issue often shows up “out of nowhere” after the board has been working fine for a while. The most common trigger is <strong>the board losing power abruptly</strong> — a pulled cable, a dead battery, a brownout, or cutting power without a clean shutdown. That can reset the firmware’s saved boot order back to its defaults, which causes it to start trying the NVMe drive again.</p>
+                                <p>Where possible:</p>
+                                <ul>
+                                    <li>Always shut down cleanly (<code>sudo shutdown now</code>) before removing power.</li>
+                                    <li>If this device runs unattended / in the field and loses power unexpectedly on a regular basis, expect this to recur — re-apply <strong>Fix 3</strong> (SD card first in the boot order) after an unclean power loss.</li>
+                                </ul>
+                            </div>
+
+                            <div class="step-card">
+                                <div class="step-number">5</div>
+                                <h3>Fix 5: Still stuck? Time to reflash</h3>
+                                <p>If you’ve worked through Fixes 1–4 and:</p>
+                                <ul>
+                                    <li>the SD card genuinely never shows up in <code>map -r</code>, or</li>
+                                    <li>the board won’t boot even after fixing the boot order, or</li>
+                                    <li>the shell itself seems unresponsive or broken</li>
+                                </ul>
+                                <p>…then the SD card or the board’s underlying bootloader firmware likely needs to be reflashed from a host PC via NVIDIA SDK Manager. This is more involved and carries some risk if done incorrectly.</p>
+                                <div class="warning">
+                                    <p><strong>Stop here and reach out to Matt</strong> to help with this step.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible update-item">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
                         <span class="update-title">Motor Wire Check (Robot 1)</span>
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
