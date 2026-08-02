@@ -1,4 +1,4 @@
-image: /workspace/catkin_ws/src/mattbot_mcl/maps/caus_test.pgm
+image: /workspace/catkin_ws/src/mattbot_mcl/maps/caus_cafeteria.pgm
 resolution: 0.050000
 origin: [-50.000000, -50.000000, 0.000000]
 negate: 0
