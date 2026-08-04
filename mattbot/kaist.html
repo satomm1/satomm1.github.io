@@ -479,7 +479,7 @@ rosnode kill --all</pre>
                                 <span class="update-date">2026-08-04</span>
                                 <span class="update-badge software">Software</span>
                             </div>
-                            <p>Install the tools needed to build and flash motor / microcontroller firmware, clone the project, and set the robot defines. <strong>Stop after step 3</strong> until Matt finishes the remaining software updates.</p>
+                            <p>Install MPLAB X IDE and XC32, clone the MCU project, set the robot defines, then Clean and Build and program each robot with the SNAP programmer.</p>
                             <div class="step-card">
                                 <div class="step-number">1</div>
                                 <h3>Install MPLAB X IDE and the XC32 compiler</h3>
@@ -529,8 +529,19 @@ git clone https://github.com/satomm1/Robot.git</pre>
                                 </ul>
                                 <p>Save the file after making any changes.</p>
                             </div>
-                            <div class="warning">
-                                <p><strong>Stop here</strong> until Matt finishes the remaining software updates. Do not continue with flashing or further MCU steps until then.</p>
+                            <div class="step-card">
+                                <div class="step-number">4</div>
+                                <h3>Connect the SNAP and program the MCU</h3>
+                                <ol>
+                                    <li>Take the <strong>SNAP</strong> programmer. Plug the rainbow ribbon wires into it, starting at the side where Matt marked an arrow.</li>
+                                    <li>Connect the other end of these wires to the programming ports on the robot circuit board.</li>
+                                    <li>Connect the SNAP programmer to the computer with a <strong>micro-USB to USB</strong> cable.</li>
+                                    <li>In MPLAB X IDE, click <strong>Clean and Build</strong> (the button with the broom) at the top of the window. Wait for the build to finish.</li>
+                                    <li>Make sure the circuit board power is <strong>turned on</strong>.</li>
+                                    <li>Click <strong>Make and Program Device</strong> (the button with the down arrow onto the chip). If a pop-up asks you to select a programming device, choose the <strong>SNAP</strong> programmer.</li>
+                                </ol>
+                                <img src="images/mplab_clean_build_program.png" alt="MPLAB X IDE toolbar showing Clean and Build (broom) and Make and Program Device (down arrow) buttons" class="section-image">
+                                <p>If everything works, MPLAB should report that programming is complete. <strong>Repeat this for every robot</strong> (update <code>ROBOT_ID</code> in <code>ES_Configure.h</code> for each one before building and programming).</p>
                             </div>
                         </div>
                     </div>
