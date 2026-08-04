@@ -470,30 +470,66 @@ rosnode kill --all</pre>
 
                 <div class="collapsible update-item">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
-                        <span class="update-title">Motor Wire Check (Robot 1)</span>
+                        <span class="update-title">Motor Software Update (Preliminary)</span>
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
                     <div class="collapsible-panel">
                         <div class="collapsible-content">
                             <div class="update-meta">
-                                <span class="update-date">2026-07-31</span>
-                                <span class="update-badge hardware">Hardware</span>
+                                <span class="update-date">2026-08-04</span>
+                                <span class="update-badge software">Software</span>
                             </div>
-                            <p>On <strong>Robot 1</strong>, reseat the motor connectors and tidy the motor wiring. This may help with the robot’s tendency to <strong>veer right</strong>.</p>
-                            <img src="images/motor_wire_check_robot1.png" alt="Robot 1 motors with red arrows marking where the white plastic connectors plug into each motor" class="section-image">
+                            <p>Install the tools needed to build and flash motor / microcontroller firmware, clone the project, and set the robot defines. <strong>Stop after step 3</strong> until Matt finishes the remaining software updates.</p>
                             <div class="step-card">
                                 <div class="step-number">1</div>
-                                <h3>Press the connectors firmly onto the motors</h3>
-                                <p>At each motor, press down on the <strong>plastic part of the wire connector</strong> where it plugs into the matching plastic connector on the motor (see the red circles/arrows in the photo). Press <strong>gently but firmly</strong>. The easiest way is to put one finger on either side of the wires and push straight down.</p>
+                                <h3>Install MPLAB X IDE and the XC32 compiler</h3>
+                                <p>Do this on the <strong>central Windows machine</strong>. You can alternatively install on a Mac, but <strong>only if it is an Arm-based Apple silicon Mac</strong> (M1/M2/M3/etc.).</p>
+                                <ol>
+                                    <li>Go to the <a href="https://www.microchip.com/en-us/tools-resources/develop/mplab-x-ide" target="_blank" rel="noopener">MPLAB X IDE download page</a>.</li>
+                                    <li>Download the installer for your OS, then run it.</li>
+                                    <li>During installation, you will likely be asked whether to also download/install compilers. Install the <strong>XC32</strong> compiler. You do <strong>not</strong> need XC8, XC16, or other compilers.</li>
+                                </ol>
+                                <p>If you did not install XC32 during the MPLAB X IDE setup, download and install it separately from the <a href="https://www.microchip.com/en-us/tools-resources/develop/mplab-xc-compilers/xc32" target="_blank" rel="noopener">MPLAB XC32 compiler page</a>.</p>
                             </div>
                             <div class="step-card">
                                 <div class="step-number">2</div>
-                                <h3>Check the motor-to-board wiring</h3>
-                                <p>Inspect the six-wire bundles that run from each motor to the circuit board:</p>
+                                <h3>Download the code and open the MCU project in MPLAB</h3>
+                                <p>On the central Windows machine, open a terminal (Command Prompt or PowerShell), navigate to the Desktop, then clone the robot repository:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">cd %USERPROFILE%\Desktop
+git clone https://github.com/satomm1/Robot.git</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>In PowerShell, use <code>cd $env:USERPROFILE\Desktop</code> instead of <code>cd %USERPROFILE%\Desktop</code>.</p>
+                                <ol>
+                                    <li>Open <strong>MPLAB X IDE</strong>.</li>
+                                    <li>Click <strong>File → Open Project</strong>.</li>
+                                    <li>In the file explorer pop-up, navigate to the <code>Robot</code> folder you just cloned, then open the <strong>Software</strong> folder.</li>
+                                    <li>You should see an <strong>MCU</strong> folder with a different (project) icon. Select <strong>MCU</strong>, then click <strong>Open Project</strong>.</li>
+                                    <li>Open project properties via <strong>File → Project Properties</strong>. This should open on the configuration page by default (Family, Device, etc.). If not, click <strong>Conf</strong> in the left-hand column.</li>
+                                    <li>In the <strong>Device</strong> dropdown, select <code>PIC32MZ2048EFH144</code>.</li>
+                                    <li>On the same configuration page, in the <strong>Packs</strong> box, click the most recent version (something like <code>1.6.xxx</code> or <code>1.5.xxx</code>).</li>
+                                    <li>In <strong>Compiler Toolchain</strong>, click <strong>XC32</strong> (e.g. <code>v5.xx</code>, or whichever XC32 version you installed).</li>
+                                    <li>The selected pack and compiler should be highlighted in blue. Click <strong>Apply</strong>, then <strong>OK</strong>.</li>
+                                </ol>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">3</div>
+                                <h3>Open ES_Configure.h and set robot defines</h3>
+                                <p>In the left-hand column (Projects / file navigator), expand <strong>FrameworkHeaders</strong>, then double-click <code>ES_Configure.h</code> to open the file.</p>
+                                <p>Near the top of the file, double-check and update these <code>#define</code> values for the robot you are programming:</p>
                                 <ul>
-                                    <li>Try to keep these motor wires from <strong>crossing</strong> other cables — especially the white/green twisted-pair wires.</li>
-                                    <li>Spread the six motor wires apart a bit if they are tightly bunched together (they stay joined at the connector, but separating them along the run helps).</li>
+                                    <li><code>#define ROBOT_ID x</code> — set <code>x</code> to the ID of the robot you are programming.</li>
+                                    <li><code>#define PCB_REV 3</code> — make sure this is set to <code>3</code>.</li>
+                                    <li><code>#define MOTOR_TYPE 1</code> — make sure this is set to <code>1</code>.</li>
+                                    <li><code>#define WHEEL_RADIUS 0.041</code> — set this to <code>0.041</code>.</li>
+                                    <li><code>#define CAR 0</code> — should be <code>0</code>.</li>
+                                    <li><code>#define WHEEL_BASE 0.258572</code> — should be this value.</li>
                                 </ul>
+                                <p>Save the file after making any changes.</p>
+                            </div>
+                            <div class="warning">
+                                <p><strong>Stop here</strong> until Matt finishes the remaining software updates. Do not continue with flashing or further MCU steps until then.</p>
                             </div>
                         </div>
                     </div>
@@ -655,6 +691,37 @@ git pull</pre>
                 <div class="updates-divider" role="separator" aria-label="Previous updates">Previous updates</div>
 
                 <div id="updates-archive">
+
+                <div class="collapsible update-item">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        <span class="update-title">Motor Wire Check (Robot 1)</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="update-meta">
+                                <span class="update-date">2026-07-31</span>
+                                <span class="update-badge hardware">Hardware</span>
+                            </div>
+                            <p>On <strong>Robot 1</strong>, reseat the motor connectors and tidy the motor wiring. This may help with the robot’s tendency to <strong>veer right</strong>.</p>
+                            <img src="images/motor_wire_check_robot1.png" alt="Robot 1 motors with red arrows marking where the white plastic connectors plug into each motor" class="section-image">
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Press the connectors firmly onto the motors</h3>
+                                <p>At each motor, press down on the <strong>plastic part of the wire connector</strong> where it plugs into the matching plastic connector on the motor (see the red circles/arrows in the photo). Press <strong>gently but firmly</strong>. The easiest way is to put one finger on either side of the wires and push straight down.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Check the motor-to-board wiring</h3>
+                                <p>Inspect the six-wire bundles that run from each motor to the circuit board:</p>
+                                <ul>
+                                    <li>Try to keep these motor wires from <strong>crossing</strong> other cables — especially the white/green twisted-pair wires.</li>
+                                    <li>Spread the six motor wires apart a bit if they are tightly bunched together (they stay joined at the connector, but separating them along the run helps).</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="collapsible update-item">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
