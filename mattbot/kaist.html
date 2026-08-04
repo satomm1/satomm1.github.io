@@ -571,7 +571,7 @@ python3 generate_dds_map.py --map_file caus_cafeteria</pre>
                                 <p>This step only needs to be done <strong>once</strong>. Use any Jetson that already has the updated map. On the central machine, open an <strong>Ubuntu WSL 1</strong> terminal:</p>
                                 <div class="code-wrap">
                                     <pre class="code-block">cd ~/dds_robot_platform/dds
-scp jetson@&lt;jetson_ip&gt;:~/workspaces/catkin_ws/src/mattbot_mcl/map_json/current_map_mod.json .</pre>
+scp jetson@&lt;jetson_ip&gt;:~/workspaces/catkin_ws/src/mattbot_mcl/map_json/current_map_mod.json user_map.json</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
                                 <p>If <code>./start_scripts.sh</code> is currently running, restart it so the updated map is picked up (stop with <kbd>Ctrl+C</kbd>, then run <code>./start_scripts.sh</code> again from <code>~/dds_robot_platform/dds</code>).</p>
