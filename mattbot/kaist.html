@@ -547,7 +547,81 @@ git clone https://github.com/satomm1/Robot.git</pre>
                     </div>
                 </div>
 
-                <!-- Update Maps — hidden for now; remove the hidden attribute below to show again -->
+                <div class="collapsible update-item" id="mattbot-stack-pull-update">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        <span class="update-title">Robot software update via GUI (each Jetson) — last commit: <!--MATTBOT_STACK_LAST_COMMIT-->2026-08-03 07:41 KST<!--/MATTBOT_STACK_LAST_COMMIT--></span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="update-meta">
+                                <span class="update-date"><!--MATTBOT_STACK_LAST_DATE-->2026-08-03<!--/MATTBOT_STACK_LAST_DATE--></span>
+                                <span class="update-badge software">Software</span>
+                            </div>
+                            <p>After updating the central machine (see <strong>Pull latest dds_robot_platform</strong> in One Time Updates), pull the latest robot-side software on <strong>each Jetson</strong> using the Robot GUI. This must be done <strong>once per robot</strong> — the GUI update button applies only to the currently selected robot.</p>
+                            <p>The timestamp above is the most recent commit across <code>mattbot_bringup</code>, <code>mattbot_dds</code>, <code>mattbot_capture</code>, <code>mattbot_mcl</code>, and <code>mattbot_navigation</code> (<code>noetic</code>/<code>main</code>). If your robots were last updated before that time, run <strong>Software Update</strong> on each Jetson.</p>
+                            <p><strong>For each robot:</strong></p>
+                            <ol>
+                                <li>Power on the robot and confirm it appears in the Robot GUI (status dot yellow, not red).</li>
+                                <li>In the right-hand <strong>Robot Startup</strong> panel, select the robot from the <strong>saved addresses</strong> dropdown.</li>
+                                <li>Click <strong>Start Docker</strong> if the robot’s Docker container is not already running.</li>
+                                <li>Click <strong>Software Update</strong> and wait for the update to finish. Do not power off the robot until the GUI reports success.</li>
+                                <li>After the update completes, click <strong>Start ROS</strong> (with the <strong>KAIST</strong> checkbox enabled) if you need the robot running again.</li>
+                            </ol>
+                            <p>Repeat steps 1–5 for every robot in the fleet.</p>
+                            <div class="tip">
+                                <p>If an update fails, check that the Jetson host service is installed (see <strong>Previous updates → Install Jetson host service</strong>) and that the robot is reachable on the network.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible update-item" id="dds-rp-pull-update">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        <span class="update-title">Pull latest dds_robot_platform (central machine) — last commit: <!--DDS_RP_LAST_COMMIT-->2026-08-01 05:09 KST<!--/DDS_RP_LAST_COMMIT--></span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="update-meta">
+                                <span class="update-date"><!--DDS_RP_LAST_DATE-->2026-08-01<!--/DDS_RP_LAST_DATE--></span>
+                                <span class="update-badge software">Software</span>
+                            </div>
+                            <p>On the <strong>central operator workstation</strong>, update the existing <code>dds_robot_platform</code> clone in <strong>both</strong> WSL environments used at KAIST: <strong>Ubuntu WSL 1</strong> (DDS scripts) and plain <strong>Ubuntu</strong> / WSL2 (capture stack). Each distro has its own filesystem — run <code>git pull</code> in each one.</p>
+                            <p><strong>1. Ubuntu WSL 1</strong> — open an <strong>Ubuntu WSL 1</strong> tab in Windows Terminal (not plain Ubuntu / WSL2). If DNS/network lookups fail in WSL1, fix the resolver first, then pull:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">sudo sh -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf'
+cd ~/dds_robot_platform
+git pull</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p><strong>2. Ubuntu (WSL2)</strong> — open a plain <strong>Ubuntu</strong> tab in Windows Terminal (WSL2, used for capture):</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">cd ~/dds_robot_platform
+git pull</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <p>If <code>git pull</code> fails because of local changes in either environment, discard them and pull again:</p>
+                            <div class="code-wrap">
+                                <pre class="code-block">cd ~/dds_robot_platform
+git restore .
+git pull</pre>
+                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            </div>
+                            <div class="warning">
+                                <p><strong>After pulling updates:</strong> if the Local Stack Docker containers are already running, you <strong>must restart them</strong>. Stop them via the Robot GUI (Local Stack Docker <strong>Stop</strong>), then start them again with <strong>Start</strong>. If Capture was running, also <strong>Stop</strong> then <strong>Start</strong> Capture in the same Local Stack panel.</p>
+                                <p>If <code>./start_scripts.sh</code> is running in the Ubuntu WSL 1 terminal, stop it with <kbd>Ctrl+C</kbd>, then run <code>./start_scripts.sh</code> again from <code>~/dds_robot_platform/dds</code>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                </div><!-- #updates-new -->
+
+                <div class="updates-divider" role="separator" aria-label="Previous updates">Previous updates</div>
+
+                <div id="updates-archive">
+
                 <div class="collapsible update-item">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
                         <span class="update-title">Update Maps</span>
@@ -628,81 +702,6 @@ scp jetson@&lt;jetson_ip&gt;:~/workspaces/catkin_ws/src/mattbot_mcl/map_json/cur
                         </div>
                     </div>
                 </div>
-
-                <div class="collapsible update-item" id="mattbot-stack-pull-update">
-                    <button type="button" class="collapsible-trigger" aria-expanded="false">
-                        <span class="update-title">Robot software update via GUI (each Jetson) — last commit: <!--MATTBOT_STACK_LAST_COMMIT-->2026-08-03 07:41 KST<!--/MATTBOT_STACK_LAST_COMMIT--></span>
-                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                    </button>
-                    <div class="collapsible-panel">
-                        <div class="collapsible-content">
-                            <div class="update-meta">
-                                <span class="update-date"><!--MATTBOT_STACK_LAST_DATE-->2026-08-03<!--/MATTBOT_STACK_LAST_DATE--></span>
-                                <span class="update-badge software">Software</span>
-                            </div>
-                            <p>After updating the central machine (see <strong>Pull latest dds_robot_platform</strong> in One Time Updates), pull the latest robot-side software on <strong>each Jetson</strong> using the Robot GUI. This must be done <strong>once per robot</strong> — the GUI update button applies only to the currently selected robot.</p>
-                            <p>The timestamp above is the most recent commit across <code>mattbot_bringup</code>, <code>mattbot_dds</code>, <code>mattbot_capture</code>, <code>mattbot_mcl</code>, and <code>mattbot_navigation</code> (<code>noetic</code>/<code>main</code>). If your robots were last updated before that time, run <strong>Software Update</strong> on each Jetson.</p>
-                            <p><strong>For each robot:</strong></p>
-                            <ol>
-                                <li>Power on the robot and confirm it appears in the Robot GUI (status dot yellow, not red).</li>
-                                <li>In the right-hand <strong>Robot Startup</strong> panel, select the robot from the <strong>saved addresses</strong> dropdown.</li>
-                                <li>Click <strong>Start Docker</strong> if the robot’s Docker container is not already running.</li>
-                                <li>Click <strong>Software Update</strong> and wait for the update to finish. Do not power off the robot until the GUI reports success.</li>
-                                <li>After the update completes, click <strong>Start ROS</strong> (with the <strong>KAIST</strong> checkbox enabled) if you need the robot running again.</li>
-                            </ol>
-                            <p>Repeat steps 1–5 for every robot in the fleet.</p>
-                            <div class="tip">
-                                <p>If an update fails, check that the Jetson host service is installed (see <strong>Previous updates → Install Jetson host service</strong>) and that the robot is reachable on the network.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="collapsible update-item" id="dds-rp-pull-update">
-                    <button type="button" class="collapsible-trigger" aria-expanded="false">
-                        <span class="update-title">Pull latest dds_robot_platform (central machine) — last commit: <!--DDS_RP_LAST_COMMIT-->2026-08-01 05:09 KST<!--/DDS_RP_LAST_COMMIT--></span>
-                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                    </button>
-                    <div class="collapsible-panel">
-                        <div class="collapsible-content">
-                            <div class="update-meta">
-                                <span class="update-date"><!--DDS_RP_LAST_DATE-->2026-08-01<!--/DDS_RP_LAST_DATE--></span>
-                                <span class="update-badge software">Software</span>
-                            </div>
-                            <p>On the <strong>central operator workstation</strong>, update the existing <code>dds_robot_platform</code> clone in <strong>both</strong> WSL environments used at KAIST: <strong>Ubuntu WSL 1</strong> (DDS scripts) and plain <strong>Ubuntu</strong> / WSL2 (capture stack). Each distro has its own filesystem — run <code>git pull</code> in each one.</p>
-                            <p><strong>1. Ubuntu WSL 1</strong> — open an <strong>Ubuntu WSL 1</strong> tab in Windows Terminal (not plain Ubuntu / WSL2). If DNS/network lookups fail in WSL1, fix the resolver first, then pull:</p>
-                            <div class="code-wrap">
-                                <pre class="code-block">sudo sh -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf'
-cd ~/dds_robot_platform
-git pull</pre>
-                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
-                            </div>
-                            <p><strong>2. Ubuntu (WSL2)</strong> — open a plain <strong>Ubuntu</strong> tab in Windows Terminal (WSL2, used for capture):</p>
-                            <div class="code-wrap">
-                                <pre class="code-block">cd ~/dds_robot_platform
-git pull</pre>
-                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
-                            </div>
-                            <p>If <code>git pull</code> fails because of local changes in either environment, discard them and pull again:</p>
-                            <div class="code-wrap">
-                                <pre class="code-block">cd ~/dds_robot_platform
-git restore .
-git pull</pre>
-                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
-                            </div>
-                            <div class="warning">
-                                <p><strong>After pulling updates:</strong> if the Local Stack Docker containers are already running, you <strong>must restart them</strong>. Stop them via the Robot GUI (Local Stack Docker <strong>Stop</strong>), then start them again with <strong>Start</strong>. If Capture was running, also <strong>Stop</strong> then <strong>Start</strong> Capture in the same Local Stack panel.</p>
-                                <p>If <code>./start_scripts.sh</code> is running in the Ubuntu WSL 1 terminal, stop it with <kbd>Ctrl+C</kbd>, then run <code>./start_scripts.sh</code> again from <code>~/dds_robot_platform/dds</code>.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                </div><!-- #updates-new -->
-
-                <div class="updates-divider" role="separator" aria-label="Previous updates">Previous updates</div>
-
-                <div id="updates-archive">
 
                 <div class="collapsible update-item">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
