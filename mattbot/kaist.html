@@ -470,47 +470,35 @@ rosnode kill --all</pre>
 
                 <div class="collapsible update-item">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
-                        <span class="update-title">Motor Software Update (Preliminary)</span>
+                        <span class="update-title">Motor Software Update</span>
                         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                     </button>
                     <div class="collapsible-panel">
                         <div class="collapsible-content">
                             <div class="update-meta">
-                                <span class="update-date">2026-08-04</span>
+                                <span class="update-date">2026-08-10</span>
                                 <span class="update-badge software">Software</span>
                             </div>
-                            <p>Install MPLAB X IDE and XC32, clone the MCU project, set the robot defines, then Clean and Build and program each robot with the SNAP programmer.</p>
+                            <p>Pull the latest MCU firmware, confirm the robot defines, then Clean and Build and program each robot with the SNAP programmer. If you have not yet installed MPLAB X IDE / XC32 or cloned the repo, complete <strong>Previous updates → Motor Software Update — MPLAB install and project setup</strong> first.</p>
                             <div class="step-card">
                                 <div class="step-number">1</div>
-                                <h3>Install MPLAB X IDE and the XC32 compiler</h3>
-                                <p>Do this on the <strong>central Windows machine</strong>. You can alternatively install on a Mac, but <strong>only if it is an Arm-based Apple silicon Mac</strong> (M1/M2/M3/etc.).</p>
-                                <ol>
-                                    <li>Go to the <a href="https://www.microchip.com/en-us/tools-resources/develop/mplab-x-ide" target="_blank" rel="noopener">MPLAB X IDE download page</a>.</li>
-                                    <li>Download the installer for your OS, then run it.</li>
-                                    <li>During installation, you will likely be asked whether to also download/install compilers. Install the <strong>XC32</strong> compiler. You do <strong>not</strong> need XC8, XC16, or other compilers.</li>
-                                </ol>
-                                <p>If you did not install XC32 during the MPLAB X IDE setup, download and install it separately from the <a href="https://www.microchip.com/en-us/tools-resources/develop/mplab-xc-compilers/xc32" target="_blank" rel="noopener">MPLAB XC32 compiler page</a>.</p>
+                                <h3>Pull the latest Robot repository</h3>
+                                <p>On the central Windows machine, open Command Prompt or PowerShell and pull the latest commits from the <code>Robot</code> repo on the Desktop:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">cd %USERPROFILE%\Desktop\Robot
+git pull</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>In PowerShell, use <code>cd $env:USERPROFILE\Desktop\Robot</code> instead of <code>cd %USERPROFILE%\Desktop\Robot</code>.</p>
                             </div>
                             <div class="step-card">
                                 <div class="step-number">2</div>
-                                <h3>Download the code and open the MCU project in MPLAB</h3>
-                                <p>On the central Windows machine, open a terminal (Command Prompt or PowerShell), navigate to the Desktop, then clone the robot repository:</p>
-                                <div class="code-wrap">
-                                    <pre class="code-block">cd %USERPROFILE%\Desktop
-git clone https://github.com/satomm1/Robot.git</pre>
-                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
-                                </div>
-                                <p>In PowerShell, use <code>cd $env:USERPROFILE\Desktop</code> instead of <code>cd %USERPROFILE%\Desktop</code>.</p>
+                                <h3>Open the MCU project in MPLAB (if needed)</h3>
+                                <p>If the <strong>MCU</strong> project is already open in MPLAB X IDE, skip this step. Otherwise:</p>
                                 <ol>
                                     <li>Open <strong>MPLAB X IDE</strong>.</li>
                                     <li>Click <strong>File → Open Project</strong>.</li>
-                                    <li>In the file explorer pop-up, navigate to the <code>Robot</code> folder you just cloned, then open the <strong>Software</strong> folder.</li>
-                                    <li>You should see an <strong>MCU</strong> folder with a different (project) icon. Select <strong>MCU</strong>, then click <strong>Open Project</strong>.</li>
-                                    <li>Open project properties via <strong>File → Project Properties</strong>. This should open on the configuration page by default (Family, Device, etc.). If not, click <strong>Conf</strong> in the left-hand column.</li>
-                                    <li>In the <strong>Device</strong> dropdown, select <code>PIC32MZ2048EFH144</code>.</li>
-                                    <li>On the same configuration page, in the <strong>Packs</strong> box, click the most recent version (something like <code>1.6.xxx</code> or <code>1.5.xxx</code>).</li>
-                                    <li>In <strong>Compiler Toolchain</strong>, click <strong>XC32</strong> (e.g. <code>v5.xx</code>, or whichever XC32 version you installed).</li>
-                                    <li>The selected pack and compiler should be highlighted in blue. Click <strong>Apply</strong>, then <strong>OK</strong>.</li>
+                                    <li>Navigate to <code>Desktop\Robot\Software</code>, select the <strong>MCU</strong> folder (project icon), then click <strong>Open Project</strong>.</li>
                                 </ol>
                             </div>
                             <div class="step-card">
@@ -542,6 +530,9 @@ git clone https://github.com/satomm1/Robot.git</pre>
                                 </ol>
                                 <img src="images/mplab_clean_build_program.png" alt="MPLAB X IDE toolbar showing Clean and Build (broom) and Make and Program Device (down arrow) buttons" class="section-image">
                                 <p>If everything works, MPLAB should report that programming is complete. <strong>Repeat this for every robot</strong> (update <code>ROBOT_ID</code> in <code>ES_Configure.h</code> for each one before building and programming).</p>
+                                <div class="tip">
+                                    <p><strong>If programming does not complete:</strong> try flipping the ribbon cable connection at the circuit board 180 degrees (reverse the orientation) so the SNAP wires seat correctly on the programming header, then try <strong>Make and Program Device</strong> again.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -626,6 +617,55 @@ git pull</pre>
                     <div class="collapsible-panel">
                         <div class="collapsible-content">
                 <div id="updates-archive">
+
+                <div class="collapsible update-item">
+                    <button type="button" class="collapsible-trigger" aria-expanded="false">
+                        <span class="update-title">Motor Software Update — MPLAB install and project setup</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="collapsible-panel">
+                        <div class="collapsible-content">
+                            <div class="update-meta">
+                                <span class="update-date">2026-08-04</span>
+                                <span class="update-badge software">Software</span>
+                            </div>
+                            <p>One-time setup: install MPLAB X IDE and XC32, clone the <code>Robot</code> repo, and configure the MCU project. Continue with the current <strong>Motor Software Update</strong> in One Time Updates after this is done.</p>
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Install MPLAB X IDE and the XC32 compiler</h3>
+                                <p>Do this on the <strong>central Windows machine</strong>. You can alternatively install on a Mac, but <strong>only if it is an Arm-based Apple silicon Mac</strong> (M1/M2/M3/etc.).</p>
+                                <ol>
+                                    <li>Go to the <a href="https://www.microchip.com/en-us/tools-resources/develop/mplab-x-ide" target="_blank" rel="noopener">MPLAB X IDE download page</a>.</li>
+                                    <li>Download the installer for your OS, then run it.</li>
+                                    <li>During installation, you will likely be asked whether to also download/install compilers. Install the <strong>XC32</strong> compiler. You do <strong>not</strong> need XC8, XC16, or other compilers.</li>
+                                </ol>
+                                <p>If you did not install XC32 during the MPLAB X IDE setup, download and install it separately from the <a href="https://www.microchip.com/en-us/tools-resources/develop/mplab-xc-compilers/xc32" target="_blank" rel="noopener">MPLAB XC32 compiler page</a>.</p>
+                            </div>
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Download the code and open the MCU project in MPLAB</h3>
+                                <p>On the central Windows machine, open a terminal (Command Prompt or PowerShell), navigate to the Desktop, then clone the robot repository:</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">cd %USERPROFILE%\Desktop
+git clone https://github.com/satomm1/Robot.git</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>In PowerShell, use <code>cd $env:USERPROFILE\Desktop</code> instead of <code>cd %USERPROFILE%\Desktop</code>.</p>
+                                <ol>
+                                    <li>Open <strong>MPLAB X IDE</strong>.</li>
+                                    <li>Click <strong>File → Open Project</strong>.</li>
+                                    <li>In the file explorer pop-up, navigate to the <code>Robot</code> folder you just cloned, then open the <strong>Software</strong> folder.</li>
+                                    <li>You should see an <strong>MCU</strong> folder with a different (project) icon. Select <strong>MCU</strong>, then click <strong>Open Project</strong>.</li>
+                                    <li>Open project properties via <strong>File → Project Properties</strong>. This should open on the configuration page by default (Family, Device, etc.). If not, click <strong>Conf</strong> in the left-hand column.</li>
+                                    <li>In the <strong>Device</strong> dropdown, select <code>PIC32MZ2048EFH144</code>.</li>
+                                    <li>On the same configuration page, in the <strong>Packs</strong> box, click the most recent version (something like <code>1.6.xxx</code> or <code>1.5.xxx</code>).</li>
+                                    <li>In <strong>Compiler Toolchain</strong>, click <strong>XC32</strong> (e.g. <code>v5.xx</code>, or whichever XC32 version you installed).</li>
+                                    <li>The selected pack and compiler should be highlighted in blue. Click <strong>Apply</strong>, then <strong>OK</strong>.</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="collapsible update-item">
                     <button type="button" class="collapsible-trigger" aria-expanded="false">
