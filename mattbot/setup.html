@@ -422,17 +422,55 @@ ssh YOUR_USER@JETSON_IP 'chmod +x ~/jetson-host-install.sh'</pre>
                     <div class="collapsible-panel">
                         <div class="collapsible-content">
                             <div class="tip">
-                                <p>Run all of the following on the <strong>Jetson host</strong> (outside the Docker container), not inside <code>ros_noetic</code> or other containers.</p>
+                                <p>Run all of the following on the <strong>Jetson host</strong> (outside the Docker container), not inside <code>ros_noetic</code> or other containers. Complete <strong>Jetson host service (GUI startup)</strong> first.</p>
                             </div>
-                            <div class="code-wrap">
-                                <pre class="code-block">git clone https://github.com/satomm1/mattbot_display.git
-cd mattbot_display
-pip3 install pygame
-pip3 install -U pyinstaller
-python3 display_app.py</pre>
-                                <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                            <p>The <a href="https://github.com/satomm1/mattbot_display" target="_blank" rel="noopener">mattbot_display</a> touch-screen app shows messages from the robot backend, speaks them with local Piper TTS, and provides <strong>Start Robot</strong> / <strong>Stop Robot</strong> controls via the host services on ports <strong>8081</strong> (Docker) and <strong>8080</strong> (ROS). The installer runs Python directly from the repo — no PyInstaller build is needed.</p>
+
+                            <div class="step-card">
+                                <div class="step-number">1</div>
+                                <h3>Clone the repository</h3>
+                                <div class="code-wrap">
+                                    <pre class="code-block">cd ~
+git clone https://github.com/satomm1/mattbot_display.git
+cd mattbot_display</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>If the repo already exists: <code>cd ~/mattbot_display &amp;&amp; git pull</code>.</p>
                             </div>
-                            <p>Build desktop executable: <code>pyinstaller display_app.spec</code>, then <code>cp dist/display_app ~/Desktop</code>. After copying to the Desktop, you can launch the display app by <strong>double-tapping</strong> its icon on the touchscreen. Adjust <code>AUDIODEV</code> in the script if needed (see <a href="https://github.com/satomm1/Robot/blob/main/Jetson/README.md" target="_blank" rel="noopener">Jetson README</a>).</p>
+
+                            <div class="step-card">
+                                <div class="step-number">2</div>
+                                <h3>Run the installer</h3>
+                                <p>From the repo root. This installs missing packages (<code>python3-tk</code>, <code>alsa-utils</code>, <code>x11-xserver-utils</code>), downloads Piper and the voice model, enables the <code>mattbot-display</code> user systemd service, and creates a desktop shortcut.</p>
+                                <div class="code-wrap">
+                                    <pre class="code-block">chmod +x scripts/install.sh
+sudo ./scripts/install.sh</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>The service runs from <code>~/mattbot_display</code>. Override the path with <code>INSTALL_DIR=/opt/mattbot/display sudo ./scripts/install.sh</code> only if you installed somewhere else.</p>
+                            </div>
+
+                            <div class="step-card">
+                                <div class="step-number">3</div>
+                                <h3>Verify</h3>
+                                <div class="code-wrap">
+                                    <pre class="code-block">systemctl --user status mattbot-display
+curl -s http://127.0.0.1:8081/status</pre>
+                                    <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
+                                </div>
+                                <p>Logs: <code>journalctl --user -u mattbot-display -n 30</code>. If you see <code>couldn't connect to display ":0"</code>, log in to the desktop first, then <code>systemctl --user restart mattbot-display</code>. Auto-login is recommended for kiosk use.</p>
+                            </div>
+
+                            <div class="step-card">
+                                <div class="step-number">4</div>
+                                <h3>Daily use</h3>
+                                <p>After reboot, the display should start when the graphical session is up. Use the on-screen <strong>Exit</strong> button to return to the desktop (the service stops and does not auto-restart on a clean exit). Start it again by double-clicking <strong>Start-Mattbot-Display.sh</strong> on the desktop (or <strong>Mattbot Display</strong> in the application menu). After pulling code updates, use the same shortcut or <code>./scripts/restart_display.sh</code> — no rebuild or copy step.</p>
+                                <p>On LXDE / PCManFM (common on Jetson), double-click the <code>.sh</code> shortcut rather than the <code>.desktop</code> file. If it opens in a text editor, choose <strong>Execute</strong> / <strong>Run</strong> once, or re-run <code>sudo ./scripts/setup_desktop_shortcut.sh</code>.</p>
+                            </div>
+
+                            <div class="tip">
+                                <p>Audio defaults to the first HDMI output from <code>aplay -l</code>. Override with <code>MATTBOT_ALSA_DEVICE</code> (e.g. <code>plughw:2,3</code>) in <code>~/.config/systemd/user/mattbot-display.service</code> or <code>/etc/default/mattbot-display</code>. Full configuration is in the <a href="https://github.com/satomm1/mattbot_display/blob/main/README.md" target="_blank" rel="noopener">mattbot_display README</a>.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
