@@ -104,7 +104,7 @@ sudo apt install nano</pre>
 sudo python3 jetson-io.py</pre>
                                     <button type="button" class="copy-btn" aria-label="Copy code">Copy</button>
                                 </div>
-                                <p>Manually configure the header: activate <strong>SPI1</strong> and <strong>I2S</strong>. Reboot when done.</p>
+                                <p>Manually configure the header: activate <strong>SPI1</strong>, <strong>SPI3</strong>, and <strong>I2S</strong>. Reboot when done.</p>
                             </div>
                             <div class="step-card">
                                 <div class="step-number">6</div>
@@ -133,22 +133,23 @@ ls /dev/spidev*</pre>
                             <div class="step-card">
                                 <div class="step-number">8–9</div>
                                 <h3>Wiring</h3>
-                                <h4>Jetson ↔ main board (SPI1)</h4>
-                                <p>Connect the main board’s 6-position Molex (first five positions) to the Jetson 40-pin header with dupont wires. Match SPI1 on the Jetson to the PCB labels:</p>
+                                <h4>Jetson ↔ main board (SPI1 or SPI3)</h4>
+                                <p>Connect the main board’s 6-position Molex (first five positions) to the Jetson 40-pin header with dupont wires. Use either SPI1 or SPI3 (set <code>MCU_SPI</code> to match later). Map the chosen SPI pins to the PCB labels:</p>
                                 <table class="pin-table">
                                     <thead>
                                         <tr>
                                             <th>Jetson pin name</th>
-                                            <th>Jetson GPIO</th>
+                                            <th>SPI1 GPIO</th>
+                                            <th>SPI3 GPIO</th>
                                             <th>PCB pin name</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr><td>SPI1_SCLK</td><td>23</td><td>SCK</td></tr>
-                                        <tr><td>SPI1_CS0</td><td>24</td><td>SS</td></tr>
-                                        <tr><td>SPI1_din</td><td>21</td><td>SDO</td></tr>
-                                        <tr><td>SPI1_dout</td><td>19</td><td>SDI</td></tr>
-                                        <tr><td>GND</td><td>25</td><td>GND</td></tr>
+                                        <tr><td>SCLK</td><td>23</td><td>13</td><td>SCK</td></tr>
+                                        <tr><td>CS0</td><td>24</td><td>18</td><td>SS</td></tr>
+                                        <tr><td>DIN</td><td>21</td><td>22</td><td>SDO</td></tr>
+                                        <tr><td>DOUT</td><td>19</td><td>37</td><td>SDI</td></tr>
+                                        <tr><td>GND</td><td>25</td><td>20</td><td>GND</td></tr>
                                     </tbody>
                                 </table>
                                 <div class="warning"><strong>Note:</strong> If using twisted-pair wire, <strong>do not</strong> twist the SDO and SDI wires together — that can cause crosstalk and degrade SPI communication.</div>
@@ -288,7 +289,7 @@ source devel/setup.bash</pre>
                                 <div class="code-wrap">
                                     <pre class="code-block">export ROS_IP=              # this Jetson's WiFi IP address
 export ROBOT_ID=              # unique integer for this robot (match MCU robot ID)
-export MCU_SPI=               # 1 or 3 — SPI used for MCU comms (SPI1 on header → usually 1)
+export MCU_SPI=               # 1 or 3 — SPI used for MCU comms (SPI1 wiring → 1, SPI3 wiring → 3)
 export CAMERA_TYPE=           # astra_pro_plus, astra, or astra_pro
 export ROBOT_HEIGHT=          # short or tall
 export ROBOT_CAR=             # true for car configuration, false otherwise</pre>
