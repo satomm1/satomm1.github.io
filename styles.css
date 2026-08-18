@@ -54,10 +54,11 @@ body {
 }
 
 .header .profile-photo {
-    width: 148px;
-    height: 148px;
+    width: 160px;
+    height: 160px;
+    box-sizing: content-box;
     object-fit: cover;
-    object-position: center top;
+    object-position: center center;
     border-radius: 50%;
     margin-bottom: 1.5rem;
     border: 3px solid rgba(247, 245, 242, 0.35);
@@ -432,8 +433,8 @@ body {
     }
 
     .header .profile-photo {
-        width: 120px;
-        height: 120px;
+        width: 132px;
+        height: 132px;
     }
 
     .header .subtitle {
