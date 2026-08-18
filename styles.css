@@ -185,6 +185,10 @@ body {
 }
 
 .publication-preview li {
+    margin-bottom: 1rem;
+}
+
+.publication-preview li:last-child {
     margin-bottom: 0;
 }
 
