@@ -419,6 +419,46 @@ body {
     height: 20px;
 }
 
+.back-to-top {
+    position: fixed;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    z-index: 20;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--paper-edge);
+    border-radius: 50%;
+    background: rgba(26, 36, 48, 0.9);
+    color: var(--paper);
+    font-family: var(--font-body);
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(8px);
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.back-to-top.is-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.back-to-top:hover {
+    background: rgba(47, 66, 88, 0.96);
+    border-color: rgba(247, 245, 242, 0.35);
+}
+
+.back-to-top:focus-visible {
+    outline: 2px solid var(--paper);
+    outline-offset: 3px;
+}
+
 @keyframes rise {
     from {
         opacity: 0;
@@ -438,7 +478,8 @@ body {
     }
 
     .project-card,
-    .social-links a {
+    .social-links a,
+    .back-to-top {
         transition: none;
     }
 }
@@ -487,5 +528,10 @@ body {
 
     .social-links a {
         margin: 0 0.55rem;
+    }
+
+    .back-to-top {
+        right: 1rem;
+        bottom: 1rem;
     }
 }

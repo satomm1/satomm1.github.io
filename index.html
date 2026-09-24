@@ -127,6 +127,7 @@
             <a href="https://github.com/satomm1" title="GitHub" target="_blank" rel="noopener noreferrer"><img src="images/github.svg" alt="GitHub"></a>
         </section>
     </div>
+    <button type="button" class="back-to-top" aria-label="Back to top">↑</button>
     <script>
         document.querySelector('.less-toggle').addEventListener('click', function () {
             const details = this.closest('details');
@@ -139,6 +140,17 @@
                 e.stopPropagation();
                 window.open(link.href, '_blank', 'noopener,noreferrer');
             });
+        });
+
+        const backToTop = document.querySelector('.back-to-top');
+        const showBackToTop = function () {
+            backToTop.classList.toggle('is-visible', window.scrollY > 320);
+        };
+        showBackToTop();
+        window.addEventListener('scroll', showBackToTop, { passive: true });
+        backToTop.addEventListener('click', function () {
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
         });
     </script>
 </body>
