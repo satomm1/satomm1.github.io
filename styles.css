@@ -4,7 +4,7 @@
     --bg-lift: #2f4258;
     --ink: #1c2834;
     --ink-soft: #4a5a6a;
-    --ink-faint: #6b7c8c;
+    --ink-faint: #566370;
     --paper: #f3f5f7;
     --paper-edge: rgba(255, 255, 255, 0.08);
     --accent: #9e2a2b;
@@ -91,9 +91,7 @@ body {
     animation: rise 0.8s ease-out 0.12s both;
 }
 
-.panel section + section,
-.panel details + section,
-.panel section + details {
+.panel section + section {
     margin-top: 2.25rem;
     padding-top: 2.25rem;
     border-top: 1px solid var(--line);
@@ -151,33 +149,8 @@ body {
 }
 
 /* Publications */
-.publications summary {
-    cursor: pointer;
-    list-style: none;
-    user-select: none;
-}
-
-.publications summary::-webkit-details-marker {
-    display: none;
-}
-
-.publications-title {
-    display: block;
-    font-family: var(--font-display);
-    font-size: 1.55rem;
-    font-weight: 500;
-    color: var(--ink);
-    margin-bottom: 1rem;
-    letter-spacing: -0.01em;
-}
-
-.publication-preview {
-    display: block;
-    text-align: left;
-}
-
 .publication-preview ol,
-.publications > ol {
+.publication-list {
     color: var(--ink-soft);
     font-size: 0.98rem;
     line-height: 1.55;
@@ -185,23 +158,13 @@ body {
     padding-left: 1.35rem;
 }
 
-.publication-preview li {
+.publication-preview li,
+.publication-list li {
     margin-bottom: 1rem;
 }
 
-.publication-preview li:last-child {
-    margin-bottom: 0;
-}
-
-.publications > ol {
-    margin-top: 0.25rem;
-}
-
-.publications > ol li {
-    margin-bottom: 1rem;
-}
-
-.publications > ol li:last-child {
+.publication-preview li:last-child,
+.publication-list li:last-child {
     margin-bottom: 0;
 }
 
@@ -209,33 +172,15 @@ body {
     font-style: italic;
 }
 
-.more-indicator {
-    display: inline-block;
-    margin-top: 1rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--accent);
-    letter-spacing: 0.02em;
-}
-
-.more-indicator::after {
-    content: " \2193";
-}
-
-.publications[open] .publication-preview,
-.publications[open] .more-indicator {
+.publications.is-open .publication-preview {
     display: none;
 }
 
-.publications summary:hover .publications-title,
-.publications summary:hover .more-indicator {
-    color: var(--accent-soft);
-}
-
-.less-toggle {
-    display: block;
-    margin: 1.25rem 0 0;
-    padding: 0;
+.publications-toggle {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.35rem 0;
+    min-height: 2rem;
     border: none;
     background: none;
     font-family: inherit;
@@ -246,7 +191,15 @@ body {
     letter-spacing: 0.02em;
 }
 
-.less-toggle:hover {
+.publications-toggle::after {
+    content: " \2193";
+}
+
+.publications.is-open .publications-toggle::after {
+    content: " \2191";
+}
+
+.publications-toggle:hover {
     color: var(--accent-soft);
 }
 
@@ -412,11 +365,59 @@ body {
     opacity: 0.9;
 }
 
+.social-links a[title="LinkedIn"] {
+    background: var(--paper);
+    border-color: transparent;
+}
+
+.social-links a[title="LinkedIn"]:hover {
+    background: #ffffff;
+    border-color: transparent;
+}
+
 .social-links a[title="LinkedIn"] img {
-    /* LinkedIn blue bug - keep brand color */
     filter: none;
     width: 20px;
     height: 20px;
+}
+
+.demo-figure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.45rem;
+    margin: 0;
+}
+
+.media-toggle {
+    border: 1px solid rgba(247, 245, 242, 0.45);
+    border-radius: 999px;
+    background: transparent;
+    color: rgba(247, 245, 242, 0.92);
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1;
+    min-height: 2rem;
+    padding: 0.4rem 0.75rem;
+    cursor: pointer;
+}
+
+.media-toggle:hover {
+    color: #f0c4c0;
+    border-color: #f0c4c0;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
 .back-to-top {
@@ -471,6 +472,10 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
     .header,
     .panel,
     .social-links {

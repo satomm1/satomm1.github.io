@@ -22,6 +22,7 @@
             <p class="subtitle">PhD Student, Stanford Civil &amp; Environmental Engineering</p>
         </header>
 
+        <main>
         <div class="panel">
             <section class="about">
                 <h2>About Me</h2>
@@ -46,21 +47,18 @@
                 </ul>
             </section>
 
-            <details class="publications">
-                <summary>
-                    <span class="publications-title">Publications</span>
-                    <span class="publication-preview">
-                        <ol>
+            <section class="publications" id="publications">
+                <h2>Publications</h2>
+                <div class="publication-preview">
+                    <ol>
                             <li><strong>M. Sato</strong> and K. Law, “LPBF Melt Pool Prediction Using Quantum Computers and Machine Learning,” <em>2026 IEEE International Conference on Quantum Computing and Engineering (QCE)</em>, Toronto, CAN, September 13–18, 2026. doi: <a href="https://doi.org/10.1109/QCE68830.2026.00362" target="_blank" rel="noopener noreferrer">10.1109/QCE68830.2026.00362</a>. [<a href="https://eil.stanford.edu/sites/g/files/sbiybj34491/files/media/file/lpbf_quantum_preprint.pdf" target="_blank" rel="noopener noreferrer">PDF</a>]</li>
                             <li><strong>M. Sato</strong> and K. Law, “Socially Consistent Multi-Robot Navigation Using Decoupled Planning and Trajectory Coordination,” <em>Civil Engineering Sciences</em>, vol. 2, no. 25, September 2026, doi: <a href="https://doi.org/10.34133/cesci.0025" target="_blank" rel="noopener noreferrer">10.34133/cesci.0025</a>.</li>
                             <li><strong>M. Sato</strong> and K. Law, “A Hybrid Quantum-Classical Approach for Melt Pool Prediction in Laser Powder Bed Fusion,” <em>Proceedings of the ASME 2026 International Design Engineering Technical Conferences and Computers and Information in Engineering Conference</em>, Houston, TX, Aug. 23–26, 2026, doi: <a href="https://doi.org/10.48550/arXiv.2606.23719" target="_blank" rel="noopener noreferrer">10.48550/arXiv.2606.23719</a>.</li>
                             <li><strong>M. Sato</strong> and K. Law, “A Mobile Robot Framework for Learning to Detect New Objects with Large Language Models,” <em>J. Comput. Inf. Sci. Eng.</em>, vol. 26, no. 6, June 2026, doi: <a href="https://doi.org/10.1115/1.4071863" target="_blank" rel="noopener noreferrer">10.1115/1.4071863</a>.</li>
 
                         </ol>
-                    </span>
-                    <span class="more-indicator">More</span>
-                </summary>
-                <ol>
+                </div>
+                <ol class="publication-list" id="publication-list" hidden>
                     <li><strong>M. Sato</strong> and K. Law, “LPBF Melt Pool Prediction Using Quantum Computers and Machine Learning,” <em>2026 IEEE International Conference on Quantum Computing and Engineering (QCE)</em>, Toronto, CAN, September 13–18, 2026. doi: <a href="https://doi.org/10.1109/QCE68830.2026.00362" target="_blank" rel="noopener noreferrer">10.1109/QCE68830.2026.00362</a>. [<a href="https://eil.stanford.edu/sites/g/files/sbiybj34491/files/media/file/lpbf_quantum_preprint.pdf" target="_blank" rel="noopener noreferrer">PDF</a>]</li>
                     <li><strong>M. Sato</strong> and K. Law, “Socially Consistent Multi-Robot Navigation Using Decoupled Planning and Trajectory Coordination,” <em>Civil Engineering Sciences</em>, vol. 2, no. 25, September 2026, doi: <a href="https://doi.org/10.34133/cesci.0025" target="_blank" rel="noopener noreferrer">10.34133/cesci.0025</a>.</li>
                     <li><strong>M. Sato</strong> and K. Law, “A Hybrid Quantum-Classical Approach for Melt Pool Prediction in Laser Powder Bed Fusion,” <em>Proceedings of the ASME 2026 International Design Engineering Technical Conferences and Computers and Information in Engineering Conference</em>, Houston, TX, Aug. 23–26, 2026, doi: <a href="https://doi.org/10.48550/arXiv.2606.23719" target="_blank" rel="noopener noreferrer">10.48550/arXiv.2606.23719</a>.</li>
@@ -73,8 +71,8 @@
                     <li>B. Kapusuzoglu, P. Nath, <strong>M. Sato</strong>, S. Mahadevan, and P. Witherell, “Multi-Objective Optimization Under Uncertainty of Part Quality in Fused Filament Fabrication,” <em>ASCE-ASME J Risk and Uncert in Engrg Sys Part B Mech Engrg</em>, vol. 8, no. 1, Jan. 2022, doi: <a href="https://doi.org/10.1115/1.4053181" target="_blank" rel="noopener noreferrer">10.1115/1.4053181</a>.</li>
                     <li>B. Kapusuzoglu, <strong>M. Sato</strong>, S. Mahadevan, and P. Witherell, “Process Optimization Under Uncertainty for Improving the Bond Quality of Polymer Filaments in Fused Filament Fabrication,” <em>Journal of Manufacturing Science and Engineering</em>, vol. 143, no. 2, Oct. 2020, doi: <a href="https://doi.org/10.1115/1.4048073" target="_blank" rel="noopener noreferrer">10.1115/1.4048073</a>.</li>
                 </ol>
-                <button type="button" class="less-toggle">Less ↑</button>
-            </details>
+                <button type="button" class="publications-toggle" aria-expanded="false" aria-controls="publication-list">More</button>
+            </section>
 
             <section class="projects">
                 <h2>Featured Projects</h2>
@@ -82,7 +80,7 @@
                     <div class="project-card-body">
                         <h3>Autonomous Mobile Robot</h3>
                         <p>Explore my open source autonomous mobile robot project. The project includes the robot's mechanical, electrical, and software design.</p>
-                        <a href="./mattbot/index.html" class="project-link">View Project →</a>
+                        <a href="./mattbot/index.html" class="project-link">View <span class="visually-hidden">Autonomous Mobile Robot </span>Project →</a>
                     </div>
                     <div class="project-preview-wrap">
                         <img class="project-preview" src="images/robot.png" alt="Autonomous mobile robot">
@@ -92,17 +90,20 @@
                     <div class="project-card-body">
                         <h3>Light Switch Presser</h3>
                         <p>Detects when the office light turns off and swings an arm to hit the switch back on.</p>
-                        <a href="https://github.com/satomm1/light-switch-presser" class="project-link" target="_blank" rel="noopener noreferrer">View Project →</a>
+                        <a href="https://github.com/satomm1/light-switch-presser" class="project-link" target="_blank" rel="noopener noreferrer">View <span class="visually-hidden">Light Switch Presser </span>Project →</a>
                     </div>
                     <div class="project-preview-wrap">
-                        <img class="project-preview" src="images/light_demo.gif" alt="Light switch presser">
+                        <figure class="demo-figure">
+                            <img class="project-preview" id="light-demo" src="images/light_demo.gif" data-animated="images/light_demo.gif" data-still="images/light_demo_still.jpg" alt="Light switch presser">
+                            <button type="button" class="media-toggle" aria-pressed="true" aria-controls="light-demo">Pause animation</button>
+                        </figure>
                     </div>
                 </div>
                 <div class="project-card">
                     <div class="project-card-body">
                         <h3>ME218C Final Project</h3>
                         <p>Remote controlled boat for final project of Stanford ME218C course.</p>
-                        <a href="https://raveraft.weebly.com/" class="project-link" target="_blank" rel="noopener noreferrer">View Project →</a>
+                        <a href="https://raveraft.weebly.com/" class="project-link" target="_blank" rel="noopener noreferrer">View <span class="visually-hidden">ME218C Final </span>Project →</a>
                     </div>
                     <div class="project-preview-wrap">
                         <img class="project-preview" src="images/rc_boat.jpg" alt="Remote controlled boat">
@@ -112,7 +113,7 @@
                     <div class="project-card-body">
                         <h3>ME218B Final Project</h3>
                         <p>Wheeled robot for final project of Stanford ME218B course.</p>
-                        <a href="https://reporoadrunna.weebly.com/" class="project-link" target="_blank" rel="noopener noreferrer">View project →</a>
+                        <a href="https://reporoadrunna.weebly.com/" class="project-link" target="_blank" rel="noopener noreferrer">View <span class="visually-hidden">ME218B Final </span>project →</a>
                     </div>
                     <div class="project-preview-wrap">
                         <img class="project-preview" src="images/me218b.jpg" alt="Wheeled robot">
@@ -121,25 +122,41 @@
             </section>
         </div>
 
-        <section class="social-links">
+        <section class="social-links" aria-label="Social profiles">
             <a href="https://www.linkedin.com/in/matthew-sato-4ab47514b" title="LinkedIn" target="_blank" rel="noopener noreferrer"><img src="images/LI-In-Bug.png" alt="LinkedIn"></a>
             <a href="https://scholar.google.com/citations?user=rNj6LR4AAAAJ&hl=en" title="Google Scholar" target="_blank" rel="noopener noreferrer"><img src="images/scholar.png" alt="Google Scholar"></a>
             <a href="https://github.com/satomm1" title="GitHub" target="_blank" rel="noopener noreferrer"><img src="images/github.svg" alt="GitHub"></a>
         </section>
+        </main>
     </div>
     <button type="button" class="back-to-top" aria-label="Back to top">↑</button>
     <script>
-        document.querySelector('.less-toggle').addEventListener('click', function () {
-            const details = this.closest('details');
-            details.open = false;
-            details.scrollIntoView({ block: 'start' });
+        const publications = document.querySelector('.publications');
+        const publicationsToggle = publications.querySelector('.publications-toggle');
+        const publicationList = document.getElementById('publication-list');
+        publicationsToggle.addEventListener('click', function () {
+            const open = publications.classList.toggle('is-open');
+            publicationsToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            publicationsToggle.textContent = open ? 'Less' : 'More';
+            publicationList.hidden = !open;
+            if (!open) {
+                const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                publications.scrollIntoView({ block: 'start', behavior: reduceMotion ? 'auto' : 'smooth' });
+            }
         });
-        document.querySelectorAll('.publications summary a').forEach(function (link) {
-            link.addEventListener('click', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                window.open(link.href, '_blank', 'noopener,noreferrer');
-            });
+
+        const lightDemo = document.getElementById('light-demo');
+        const mediaToggle = document.querySelector('.media-toggle');
+        const setDemoPlaying = function (playing) {
+            lightDemo.src = playing ? lightDemo.dataset.animated : lightDemo.dataset.still;
+            mediaToggle.setAttribute('aria-pressed', playing ? 'true' : 'false');
+            mediaToggle.textContent = playing ? 'Pause animation' : 'Play animation';
+        };
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            setDemoPlaying(false);
+        }
+        mediaToggle.addEventListener('click', function () {
+            setDemoPlaying(mediaToggle.getAttribute('aria-pressed') !== 'true');
         });
 
         const backToTop = document.querySelector('.back-to-top');
